@@ -1,8 +1,8 @@
 package main;
 
-import main.Frames.DashboardFrame;
-import main.Frames.MainFrame;
-import main.models.DataModels;
+import main.frames.DashboardFrame;
+import main.frames.MainFrame;
+import main.managers.RoomManager;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -19,7 +19,7 @@ public class SmartStayHotelBookingSystem {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        DataModels dataModel = new DataModels();
+        RoomManager roomManager = new RoomManager();
         java.awt.EventQueue.invokeLater(() -> {
         //new MainFrame().setVisible(true);
         new DashboardFrame().setVisible(true);

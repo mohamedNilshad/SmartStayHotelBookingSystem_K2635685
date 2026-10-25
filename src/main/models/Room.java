@@ -4,18 +4,20 @@
  */
 package main.models;
 
+import main.models.room_packages.RoomPackage;
+
 /**
  *
  * @author N I L S H A D
  */
 public class Room {
     private int roomID;
-    private RoomType roomType;
+    private RoomPackage roomType;
     private String roomStatus; //(Available-1, Reserved-0, Under Maintenance-3)
     private boolean breakfast;
     private int capacity;
 
-    public Room(int roomID, RoomType roomType, String roomStatus, boolean breakfast, int capacity) {
+    public Room(int roomID, RoomPackage roomType, String roomStatus, boolean breakfast, int capacity) {
         this.roomID = roomID;
         this.roomType = roomType;
         this.roomStatus = roomStatus;
@@ -24,7 +26,7 @@ public class Room {
     }
 
     public int getRoomID() { return roomID; }
-    public RoomType getRoomType() { return roomType; }
+    public RoomPackage getRoomType() { return roomType; }
     public String getStatus() { return roomStatus; }
     public boolean getBreakfast() { return breakfast; }
     public int getCapacity() { return capacity; }
