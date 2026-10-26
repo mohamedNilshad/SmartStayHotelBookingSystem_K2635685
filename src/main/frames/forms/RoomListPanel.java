@@ -117,14 +117,14 @@ public class RoomListPanel extends javax.swing.JPanel {
 
             //String breakfast = room.getBreakfast() ? "  |  🍲 Breakfast" : ""; 
             //"👥 x " + room.getCapacity()
-            JLabel info = new JLabel("🛏 " + roomPackage.getBedTypesInString()
-            );
-            info.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 13));
-            info.setForeground(new Color(95, 110, 130));
+            
+//            JLabel info = new JLabel("🛏 " + roomPackage.getBedTypesInString());
+//            info.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 13));
+//            info.setForeground(new Color(95, 110, 130));
 
             details.add(type);
             details.add(Box.createVerticalStrut(5));
-            details.add(info);
+//            details.add(info);
 
             // Price
             NumberFormat currency = NumberFormat.getInstance(

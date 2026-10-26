@@ -11,20 +11,15 @@ package main.models.room_packages;
 abstract public class RoomPackage {
 
     private String packageName;
-    private String[] bedTypes;
     private double dailyRoomRate;
     private double extraGuestCharge;
     private double taxRate;
 
     abstract public String getPackageName();
-    
-    abstract public String[] getBedTypes();
 
     abstract public double getDailyRoomRate();
 
     abstract public double getExtraGuestCharge();
 
     abstract public double getTaxRate();
-
-    abstract public String getBedTypesInString();
 }

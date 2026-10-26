@@ -11,7 +11,6 @@ package main.models.room_packages;
 public class SuitePackage extends RoomPackage {
 
     private final String packageName;
-    private final String[] bedTypes;
     private final double dailyRoomRate;
     private final double extraGuestCharge;
     private final double taxRate;
@@ -19,7 +18,6 @@ public class SuitePackage extends RoomPackage {
     public SuitePackage() {
         this.packageName = "Suite";
         this.dailyRoomRate = 14000.00;
-        this.bedTypes = new String[]{"Single", "Double", "Queen", "King"};
         this.extraGuestCharge = 2000.00;
         this.taxRate = 15.0;
     }
@@ -27,11 +25,6 @@ public class SuitePackage extends RoomPackage {
     @Override
     public String getPackageName() {
         return packageName;
-    }
-
-    @Override
-    public String[] getBedTypes() {
-        return bedTypes;
     }
 
     @Override
@@ -47,20 +40,5 @@ public class SuitePackage extends RoomPackage {
     @Override
     public double getTaxRate() {
         return taxRate;
-    }
-
-    @Override
-    public String getBedTypesInString() {
-        String bedType = "";
-
-        for (String type : bedTypes) {
-            if (!bedType.isEmpty()) {
-                bedType += " | ";
-            }
-
-            bedType += type;
-        }
-
-        return bedType;
     }
 }

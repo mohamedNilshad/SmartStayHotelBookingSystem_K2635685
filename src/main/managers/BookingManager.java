@@ -5,8 +5,8 @@
 package main.managers;
 
 import java.util.*;
+import main.models.Booking;
 import main.models.Room;
-import main.models.room_packages.*;
 
 /**
  *
@@ -14,69 +14,75 @@ import main.models.room_packages.*;
  */
 public class BookingManager {
 
-    private static String[] roomStatus = {"Available", "Reserved", "Under Maintenance"};
-    private static List<RoomPackage> roomPackageList = new ArrayList<>();
-    private static List<Room> roomList = new ArrayList<>();
+    private static String[] bookingStatus = {"Active", "Cancelled"};
+    private static List<Booking> bookingList = new ArrayList<>();
 
-    public BookingManager() {
-        //initialize RoomPackages
-        roomPackageList.add(new StandardPackage());
-        roomPackageList.add(new DeluxePackage());
-        roomPackageList.add(new SuitePackage());
-        roomPackageList.add(new FamilySuitePackage());
-
-        //initialize Rooms
-        roomList.add(new Room(100, roomPackageList.get(0), roomStatus[0], false, 1));
-        roomList.add(new Room(101, roomPackageList.get(0), roomStatus[0], false, 2));
-
-        roomList.add(new Room(102, roomPackageList.get(1), roomStatus[1], false, 1));
-        roomList.add(new Room(103, roomPackageList.get(1), roomStatus[0], true, 2));
-
-        roomList.add(new Room(104, roomPackageList.get(2), roomStatus[0], true, 2));
-        roomList.add(new Room(105, roomPackageList.get(2), roomStatus[1], true, 3));
-        roomList.add(new Room(106, roomPackageList.get(2), roomStatus[0], true, 3));
-
-        roomList.add(new Room(107, roomPackageList.get(3), roomStatus[2], true, 3));
-        roomList.add(new Room(108, roomPackageList.get(3), roomStatus[0], true, 4));
-        roomList.add(new Room(109, roomPackageList.get(3), roomStatus[1], true, 4));
-        roomList.add(new Room(110, roomPackageList.get(3), roomStatus[0], true, 4));
-
+    public static List<Booking> getBookingList() {
+        return new ArrayList<>(bookingList);
     }
 
-    public static List<String> getRoomPackageNames() {
-        List<String> nameList = new ArrayList<>();
+    public static List<Room> getAvailableRoomList(String bedType, String roomPackageName, Date checkInDate, Date checkOutDate) {
+        List<Room> availableRoomList = new ArrayList<>();
 
-        for (RoomPackage roomPackage : roomPackageList) {
-            nameList.add(roomPackage.getPackageName());
+        for (Room room : RoomManager.getRoomList()) {
+
+            if (room.getBedType().equals(bedType) && room.getRoomPackage().getPackageName().equals(roomPackageName)) {//sort rooms by bedType and roomPackageName
+                boolean isAvailable = isBookingAvailable(room.getRoomID(), checkInDate, checkOutDate);
+                if (isAvailable) {
+                    availableRoomList.add(room);
+                }
+            }
         }
 
-        return nameList;
-    }
-    
-    
-    public static List<RoomPackage> getRoomPackageList() {
-        return new ArrayList<>(roomPackageList);
+        return availableRoomList;//if everything ok return true
     }
 
-    public static List<Room> getRoomList() {
-        return new ArrayList<>(roomList);
+    public static boolean isBookingAvailable(int roomId, Date checkInDate, Date checkOutDate) {
+        for (Booking booking : bookingList) {
+
+            if (booking.getRoom().getRoomID() == roomId) {//sort bookings by roomId
+
+                if (isDateBetween(booking.getCheckInDate(), checkInDate, checkOutDate)) {//confirm check-in date not in the dates
+                    return false;
+
+                } else if (isDateBetween(booking.getCheckOutDate(), checkInDate, checkOutDate)) {//confirm check-out date not in the dates
+                    return false;
+                }
+            }
+        }
+
+        return true;//if everything ok return true
     }
 
-    public static void addNewRoom(Room room) {
-        roomList.add(room);
+    private static boolean isDateBetween(Date date, Date startDate, Date endDate) {
+
+        if (date == null || startDate == null || endDate == null) {
+            return false;
+        }
+
+        return !date.before(startDate) && !date.after(endDate);
     }
 
-    public static void updateRoomStatus(int roomId, String roomStatus) {
+    public static void addNewBooking(Booking booking) {
+        bookingList.add(booking);
+    }
 
-        for (int i = 0; i < roomList.size(); i++) {
-            Room room = roomList.get(i);
+    public static void updateBookingStatus(int bookingId, String bookingStatus) {
 
-            if (room.getRoomID() == roomId) {
-                room.setStatus(roomStatus);
-                roomList.set(i, room);
+        for (int i = 0; i < bookingList.size(); i++) {
+            Booking booking = bookingList.get(i);
+
+            if (booking.getBookingID() == bookingId) {
+                booking.setStatus(bookingStatus);
+                bookingList.set(i, booking);
                 break;
             }
         }
+    }
+
+    public static int generateBookingId() {
+        int size = bookingList.size();
+        return size++;
     }
 
 }

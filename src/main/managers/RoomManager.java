@@ -18,7 +18,7 @@ import main.models.room_packages.SuitePackage;
  * @author N I L S H A D
  */
 public class RoomManager {
-
+    private static String[] bedTypes = {"Single", "Double", "Queen", "King"};
     private static String[] roomStatus = {"Available", "Reserved", "Under Maintenance"};
     private static List<RoomPackage> roomPackageList = new ArrayList<>();
     private static List<Room> roomList = new ArrayList<>();
@@ -31,20 +31,20 @@ public class RoomManager {
         roomPackageList.add(new FamilySuitePackage());
 
         //initialize Rooms
-        roomList.add(new Room(100, roomPackageList.get(0), roomStatus[0], false, 1));
-        roomList.add(new Room(101, roomPackageList.get(0), roomStatus[0], false, 2));
+        roomList.add(new Room(100, roomPackageList.get(0), bedTypes[0], roomStatus[0], false, 1));
+        roomList.add(new Room(101, roomPackageList.get(0), bedTypes[1], roomStatus[0], false, 2));
 
-        roomList.add(new Room(102, roomPackageList.get(1), roomStatus[1], false, 1));
-        roomList.add(new Room(103, roomPackageList.get(1), roomStatus[0], true, 2));
+        roomList.add(new Room(102, roomPackageList.get(1), bedTypes[0], roomStatus[1], false, 1));
+        roomList.add(new Room(103, roomPackageList.get(1), bedTypes[1], roomStatus[0], true, 2));
 
-        roomList.add(new Room(104, roomPackageList.get(2), roomStatus[0], true, 2));
-        roomList.add(new Room(105, roomPackageList.get(2), roomStatus[1], true, 3));
-        roomList.add(new Room(106, roomPackageList.get(2), roomStatus[0], true, 3));
+        roomList.add(new Room(104, roomPackageList.get(2), bedTypes[0], roomStatus[0], true, 2));
+        roomList.add(new Room(105, roomPackageList.get(2), bedTypes[1], roomStatus[1], true, 3));
+        roomList.add(new Room(106, roomPackageList.get(2), bedTypes[2], roomStatus[0], true, 3));
 
-        roomList.add(new Room(107, roomPackageList.get(3), roomStatus[2], true, 3));
-        roomList.add(new Room(108, roomPackageList.get(3), roomStatus[0], true, 4));
-        roomList.add(new Room(109, roomPackageList.get(3), roomStatus[1], true, 4));
-        roomList.add(new Room(110, roomPackageList.get(3), roomStatus[0], true, 4));
+        roomList.add(new Room(107, roomPackageList.get(3), bedTypes[0], roomStatus[2], true, 3));
+        roomList.add(new Room(108, roomPackageList.get(3), bedTypes[1], roomStatus[0], true, 4));
+        roomList.add(new Room(109, roomPackageList.get(3), bedTypes[2], roomStatus[1], true, 4));
+        roomList.add(new Room(110, roomPackageList.get(3), bedTypes[3], roomStatus[0], true, 4));
 
     }
 
@@ -65,6 +65,10 @@ public class RoomManager {
 
     public static List<Room> getRoomList() {
         return new ArrayList<>(roomList);
+    }
+
+    public static String[] getBedTypes() {
+        return bedTypes;
     }
 
     public static void addNewRoom(Room room) {

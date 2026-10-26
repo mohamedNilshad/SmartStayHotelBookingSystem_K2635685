@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import main.functions.HelperFunctions;
+import main.managers.BookingManager;
 import main.managers.RoomManager;
+import main.models.Booking;
+import main.models.Room;
 import main.models.room_packages.RoomPackage;
 
 /**
@@ -83,7 +86,7 @@ public class SelectRoomPanel extends javax.swing.JPanel {
             roomPackageDropDown.addItem(roomPackage.getPackageName());
         }
 
-        for (String bedType : selectedRoomPackage.getBedTypes()) {
+        for (String bedType : RoomManager.getBedTypes()) {
             bedTypeDropDown.addItem(bedType);
         }
 
@@ -310,7 +313,7 @@ public class SelectRoomPanel extends javax.swing.JPanel {
             if (roomPackage.getPackageName().equals(value)) {
                 selectedRoomPackage = roomPackage;
                 bedTypeDropDown.removeAllItems();
-                for (String bedType : selectedRoomPackage.getBedTypes()) {
+                for (String bedType : RoomManager.getBedTypes()) {
                     bedTypeDropDown.addItem(bedType);
                 }
                 break;
@@ -343,7 +346,15 @@ public class SelectRoomPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_nogPlusActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    
+      
+        List<Room> availableRoomList = BookingManager.getAvailableRoomList(
+                bedTypeDropDown.getSelectedItem().toString(), 
+                roomPackageDropDown.getSelectedItem().toString(), 
+                checkInDate.getDate(),
+                checkOutDate.getDate()
+                );
+       
+        System.out.println(availableRoomList.size());
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

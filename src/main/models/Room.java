@@ -12,24 +12,27 @@ import main.models.room_packages.RoomPackage;
  */
 public class Room {
     private int roomID;
-    private RoomPackage roomType;
+    private RoomPackage roomPackage;
+    private String bedType;
     private String roomStatus; //(Available-1, Reserved-0, Under Maintenance-3)
     private boolean breakfast;
     private int capacity;
 
-    public Room(int roomID, RoomPackage roomType, String roomStatus, boolean breakfast, int capacity) {
+    public Room(int roomID, RoomPackage roomType, String bedType, String roomStatus, boolean breakfast, int capacity) {
         this.roomID = roomID;
-        this.roomType = roomType;
+        this.roomPackage = roomType;
+        this.bedType = bedType;
         this.roomStatus = roomStatus;
         this.breakfast = breakfast;
         this.capacity = capacity;
     }
 
     public int getRoomID() { return roomID; }
-    public RoomPackage getRoomType() { return roomType; }
+    public RoomPackage getRoomPackage() { return roomPackage; }
     public String getStatus() { return roomStatus; }
     public boolean getBreakfast() { return breakfast; }
     public int getCapacity() { return capacity; }
+    public String getBedType() {return bedType;}
     
     
     public void setStatus(String roomStatus) { this.roomStatus = roomStatus; }

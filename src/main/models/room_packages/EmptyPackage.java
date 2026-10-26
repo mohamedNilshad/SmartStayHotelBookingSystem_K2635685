@@ -11,7 +11,6 @@ package main.models.room_packages;
 public class EmptyPackage extends RoomPackage {
 
     private String packageName;
-    private String[] bedTypes;
     private double dailyRoomRate;
     private double extraGuestCharge;
     private double taxRate;
@@ -24,10 +23,6 @@ public class EmptyPackage extends RoomPackage {
         return packageName;
     }
 
-    @Override
-    public String[] getBedTypes() {
-        return bedTypes;
-    }
 
     @Override
     public double getDailyRoomRate() {
@@ -44,18 +39,18 @@ public class EmptyPackage extends RoomPackage {
         return taxRate;
     }
 
-    @Override
-    public String getBedTypesInString() {
-        String bedType = "";
-
-        for (String type : bedTypes) {
-            if (!bedType.isEmpty()) {
-                bedType += " | ";
-            }
-
-            bedType += type;
-        }
-
-        return bedType;
-    }
+//    @Override
+//    public String getBedTypesInString() {
+//        String bedType = "";
+//
+//        for (String type : bedTypes) {
+//            if (!bedType.isEmpty()) {
+//                bedType += " | ";
+//            }
+//
+//            bedType += type;
+//        }
+//
+//        return bedType;
+//    }
 }
