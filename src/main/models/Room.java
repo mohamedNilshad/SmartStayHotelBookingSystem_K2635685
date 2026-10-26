@@ -17,6 +17,8 @@ public class Room {
     private String roomStatus; //(Available-1, Reserved-0, Under Maintenance-3)
     private boolean breakfast;
     private int capacity;
+    
+    public Room(){}
 
     public Room(int roomID, RoomPackage roomType, String bedType, String roomStatus, boolean breakfast, int capacity) {
         this.roomID = roomID;

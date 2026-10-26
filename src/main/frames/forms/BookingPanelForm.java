@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import main.managers.RoomManager;
 import main.models.Room;
-import main.models.room_packages.RoomPackage;
 
 /**
  *
@@ -20,15 +19,15 @@ import main.models.room_packages.RoomPackage;
 public class BookingPanelForm extends javax.swing.JPanel {
 
     String placeholder = "Search...";
-    List<RoomPackage> roomPackagesList = RoomManager.getRoomPackageList();
-    List<RoomPackage> sortedRoomTypes = new ArrayList<>();
+    List<Room> roomList = RoomManager.getRoomList();
+    List<Room> sortedRoomList = new ArrayList<>();
     private CardLayout cardLayout;
 
     private RoomListPanel roomListPanel;
 
     public BookingPanelForm() {
         initComponents();
-        sortedRoomTypes = new ArrayList<>(roomPackagesList);
+        sortedRoomList = new ArrayList<>(roomList);
 
         var border = BorderFactory.createCompoundBorder(
                 searchField.getBorder(),
@@ -42,24 +41,24 @@ public class BookingPanelForm extends javax.swing.JPanel {
             searchField.setForeground(Color.GRAY);
         }
 
-        int roomTypeCount = sortedRoomTypes.size();
+        int roomTypeCount = sortedRoomList.size();
 
         tabelHeader.setText(roomTypeCount + " rooms available");
         pnlContent.setLayout(new java.awt.BorderLayout());
 
         roomListPanel = new RoomListPanel(
-                sortedRoomTypes,
+                sortedRoomList,
                 selectedRoom -> {
                     titleLabel.setText("Booking");
-                    subtitleLabel.setText("Fill to booking.");
+                    subtitleLabel.setText("Fill the form to booking.");
                     tabelHeader.setVisible(false);
                     searchField.setVisible(false);
 
                     SelectRoomPanel fillPanel = new SelectRoomPanel(
                             selectedRoom,
                             () -> {
-                                titleLabel.setText("Room Types");
-                                subtitleLabel.setText("Pick a room type to start a booking.");
+                                titleLabel.setText("Rooms");
+                                subtitleLabel.setText("Pick a room to start a booking.");
                                 tabelHeader.setVisible(true);
                                 searchField.setVisible(true);
 
@@ -72,14 +71,14 @@ public class BookingPanelForm extends javax.swing.JPanel {
                 }
         );
 
-        pnlContent.add(roomListPanel, java.awt.BorderLayout.CENTER);
+        pnlContent.add(roomListPanel, BorderLayout.CENTER);
     }
 
     public void showPanel(JPanel panel) {
         pnlContent.removeAll();
 
-        pnlContent.setLayout(new java.awt.BorderLayout());
-        pnlContent.add(panel, java.awt.BorderLayout.CENTER);
+        pnlContent.setLayout(new BorderLayout());
+        pnlContent.add(panel, BorderLayout.CENTER);
 
         pnlContent.revalidate();
         pnlContent.repaint();
@@ -107,11 +106,11 @@ public class BookingPanelForm extends javax.swing.JPanel {
 
         titleLabel.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         titleLabel.setForeground(new java.awt.Color(22, 43, 64));
-        titleLabel.setText("Room Packages");
+        titleLabel.setText("Rooms");
 
         subtitleLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         subtitleLabel.setForeground(java.awt.SystemColor.activeCaptionBorder);
-        subtitleLabel.setText("Pick a room package to start a booking.  ");
+        subtitleLabel.setText("Pick a room to start a booking.  ");
 
         searchField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -204,25 +203,25 @@ public class BookingPanelForm extends javax.swing.JPanel {
 
     private void searchFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchFieldKeyReleased
         String text = searchField.getText().trim();
-        List<RoomPackage> tempRoomTypes;
+ 
         if (text.isEmpty()) {
-            sortedRoomTypes = RoomManager.getRoomPackageList();
+            sortedRoomList = RoomManager.getRoomList();
 
         } else {
 
-            sortedRoomTypes.clear();
+            sortedRoomList.clear();
 
-            for (RoomPackage type : roomPackagesList) {
-                if (type.getPackageName().toLowerCase().startsWith(text.toLowerCase())) {
-                    sortedRoomTypes.add(type);
+            for (Room room : roomList) {
+                if (room.getRoomPackage().getPackageName().toLowerCase().startsWith(text.toLowerCase())) {
+                    sortedRoomList.add(room);
                 }
             }
         }
 
-        tabelHeader.setText(sortedRoomTypes.size() + " rooms available");
+        tabelHeader.setText(sortedRoomList.size() + " rooms available");
 
         // Update UI
-        roomListPanel.updateRoomList(sortedRoomTypes);
+        roomListPanel.updateRoomList(sortedRoomList);
     }//GEN-LAST:event_searchFieldKeyReleased
 
 

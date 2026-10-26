@@ -22,24 +22,24 @@ import main.models.room_packages.RoomPackage;
 public class SelectRoomPanel extends javax.swing.JPanel {
 
     private final Runnable onBack;
-    private RoomPackage selectedRoomPackage;
-    private List<RoomPackage> allRoomPackage = new ArrayList<>();
+    private Room selectedRoom;
+    private List<Room> allRooms = new ArrayList<>();
 
     /**
      * Creates new form RoomListPanel
      *
-     * @param roomPackage
+     * @param room
      * @param onBack
      */
-    public SelectRoomPanel(RoomPackage roomPackage, Runnable onBack) {
+    public SelectRoomPanel(Room room, Runnable onBack) {
         initComponents();
         roomPackageDropDown.setBackground(Color.white);
         bedTypeDropDown.setBackground(Color.white);
         checkInDate.setBackground(Color.white);
 
         this.onBack = onBack;
-        allRoomPackage = RoomManager.getRoomPackageList();
-        selectedRoomPackage = roomPackage;
+        allRooms = RoomManager.getRoomList();
+        selectedRoom = room;
 
         checkInDate.setDate(HelperFunctions.getDefaultCheckInDate());
         checkOutDate.setDate(HelperFunctions.getDefaultCheckOutDate(HelperFunctions.getDefaultCheckInDate()));
@@ -81,8 +81,9 @@ public class SelectRoomPanel extends javax.swing.JPanel {
     private void setForm() {
         roomPackageDropDown.removeAllItems();
         bedTypeDropDown.removeAllItems();
+        numberOfGuest.setText(String.valueOf(selectedRoom.getCapacity()));
 
-        for (RoomPackage roomPackage : allRoomPackage) {
+        for (RoomPackage roomPackage : RoomManager.getRoomPackageList()) {
             roomPackageDropDown.addItem(roomPackage.getPackageName());
         }
 
@@ -90,7 +91,7 @@ public class SelectRoomPanel extends javax.swing.JPanel {
             bedTypeDropDown.addItem(bedType);
         }
 
-        roomPackageDropDown.setSelectedItem(selectedRoomPackage.getPackageName());
+        roomPackageDropDown.setSelectedItem(selectedRoom.getRoomPackage().getPackageName());
     }
 
     /**
@@ -307,18 +308,20 @@ public class SelectRoomPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void roomPackageDropDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomPackageDropDownActionPerformed
-        String value = roomPackageDropDown.getSelectedItem().toString();
+//        String value = roomPackageDropDown.getSelectedItem().toString();
+//
+//        for (RoomPackage roomPackage : RoomManager.getRoomPackageList()) {
+//            if (roomPackage.getPackageName().equals(value)) {
+//                selectedRoom = roomPackage;
+//                bedTypeDropDown.removeAllItems();
+//                for (String bedType : RoomManager.getBedTypes()) {
+//                    bedTypeDropDown.addItem(bedType);
+//                }
+//                break;
+//            }
+//        }
 
-        for (RoomPackage roomPackage : allRoomPackage) {
-            if (roomPackage.getPackageName().equals(value)) {
-                selectedRoomPackage = roomPackage;
-                bedTypeDropDown.removeAllItems();
-                for (String bedType : RoomManager.getBedTypes()) {
-                    bedTypeDropDown.addItem(bedType);
-                }
-                break;
-            }
-        }
+//Clear all fields
     }//GEN-LAST:event_roomPackageDropDownActionPerformed
 
     private void checkInDatePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_checkInDatePropertyChange

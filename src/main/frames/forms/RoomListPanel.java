@@ -10,9 +10,8 @@ import java.util.Locale;
 import javax.swing.*;
 import javax.swing.border.*;
 import main.models.Room;
-import java.util.ArrayList;
 import java.util.List;
-import main.functions.HelperFunctions;
+import java.util.function.Consumer;
 import main.models.room_packages.EmptyPackage;
 import main.models.room_packages.RoomPackage;
 
@@ -24,14 +23,13 @@ public class RoomListPanel extends javax.swing.JPanel {
 
     private JPanel listPanel;
     private JScrollPane scrollPane;
-    private javax.swing.JLabel titleLabel;
-    private final java.util.function.Consumer<RoomPackage> onRoomSelected;
+    private JLabel titleLabel;
+    private final Consumer<Room> onRoomSelected;
 
     /**
      * Creates new form RoomListPanel
      */
-    public RoomListPanel(List<RoomPackage> roomPackageList,
-            java.util.function.Consumer<RoomPackage> onRoomSelected) {
+    public RoomListPanel(List<Room> roomList, Consumer<Room> onRoomSelected) {
         initComponents();
         this.onRoomSelected = onRoomSelected;
         setLayout(new BorderLayout());
@@ -54,17 +52,17 @@ public class RoomListPanel extends javax.swing.JPanel {
 
         add(scrollPane, java.awt.BorderLayout.CENTER);
 
-        updateRoomList(roomPackageList);
+        updateRoomList(roomList);
     }
 
-    public void updateRoomList(List<RoomPackage> roomPackageList) {
+    public void updateRoomList(List<Room> roomList) {
 
         listPanel.removeAll();
-        if (roomPackageList.isEmpty()) {
-            listPanel.add(createRoomRow(new EmptyPackage(), true));
+        if (roomList.isEmpty()) {
+            listPanel.add(createRoomRow(new Room(), true));
         } else {
-            for (RoomPackage roomPackage : roomPackageList) {
-                listPanel.add(createRoomRow(roomPackage, false));
+            for (Room room : roomList) {
+                listPanel.add(createRoomRow(room, false));
             }
         }
 
@@ -73,7 +71,7 @@ public class RoomListPanel extends javax.swing.JPanel {
 
     }
 
-    private JPanel createRoomRow(RoomPackage roomPackage, boolean isEmpty) {
+    private JPanel createRoomRow(Room room, boolean isEmpty) {
         JPanel row = new JPanel(new BorderLayout(15, 0));
 
         row.setBackground(Color.WHITE);
@@ -90,19 +88,14 @@ public class RoomListPanel extends javax.swing.JPanel {
 
         row.setCursor(new Cursor(Cursor.HAND_CURSOR));
         if (isEmpty) {
-            JLabel emptyText = new JLabel("No record available", SwingConstants.CENTER);
+            JLabel emptyText = new JLabel("No rooms available", SwingConstants.CENTER);
             emptyText.setFont(new Font("Arial", Font.PLAIN, 15));
             emptyText.setForeground(Color.GRAY);
             row.add(emptyText, BorderLayout.CENTER);
         } else {
 
             // Room number
-//        JLabel number = new JLabel(
-//                String.valueOf(room.getRoomID())
-//        );
-//        number.setFont(new Font("Arial", Font.BOLD, 18));
-//        number.setPreferredSize(new Dimension(60, 35));
-            JLabel number = new JLabel("#");
+            JLabel number = new JLabel(String.valueOf(room.getRoomID()));
             number.setFont(new Font("Arial", Font.BOLD, 18));
             number.setPreferredSize(new Dimension(60, 35));
 
@@ -111,20 +104,20 @@ public class RoomListPanel extends javax.swing.JPanel {
             details.setLayout(new BoxLayout(details, BoxLayout.Y_AXIS));
             details.setOpaque(false);
 
-            JLabel type = new JLabel(roomPackage.getPackageName());
+            JLabel type = new JLabel(room.getRoomPackage().getPackageName());
             type.setFont(new Font("Arial", Font.BOLD, 15));
             type.setForeground(new Color(95, 110, 130));
 
-            //String breakfast = room.getBreakfast() ? "  |  🍲 Breakfast" : ""; 
-            //"👥 x " + room.getCapacity()
-            
-//            JLabel info = new JLabel("🛏 " + roomPackage.getBedTypesInString());
-//            info.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 13));
-//            info.setForeground(new Color(95, 110, 130));
+            String breakfast = room.getBreakfast() ? "  |  🍲 Breakfast" : "";
+           
+
+            JLabel info = new JLabel("🛏 " + room.getBedType() + breakfast + "  |  👥 x " + room.getCapacity());
+            info.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 13));
+            info.setForeground(new Color(95, 110, 130));
 
             details.add(type);
             details.add(Box.createVerticalStrut(5));
-//            details.add(info);
+            details.add(info);
 
             // Price
             NumberFormat currency = NumberFormat.getInstance(
@@ -132,7 +125,7 @@ public class RoomListPanel extends javax.swing.JPanel {
             );
 
             JLabel price = new JLabel(
-                    "Rs. " + currency.format(roomPackage.getDailyRoomRate())
+                    "Rs. " + currency.format(room.getRoomPackage().getDailyRoomRate())
             );
             price.setFont(new Font("Arial", Font.BOLD, 14));
 
@@ -174,7 +167,7 @@ public class RoomListPanel extends javax.swing.JPanel {
 //                            RoomListPanel.this,
 //                            "Selected room: " + roomType.getDailyRoomRate()
 //                    );
-                    onRoomSelected.accept(roomPackage);
+                    onRoomSelected.accept(room);
 
                 }
 
