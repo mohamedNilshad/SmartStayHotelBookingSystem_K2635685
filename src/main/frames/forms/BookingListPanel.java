@@ -6,6 +6,7 @@ package main.frames.forms;
 
 import java.awt.*;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -13,6 +14,7 @@ import main.models.Room;
 import java.util.List;
 import java.util.function.Consumer;
 import main.functions.HelperFunctions;
+import main.managers.BookingManager;
 import main.models.Booking;
 import main.models.room_packages.EmptyPackage;
 import main.models.room_packages.RoomPackage;
@@ -105,8 +107,11 @@ public class BookingListPanel extends javax.swing.JPanel {
             String checkIn = HelperFunctions.formatDate(booking.getCheckInDate());
             String checkOut = HelperFunctions.formatDate(booking.getCheckOutDate());
             String status = booking.getStatus(); // "Active", "Cancelled", "Completed"
-            boolean showBtns = status.equals("Active") && HelperFunctions.isOneDayValidation(booking.getCheckInDate());
-
+            boolean isActive = "Active".equals(status) && !HelperFunctions.isOneDayBefore(booking.getCheckInDate());
+  
+            
+            boolean isCancelled = "Cancelled".equals(status);
+            boolean isCompleted = "Completed".equals(status);
            
             JLabel idLbl = new JLabel(bookingId);
             idLbl.setFont(new Font("Arial", Font.BOLD, 18));
@@ -155,13 +160,18 @@ public class BookingListPanel extends javax.swing.JPanel {
             totalCaption.setForeground(Color.GRAY);
             totalCaption.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
-            boolean isActive = "Active".equalsIgnoreCase(status);
+            
+            
 
-            JButton editBtn = createActionButton("Edit", new Color(37, 99, 235), isActive);
-            JButton cancelBtn = createActionButton("Cancel", new Color(220, 38, 38), isActive);
+            JButton editBtn = createActionButton("Edit", new Color(37, 99, 235), (isActive && !isCompleted && !isCancelled));
+            JButton cancelBtn = createActionButton("Cancel", new Color(220, 38, 38), (isActive && !isCompleted && !isCancelled));
 
 //            editBtn.addActionListener(e -> onBookingEdit.accept(booking));
-//            cancelBtn.addActionListener(e -> onBookingCancel.accept(booking));
+            cancelBtn.addActionListener(e -> {
+                
+                List<Booking> updatedBookingList = BookingManager.setBookingStatus(1, booking.getBookingID());
+                updateBookingList(updatedBookingList);
+            });
 
             JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
             buttons.setOpaque(false);

@@ -92,10 +92,7 @@ public class HelperFunctions {
         return sdf.format(date);
     }
 
-    public static boolean isOneDayValidation(Date givenDate) {
-        if (givenDate == null) {
-            return false;
-        }
+    public static boolean isOneDayBefore(Date givenDate) {
 
         LocalDate given = givenDate.toInstant()
                 .atZone(ZoneId.systemDefault())

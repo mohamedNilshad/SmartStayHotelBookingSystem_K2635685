@@ -55,16 +55,16 @@ public class BookingManager {
 
             if (booking.getRoom().getRoomID() == roomId) {//sort bookings by roomId
 
-                if (isDateBetween(booking.getCheckInDate(), checkInDate, checkOutDate)) {//confirm check-in date not in the dates
+                if (isDateBetween(booking.getCheckInDate(), checkInDate, checkOutDate) && booking.getStatus().equals(bookingStatus[0])) {//confirm check-in date not in the dates
                     return false;
 
-                } else if (isDateBetween(booking.getCheckOutDate(), checkInDate, checkOutDate)) {//confirm check-out date not in the dates
+                } else if (isDateBetween(booking.getCheckOutDate(), checkInDate, checkOutDate) && booking.getStatus().equals(bookingStatus[0])) {//confirm check-out date not in the dates
                     return false;
                 }
             }
         }
 
-        return true;//if room available return true
+        return true;//if booking slot is empty return true
     }
 
     private static boolean isDateBetween(Date date, Date startDate, Date endDate) {
@@ -101,6 +101,19 @@ public class BookingManager {
     public static String getBookingStatus(int index) {
         return bookingStatus[index];
     }
+    
+    public static List<Booking> setBookingStatus(int index, int bookingId) {
+        
+        for(Booking booking: bookingList){
+            if(booking.getBookingID() == bookingId){
+                booking.setStatus(bookingStatus[index]);
+                break;
+            }
+        }
+        
+        return getBookingList();
+    }
+    
     
     
 
