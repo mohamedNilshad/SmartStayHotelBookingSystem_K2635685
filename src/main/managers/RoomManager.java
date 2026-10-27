@@ -31,20 +31,21 @@ public class RoomManager {
         roomPackageList.add(new FamilySuitePackage());
 
         //initialize Rooms
-        roomList.add(new Room(100, roomPackageList.get(0), bedTypes[0], roomStatus[0], false, 1));
-        roomList.add(new Room(101, roomPackageList.get(0), bedTypes[1], roomStatus[0], false, 2));
+        roomList.add(new Room(100, roomPackageList.get(0), bedTypes[0], roomStatus[0], false, 1, 12));
+        roomList.add(new Room(111, roomPackageList.get(0), bedTypes[0], roomStatus[0], true, 1, 12));
+        roomList.add(new Room(101, roomPackageList.get(0), bedTypes[1], roomStatus[0], false, 2, 12));
 
-        roomList.add(new Room(102, roomPackageList.get(1), bedTypes[0], roomStatus[1], false, 1));
-        roomList.add(new Room(103, roomPackageList.get(1), bedTypes[1], roomStatus[0], true, 2));
+        roomList.add(new Room(102, roomPackageList.get(1), bedTypes[0], roomStatus[1], false, 1, 12));
+        roomList.add(new Room(103, roomPackageList.get(1), bedTypes[1], roomStatus[0], true, 2, 12));
 
-        roomList.add(new Room(104, roomPackageList.get(2), bedTypes[0], roomStatus[0], true, 2));
-        roomList.add(new Room(105, roomPackageList.get(2), bedTypes[1], roomStatus[1], true, 3));
-        roomList.add(new Room(106, roomPackageList.get(2), bedTypes[2], roomStatus[0], true, 3));
+        roomList.add(new Room(104, roomPackageList.get(2), bedTypes[0], roomStatus[0], true, 2, 12));
+        roomList.add(new Room(105, roomPackageList.get(2), bedTypes[1], roomStatus[1], true, 3, 12));
+        roomList.add(new Room(106, roomPackageList.get(2), bedTypes[2], roomStatus[0], true, 3, 12));
 
-        roomList.add(new Room(107, roomPackageList.get(3), bedTypes[0], roomStatus[2], true, 3));
-        roomList.add(new Room(108, roomPackageList.get(3), bedTypes[1], roomStatus[0], true, 4));
-        roomList.add(new Room(109, roomPackageList.get(3), bedTypes[2], roomStatus[1], true, 4));
-        roomList.add(new Room(110, roomPackageList.get(3), bedTypes[3], roomStatus[0], true, 4));
+        roomList.add(new Room(107, roomPackageList.get(3), bedTypes[0], roomStatus[2], true, 3, 12));
+        roomList.add(new Room(108, roomPackageList.get(3), bedTypes[1], roomStatus[0], true, 4, 12));
+        roomList.add(new Room(109, roomPackageList.get(3), bedTypes[2], roomStatus[1], true, 4, 12));
+        roomList.add(new Room(110, roomPackageList.get(3), bedTypes[3], roomStatus[0], true, 4, 12));
 
     }
 

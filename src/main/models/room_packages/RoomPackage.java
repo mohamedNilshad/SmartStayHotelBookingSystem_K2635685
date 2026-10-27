@@ -22,4 +22,5 @@ abstract public class RoomPackage {
     abstract public double getExtraGuestCharge();
 
     abstract public double getTaxRate();
+    
 }

@@ -5,15 +5,21 @@
 package main.frames.forms;
 
 import java.awt.*;
+import java.text.NumberFormat;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.Locale;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import main.functions.HelperFunctions;
 import main.managers.BookingManager;
+import main.managers.GuestManager;
 import main.managers.RoomManager;
 import main.models.Booking;
 import main.models.Room;
 import main.models.room_packages.RoomPackage;
+import main.models.room_packages.StandardPackage;
 
 /**
  *
@@ -24,6 +30,7 @@ public class SelectRoomPanel extends javax.swing.JPanel {
     private final Runnable onBack;
     private Room selectedRoom;
     private List<Room> allRooms = new ArrayList<>();
+    private JScrollPane scrollPane;
 
     /**
      * Creates new form RoomListPanel
@@ -36,6 +43,11 @@ public class SelectRoomPanel extends javax.swing.JPanel {
         roomPackageDropDown.setBackground(Color.white);
         bedTypeDropDown.setBackground(Color.white);
         checkInDate.setBackground(Color.white);
+
+        availableRoomsPanel.setVisible(false);
+        roomListCount.setVisible(false);
+        bookingDetailsPanel.setVisible(false);
+        confirmBooking.setVisible(false);
 
         this.onBack = onBack;
         allRooms = RoomManager.getRoomList();
@@ -60,7 +72,7 @@ public class SelectRoomPanel extends javax.swing.JPanel {
                 }
             }
         });
-        
+
         checkOutDate.getDateEditor().addPropertyChangeListener("date", evt -> {
 
             Date selectedcheckOutDate = (Date) evt.getNewValue();
@@ -75,7 +87,6 @@ public class SelectRoomPanel extends javax.swing.JPanel {
         });
 
         setForm();
-
     }
 
     private void setForm() {
@@ -93,8 +104,190 @@ public class SelectRoomPanel extends javax.swing.JPanel {
 
         roomPackageDropDown.setSelectedItem(selectedRoom.getRoomPackage().getPackageName());
     }
-    
-    
+
+    private JScrollPane createRoomListScrollPane(List<Room> rooms) {
+        // Container that holds all rows, stacked vertically
+        JPanel listPanel = new JPanel();
+        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+        listPanel.setBackground(Color.WHITE);
+
+        if (rooms == null || rooms.isEmpty()) {
+            listPanel.add(createRoomRow(null, true));
+        } else {
+            for (Room room : rooms) {
+                listPanel.add(createRoomRow(room, false));
+            }
+        }
+
+        // Pushes rows to the top if there are only a few
+        listPanel.add(Box.createVerticalGlue());
+
+        JScrollPane scrollPane = new JScrollPane(listPanel);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.getViewport().setBackground(Color.WHITE);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // smoother mouse-wheel scrolling
+
+        return scrollPane;
+    }
+
+    private JPanel createRoomRow(Room room, boolean isEmpty) {
+        JPanel row = new JPanel(new BorderLayout(15, 0));
+
+        row.setBackground(Color.WHITE);
+        row.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(
+                        0, 0, 1, 0, new Color(215, 222, 230)
+                ),
+                new EmptyBorder(14, 16, 14, 16)
+        ));
+        row.setMaximumSize(
+                new Dimension(Integer.MAX_VALUE, 76)
+        );
+        row.setPreferredSize(new Dimension(650, 76));
+
+        row.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        if (isEmpty) {
+            JLabel emptyText = new JLabel("No rooms available", SwingConstants.CENTER);
+            emptyText.setFont(new Font("Arial", Font.PLAIN, 15));
+            emptyText.setForeground(Color.GRAY);
+            row.add(emptyText, BorderLayout.CENTER);
+        } else {
+
+            // Room number
+            JLabel number = new JLabel(String.valueOf(room.getRoomID()));
+            number.setFont(new Font("Arial", Font.BOLD, 18));
+            number.setPreferredSize(new Dimension(60, 35));
+
+            // Room details
+            JPanel details = new JPanel();
+            details.setLayout(new BoxLayout(details, BoxLayout.Y_AXIS));
+            details.setOpaque(false);
+
+            JLabel type = new JLabel(room.getRoomPackage().getPackageName());
+            type.setFont(new Font("Arial", Font.BOLD, 15));
+            type.setForeground(new Color(95, 110, 130));
+
+            String breakfast = room.getBreakfast() ? "  |  🍲 Breakfast" : "";
+
+            JLabel info = new JLabel("🛏 " + room.getBedType() + breakfast + "  |  👥 x " + room.getCapacity());
+            info.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 13));
+            info.setForeground(new Color(95, 110, 130));
+
+            details.add(type);
+            details.add(Box.createVerticalStrut(5));
+            details.add(info);
+
+            // Price
+            NumberFormat currency = NumberFormat.getInstance(
+                    Locale.US
+            );
+
+            JLabel price = new JLabel(
+                    "Rs. " + currency.format(room.getRoomPackage().getDailyRoomRate())
+            );
+            price.setFont(new Font("Arial", Font.BOLD, 14));
+
+            JLabel perNight = new JLabel("per night");
+            perNight.setFont(new Font("Arial", Font.PLAIN, 11));
+            perNight.setForeground(Color.GRAY);
+
+            JPanel pricePanel = new JPanel();
+            pricePanel.setLayout(
+                    new BoxLayout(pricePanel, BoxLayout.Y_AXIS)
+            );
+            pricePanel.setOpaque(false);
+            pricePanel.setPreferredSize(new Dimension(120, 40));
+
+            pricePanel.add(price);
+            pricePanel.add(perNight);
+
+            JLabel arrow = new JLabel("\u203A");
+            arrow.setFont(new Font("Arial", Font.PLAIN, 24));
+            arrow.setForeground(new Color(95, 110, 130));
+
+            JPanel right = new JPanel(new BorderLayout(12, 0));
+            right.setOpaque(false);
+            right.add(pricePanel, BorderLayout.CENTER);
+            right.add(arrow, BorderLayout.EAST);
+
+            row.add(number, BorderLayout.WEST);
+            row.add(details, BorderLayout.CENTER);
+            row.add(right, BorderLayout.EAST);
+        }
+
+        // Click a room row
+        row.addMouseListener(new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (!isEmpty) {
+
+                    bookingDetailsPanel.setVisible(true);
+                    confirmBooking.setVisible(true);
+                    roomNumber.setText("Room " + room.getRoomID());
+                    roomInfo.setText(room.getRoomPackage().getPackageName() + " • " + room.getBedType() + " bed");
+
+//                    guestName.setText(GuestManager.getCurrentGuest().getFullName());
+//                    guestEmail.setText(GuestManager.getCurrentGuest().getEmailAddress());
+//                    guestPhone.setText(GuestManager.getCurrentGuest().getContactNumber());
+                    String tempCheckInDate = HelperFunctions.formatDate(checkInDate.getDate());
+                    String tempCheckOutDate = HelperFunctions.formatDate(checkOutDate.getDate());
+
+                    checkInDateInv.setText(tempCheckInDate);
+                    checkInDateInv.setText(tempCheckOutDate);
+
+                    long noOfDays = HelperFunctions.getNoOfDays(checkInDate.getDate(), checkOutDate.getDate());
+
+                    noOfNightsInv.setText(String.valueOf(noOfDays));
+                    noOfGuestsInv.setText(numberOfGuest.getText());
+
+                    int extGuestCount = (Integer.parseInt(numberOfGuest.getText()) - room.getCapacity());
+                    extGuestCharge.setText("Rs. " + room.getRoomPackage().getExtraGuestCharge() + "  x  " + extGuestCount);
+
+                    double extAmount = extGuestCount * room.getRoomPackage().getExtraGuestCharge();
+                    totExtGuestCharge.setText("Rs. " + extAmount);
+
+                    double discount = 0.0;
+                    if (noOfDays >= 5) {
+                        discount = room.getDiscountRate();
+                    }
+                    discountAmountLbl.setText(discount + " %");
+
+                    taxAmountLbl.setText(room.getRoomPackage().getTaxRate() + " %");
+
+                    double totalAmount = room.getRoomPackage().getDailyRoomRate() * noOfDays;
+                    totalAmount += extGuestCount * room.getRoomPackage().getExtraGuestCharge();
+
+                    double discountAmount = totalAmount * (discount / 100);
+                    totalAmount -= discountAmount;
+
+                    double taxAmount = totalAmount * (room.getRoomPackage().getTaxRate() / 100);
+                    totalAmount += discountAmount;
+
+                    totalAmount -= 10000.0;
+                    totalAmountLbl.setText("Rs. " + totalAmount);
+
+                }
+
+            }
+
+            @Override
+            public void mouseEntered(
+                    java.awt.event.MouseEvent e) {
+                row.setBackground(new Color(240, 244, 248));
+            }
+
+            @Override
+            public void mouseExited(
+                    java.awt.event.MouseEvent e) {
+                row.setBackground(Color.WHITE);
+            }
+        });
+
+        return row;
+    }
     
 
     /**
@@ -125,9 +318,9 @@ public class SelectRoomPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         roomNumber = new javax.swing.JLabel();
         roomInfo = new javax.swing.JLabel();
-        geustName = new javax.swing.JLabel();
-        geustEmail = new javax.swing.JLabel();
-        geustPhone = new javax.swing.JLabel();
+        guestName = new javax.swing.JLabel();
+        guestEmail = new javax.swing.JLabel();
+        guestPhone = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel2 = new javax.swing.JLabel();
         checkInDateInv = new javax.swing.JLabel();
@@ -142,14 +335,17 @@ public class SelectRoomPanel extends javax.swing.JPanel {
         extGuestCharge = new javax.swing.JLabel();
         totExtGuestCharge = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        discountAmount = new javax.swing.JLabel();
+        discountAmountLbl = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        taxAmount = new javax.swing.JLabel();
+        taxAmountLbl = new javax.swing.JLabel();
         bookingAdvance = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        totalAmount = new javax.swing.JLabel();
+        totalAmountLbl = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
+        availableRoomsPanel = new javax.swing.JPanel();
+        roomListCount = new javax.swing.JLabel();
+        confirmBooking = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(858, 520));
@@ -283,19 +479,19 @@ public class SelectRoomPanel extends javax.swing.JPanel {
         roomInfo.setForeground(new java.awt.Color(51, 51, 51));
         roomInfo.setText("Standard · Queen bed");
 
-        geustName.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        geustName.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        geustName.setText("Mr. Nilshad");
+        guestName.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        guestName.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        guestName.setText("Mr. Nilshad");
 
-        geustEmail.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        geustEmail.setForeground(new java.awt.Color(51, 51, 51));
-        geustEmail.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        geustEmail.setText("nilshad@gmail.com");
+        guestEmail.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        guestEmail.setForeground(new java.awt.Color(51, 51, 51));
+        guestEmail.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        guestEmail.setText("nilshad@gmail.com");
 
-        geustPhone.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        geustPhone.setForeground(new java.awt.Color(51, 51, 51));
-        geustPhone.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        geustPhone.setText("0777123456");
+        guestPhone.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        guestPhone.setForeground(new java.awt.Color(51, 51, 51));
+        guestPhone.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        guestPhone.setText("0777123456");
 
         jSeparator1.setForeground(new java.awt.Color(255, 255, 255));
 
@@ -345,21 +541,21 @@ public class SelectRoomPanel extends javax.swing.JPanel {
         jLabel4.setForeground(new java.awt.Color(76, 74, 74));
         jLabel4.setText("Discounts");
 
-        discountAmount.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        discountAmount.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        discountAmount.setText("10%");
+        discountAmountLbl.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        discountAmountLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        discountAmountLbl.setText("10%");
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(76, 74, 74));
         jLabel8.setText("Tax");
 
-        taxAmount.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        taxAmount.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        taxAmount.setText("10%");
+        taxAmountLbl.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        taxAmountLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        taxAmountLbl.setText("10%");
 
         bookingAdvance.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         bookingAdvance.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        bookingAdvance.setText("Rs. 1000.0");
+        bookingAdvance.setText("Rs. 10000.0");
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(76, 74, 74));
@@ -369,9 +565,9 @@ public class SelectRoomPanel extends javax.swing.JPanel {
         jLabel15.setForeground(new java.awt.Color(76, 74, 74));
         jLabel15.setText("Total");
 
-        totalAmount.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        totalAmount.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        totalAmount.setText("Rs. 10000.0");
+        totalAmountLbl.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        totalAmountLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        totalAmountLbl.setText("Rs. 10000.0");
 
         jSeparator3.setForeground(new java.awt.Color(255, 255, 255));
 
@@ -390,9 +586,9 @@ public class SelectRoomPanel extends javax.swing.JPanel {
                             .addComponent(roomInfo))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(bookingDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(geustName, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(geustEmail, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(geustPhone, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addComponent(guestName, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(guestEmail, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(guestPhone, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(bookingDetailsPanelLayout.createSequentialGroup()
                         .addGroup(bookingDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -415,16 +611,16 @@ public class SelectRoomPanel extends javax.swing.JPanel {
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
                         .addComponent(extGuestCharge)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(totExtGuestCharge))
                     .addGroup(bookingDetailsPanelLayout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(discountAmount))
+                        .addComponent(discountAmountLbl))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bookingDetailsPanelLayout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(taxAmount))
+                        .addComponent(taxAmountLbl))
                     .addGroup(bookingDetailsPanelLayout.createSequentialGroup()
                         .addComponent(jLabel14)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -432,7 +628,7 @@ public class SelectRoomPanel extends javax.swing.JPanel {
                     .addGroup(bookingDetailsPanelLayout.createSequentialGroup()
                         .addComponent(jLabel15)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(totalAmount))
+                        .addComponent(totalAmountLbl))
                     .addComponent(jSeparator3))
                 .addContainerGap())
         );
@@ -446,13 +642,13 @@ public class SelectRoomPanel extends javax.swing.JPanel {
                         .addGap(0, 0, 0)
                         .addGroup(bookingDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(roomNumber)
-                            .addComponent(geustEmail))
+                            .addComponent(guestEmail))
                         .addGap(0, 0, 0)
                         .addComponent(roomInfo))
                     .addGroup(bookingDetailsPanelLayout.createSequentialGroup()
-                        .addComponent(geustName)
+                        .addComponent(guestName)
                         .addGap(18, 18, 18)
-                        .addComponent(geustPhone)))
+                        .addComponent(guestPhone)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -481,23 +677,50 @@ public class SelectRoomPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(bookingDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(discountAmount))
+                    .addComponent(discountAmountLbl))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(bookingDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(taxAmount))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(bookingDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel14)
-                    .addComponent(bookingAdvance))
-                .addGap(10, 10, 10)
+                    .addComponent(taxAmountLbl))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(bookingDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel15)
-                    .addComponent(totalAmount))
-                .addContainerGap(44, Short.MAX_VALUE))
+                    .addComponent(totalAmountLbl))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(bookingDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(bookingAdvance))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
+
+        javax.swing.GroupLayout availableRoomsPanelLayout = new javax.swing.GroupLayout(availableRoomsPanel);
+        availableRoomsPanel.setLayout(availableRoomsPanelLayout);
+        availableRoomsPanelLayout.setHorizontalGroup(
+            availableRoomsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 535, Short.MAX_VALUE)
+        );
+        availableRoomsPanelLayout.setVerticalGroup(
+            availableRoomsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 238, Short.MAX_VALUE)
+        );
+
+        roomListCount.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        roomListCount.setForeground(new java.awt.Color(102, 102, 102));
+        roomListCount.setText("Available Rooms (1)");
+
+        confirmBooking.setBackground(new java.awt.Color(42, 111, 42));
+        confirmBooking.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        confirmBooking.setForeground(new java.awt.Color(255, 255, 255));
+        confirmBooking.setText("Confirm Booking");
+        confirmBooking.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 58, 86), 1, true));
+        confirmBooking.setFocusable(false);
+        confirmBooking.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confirmBookingActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -511,12 +734,13 @@ public class SelectRoomPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(roomPackageDropDown, javax.swing.GroupLayout.Alignment.LEADING, 0, 272, Short.MAX_VALUE)
-                                        .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(checkInDate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel9)
+                                        .addComponent(roomPackageDropDown, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel11)
+                                    .addComponent(checkInDate, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel13))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -524,45 +748,60 @@ public class SelectRoomPanel extends javax.swing.JPanel {
                                     .addComponent(jLabel10)
                                     .addComponent(checkOutDate, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
                                     .addComponent(bedTypeDropDown, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addComponent(jLabel13))
+                            .addComponent(roomListCount)
+                            .addComponent(availableRoomsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(bookingDetailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(bookingDetailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(confirmBooking, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(checkOutDate, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton3)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel9)
                             .addComponent(jLabel10))
-                        .addGap(0, 0, 0)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(roomPackageDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(bedTypeDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(33, 33, 33)
-                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel12))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(checkInDate, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, 0)
-                .addComponent(jLabel13)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(53, Short.MAX_VALUE)
-                .addComponent(bookingDetailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(39, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(checkInDate, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(15, 15, 15)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(22, 22, 22)
+                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel13)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(roomListCount)
+                                .addGap(4, 4, 4)
+                                .addComponent(availableRoomsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(checkOutDate, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(bookingDetailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(confirmBooking, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -571,20 +810,7 @@ public class SelectRoomPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void roomPackageDropDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomPackageDropDownActionPerformed
-//        String value = roomPackageDropDown.getSelectedItem().toString();
-//
-//        for (RoomPackage roomPackage : RoomManager.getRoomPackageList()) {
-//            if (roomPackage.getPackageName().equals(value)) {
-//                selectedRoom = roomPackage;
-//                bedTypeDropDown.removeAllItems();
-//                for (String bedType : RoomManager.getBedTypes()) {
-//                    bedTypeDropDown.addItem(bedType);
-//                }
-//                break;
-//            }
-//        }
 
-//Clear all fields
     }//GEN-LAST:event_roomPackageDropDownActionPerformed
 
     private void checkInDatePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_checkInDatePropertyChange
@@ -597,34 +823,62 @@ public class SelectRoomPanel extends javax.swing.JPanel {
 
     private void nogMinusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nogMinusActionPerformed
         int value = Integer.parseInt(numberOfGuest.getText());
-        if(value > 1){
-            value --;
+        if (value > 1) {
+            value--;
             numberOfGuest.setText(String.valueOf(value));
         }
     }//GEN-LAST:event_nogMinusActionPerformed
 
     private void nogPlusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nogPlusActionPerformed
         int value = Integer.parseInt(numberOfGuest.getText());
-        if(value < 10){
-            value ++;
+        if (value < 10) {
+            value++;
             numberOfGuest.setText(String.valueOf(value));
         }
     }//GEN-LAST:event_nogPlusActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-      
+
+        bookingDetailsPanel.setVisible(false);
         List<Room> availableRoomList = BookingManager.getAvailableRoomList(
-                bedTypeDropDown.getSelectedItem().toString(), 
-                roomPackageDropDown.getSelectedItem().toString(), 
+                bedTypeDropDown.getSelectedItem().toString(),
+                roomPackageDropDown.getSelectedItem().toString(),
                 checkInDate.getDate(),
                 checkOutDate.getDate()
-                );
-       
-        System.out.println(availableRoomList.size());
+        );
+
+        availableRoomsPanel.setVisible(true);
+        roomListCount.setVisible(true);
+        roomListCount.setText("Available rooms (" + availableRoomList.size() + ")");
+
+        availableRoomsPanel.setLayout(new BorderLayout());
+
+        availableRoomsPanel.add(createRoomListScrollPane(availableRoomList), BorderLayout.CENTER);
+        availableRoomsPanel.revalidate();
+        availableRoomsPanel.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void confirmBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmBookingActionPerformed
+        //Booking(Room room, Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, double bookingAdvance, String status)
+        Booking booking = new Booking(
+                selectedRoom,
+                GuestManager.getCurrentGuest(),
+                checkInDate.getDate(),
+                checkOutDate.getDate(),
+                HelperFunctions.getCurrentDate(),
+                Integer.parseInt(numberOfGuest.getText()),
+                10000,
+                BookingManager.getBookingStatus(0)
+        );
+
+        BookingManager.addNewBooking(booking);
+        HelperFunctions.showPopMessage(this, "Room No "+selectedRoom.getRoomID()+" booked successfully!");
+        onBack.run();
+    }//GEN-LAST:event_confirmBookingActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel availableRoomsPanel;
     private javax.swing.JComboBox<String> bedTypeDropDown;
     private javax.swing.JLabel bookingAdvance;
     private javax.swing.JPanel bookingDetailsPanel;
@@ -632,11 +886,12 @@ public class SelectRoomPanel extends javax.swing.JPanel {
     private javax.swing.JLabel checkInDateInv;
     private com.toedter.calendar.JDateChooser checkOutDate;
     private javax.swing.JLabel checkOutDateInv;
-    private javax.swing.JLabel discountAmount;
+    private javax.swing.JButton confirmBooking;
+    private javax.swing.JLabel discountAmountLbl;
     private javax.swing.JLabel extGuestCharge;
-    private javax.swing.JLabel geustEmail;
-    private javax.swing.JLabel geustName;
-    private javax.swing.JLabel geustPhone;
+    private javax.swing.JLabel guestEmail;
+    private javax.swing.JLabel guestName;
+    private javax.swing.JLabel guestPhone;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
@@ -664,10 +919,11 @@ public class SelectRoomPanel extends javax.swing.JPanel {
     private javax.swing.JButton nogPlus;
     private javax.swing.JLabel numberOfGuest;
     private javax.swing.JLabel roomInfo;
+    private javax.swing.JLabel roomListCount;
     private javax.swing.JLabel roomNumber;
     private javax.swing.JComboBox<String> roomPackageDropDown;
-    private javax.swing.JLabel taxAmount;
+    private javax.swing.JLabel taxAmountLbl;
     private javax.swing.JLabel totExtGuestCharge;
-    private javax.swing.JLabel totalAmount;
+    private javax.swing.JLabel totalAmountLbl;
     // End of variables declaration//GEN-END:variables
 }

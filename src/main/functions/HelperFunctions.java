@@ -6,8 +6,12 @@ package main.functions;
 
 import java.awt.Component;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  *
@@ -44,17 +48,14 @@ public class HelperFunctions {
 
     public static boolean validateCheckOutDate(Date checkOutDate, Date checkInDate) {
 
-      
         Calendar checkInCalendar = Calendar.getInstance();
         checkInCalendar.setTime(checkInDate);
 
-        
         checkInCalendar.set(Calendar.HOUR_OF_DAY, 0);
         checkInCalendar.set(Calendar.MINUTE, 0);
         checkInCalendar.set(Calendar.SECOND, 0);
         checkInCalendar.set(Calendar.MILLISECOND, 0);
 
-        
         checkInCalendar.add(Calendar.DAY_OF_MONTH, 1);
 
         Calendar checkOutCalendar = Calendar.getInstance();
@@ -65,7 +66,6 @@ public class HelperFunctions {
         checkOutCalendar.set(Calendar.SECOND, 0);
         checkOutCalendar.set(Calendar.MILLISECOND, 0);
 
-        
         return checkOutCalendar.before(checkInCalendar);
     }
 
@@ -84,6 +84,26 @@ public class HelperFunctions {
 
         calendar.add(Calendar.DAY_OF_MONTH, 1);
 
+        return calendar.getTime();
+    }
+
+    public static String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+        return sdf.format(date);
+    }
+
+    public static long getNoOfDays(Date startDateObj, Date endDateObj) {
+        LocalDate startDate = startDateObj.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endDate = endDateObj.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        // 3. Calculate the difference in days
+        long daysCount = ChronoUnit.DAYS.between(startDate, endDate);
+
+        return daysCount;
+    }
+    
+    public static Date getCurrentDate() {
+        Calendar calendar = Calendar.getInstance();
         return calendar.getTime();
     }
 }

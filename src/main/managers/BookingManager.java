@@ -34,7 +34,7 @@ public class BookingManager {
             }
         }
 
-        return availableRoomList;//if everything ok return true
+        return availableRoomList;//if everything ok return list
     }
 
     public static boolean isBookingAvailable(int roomId, Date checkInDate, Date checkOutDate) {
@@ -51,7 +51,7 @@ public class BookingManager {
             }
         }
 
-        return true;//if everything ok return true
+        return true;//if room available return true
     }
 
     private static boolean isDateBetween(Date date, Date startDate, Date endDate) {
@@ -84,5 +84,11 @@ public class BookingManager {
         int size = bookingList.size();
         return size++;
     }
+
+    public static String getBookingStatus(int index) {
+        return bookingStatus[index];
+    }
+    
+    
 
 }

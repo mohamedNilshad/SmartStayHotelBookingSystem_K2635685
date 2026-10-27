@@ -14,6 +14,7 @@ import main.managers.BookingManager;
 public class Booking {
     private int bookingID;
     private Room room;
+    private Guest guest;
     private Date checkInDate;
     private Date checkOutDate;
     private Date bookingDate;
@@ -21,9 +22,10 @@ public class Booking {
     private double bookingAdvance;
     private String status;
 
-    public Booking(Room room, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, double bookingAdvance, String status) {
+    public Booking(Room room, Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, double bookingAdvance, String status) {
         this.bookingID = BookingManager.generateBookingId();
         this.room = room;
+        this.guest = guest;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.bookingDate = bookingDate;
@@ -39,6 +41,10 @@ public class Booking {
     public Room getRoom() {
         return room;
     }
+    
+    public Guest getGuest() {
+        return guest;
+    }
 
     public Date getCheckInDate() {
         return checkInDate;
@@ -48,7 +54,21 @@ public class Booking {
         return checkOutDate;
     }
 
+    public double getBookingAdvance() {
+        return bookingAdvance;
+    }
 
+    public Date getBookingDate() {
+        return bookingDate;
+    }
+
+    public int getNumberOfGeust() {
+        return numberOfGeust;
+    }
+
+    public String getStatus() {
+        return status;
+    }
     
     
     public void setStatus(String status) { this.status = status; }
