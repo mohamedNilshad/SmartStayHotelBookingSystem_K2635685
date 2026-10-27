@@ -44,6 +44,7 @@ public class SelectRoomPanel extends javax.swing.JPanel {
         bedTypeDropDown.setBackground(Color.white);
         checkInDate.setBackground(Color.white);
 
+        availableRoomsPanel.setLayout(new BorderLayout());
         availableRoomsPanel.setVisible(false);
         roomListCount.setVisible(false);
         bookingDetailsPanel.setVisible(false);
@@ -103,10 +104,12 @@ public class SelectRoomPanel extends javax.swing.JPanel {
         }
 
         roomPackageDropDown.setSelectedItem(selectedRoom.getRoomPackage().getPackageName());
+        bedTypeDropDown.setSelectedItem(selectedRoom.getBedType());
     }
 
     private JScrollPane createRoomListScrollPane(List<Room> rooms) {
         // Container that holds all rows, stacked vertically
+        
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(Color.WHITE);
@@ -119,7 +122,7 @@ public class SelectRoomPanel extends javax.swing.JPanel {
             }
         }
 
-        // Pushes rows to the top if there are only a few
+        
         listPanel.add(Box.createVerticalGlue());
 
         JScrollPane scrollPane = new JScrollPane(listPanel);
@@ -127,7 +130,7 @@ public class SelectRoomPanel extends javax.swing.JPanel {
         scrollPane.getViewport().setBackground(Color.WHITE);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // smoother mouse-wheel scrolling
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16); 
 
         return scrollPane;
     }
@@ -224,14 +227,16 @@ public class SelectRoomPanel extends javax.swing.JPanel {
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 if (!isEmpty) {
 
+                    selectedRoom = room;
                     bookingDetailsPanel.setVisible(true);
                     confirmBooking.setVisible(true);
                     roomNumber.setText("Room " + room.getRoomID());
                     roomInfo.setText(room.getRoomPackage().getPackageName() + " • " + room.getBedType() + " bed");
 
-//                    guestName.setText(GuestManager.getCurrentGuest().getFullName());
-//                    guestEmail.setText(GuestManager.getCurrentGuest().getEmailAddress());
-//                    guestPhone.setText(GuestManager.getCurrentGuest().getContactNumber());
+                    guestName.setText(GuestManager.getCurrentGuest().getFullName());
+                    guestEmail.setText(GuestManager.getCurrentGuest().getEmailAddress());
+                    guestPhone.setText(GuestManager.getCurrentGuest().getContactNumber());
+                    
                     String tempCheckInDate = HelperFunctions.formatDate(checkInDate.getDate());
                     String tempCheckOutDate = HelperFunctions.formatDate(checkOutDate.getDate());
 
@@ -840,6 +845,8 @@ public class SelectRoomPanel extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
         bookingDetailsPanel.setVisible(false);
+        confirmBooking.setVisible(false);
+        
         List<Room> availableRoomList = BookingManager.getAvailableRoomList(
                 bedTypeDropDown.getSelectedItem().toString(),
                 roomPackageDropDown.getSelectedItem().toString(),
@@ -848,18 +855,19 @@ public class SelectRoomPanel extends javax.swing.JPanel {
         );
 
         availableRoomsPanel.setVisible(true);
+        availableRoomsPanel.removeAll();
+        
         roomListCount.setVisible(true);
         roomListCount.setText("Available rooms (" + availableRoomList.size() + ")");
 
-        availableRoomsPanel.setLayout(new BorderLayout());
-
+        
         availableRoomsPanel.add(createRoomListScrollPane(availableRoomList), BorderLayout.CENTER);
         availableRoomsPanel.revalidate();
         availableRoomsPanel.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void confirmBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmBookingActionPerformed
-        //Booking(Room room, Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, double bookingAdvance, String status)
+  
         Booking booking = new Booking(
                 selectedRoom,
                 GuestManager.getCurrentGuest(),

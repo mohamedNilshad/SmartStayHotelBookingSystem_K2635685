@@ -18,11 +18,9 @@ import main.models.Room;
  */
 public class BookingPanelForm extends javax.swing.JPanel {
 
-    String placeholder = "Search...";
-    List<Room> roomList = RoomManager.getRoomList();
-    List<Room> sortedRoomList = new ArrayList<>();
-    private CardLayout cardLayout;
-
+    private String placeholder = "Search...";
+    private List<Room> roomList = RoomManager.getRoomList();
+    private List<Room> sortedRoomList = new ArrayList<>();
     private RoomListPanel roomListPanel;
 
     public BookingPanelForm() {
@@ -41,9 +39,9 @@ public class BookingPanelForm extends javax.swing.JPanel {
             searchField.setForeground(Color.GRAY);
         }
 
-        int roomTypeCount = sortedRoomList.size();
+        int roomCount = sortedRoomList.size();
 
-        tabelHeader.setText(roomTypeCount + " rooms available");
+        tabelHeader.setText(roomCount + " rooms available");
         pnlContent.setLayout(new java.awt.BorderLayout());
 
         roomListPanel = new RoomListPanel(

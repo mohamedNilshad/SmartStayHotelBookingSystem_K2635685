@@ -14,16 +14,29 @@ import main.models.Room;
  */
 public class BookingManager {
 
-    private static String[] bookingStatus = {"Active", "Cancelled"};
+    private static String[] bookingStatus = {"Active", "Cancelled", "Completed"};
     private static List<Booking> bookingList = new ArrayList<>();
 
     public static List<Booking> getBookingList() {
         return new ArrayList<>(bookingList);
     }
+    
+    public static List<Booking> getBookingListByGuestId(String id) {
+        List<Booking> myBookingList = new ArrayList<>();
+     
+        for(Booking booking: bookingList){
+            
+            if(booking.getGuest().getNicPassportNumber().equals(id)){
+                myBookingList.add(booking);
+            }
+        }
+        
+        return myBookingList;
+    }
 
     public static List<Room> getAvailableRoomList(String bedType, String roomPackageName, Date checkInDate, Date checkOutDate) {
         List<Room> availableRoomList = new ArrayList<>();
-
+    
         for (Room room : RoomManager.getRoomList()) {
 
             if (room.getBedType().equals(bedType) && room.getRoomPackage().getPackageName().equals(roomPackageName)) {//sort rooms by bedType and roomPackageName
@@ -82,7 +95,7 @@ public class BookingManager {
 
     public static int generateBookingId() {
         int size = bookingList.size();
-        return size++;
+        return size += 1;
     }
 
     public static String getBookingStatus(int index) {

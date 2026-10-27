@@ -24,9 +24,9 @@ public class DashboardFrame extends javax.swing.JFrame {
     public DashboardFrame() {
         initComponents();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
-        //Guest guest = GuestManager.getCurrentGuest();
-        //jLabel3.setText(guest.getFullName());
-        //jLabel5.setText(guest.getContactNumber());
+        Guest guest = GuestManager.getCurrentGuest();
+        jLabel3.setText(guest.getFullName());
+        jLabel5.setText(guest.getContactNumber());
 
         BookingPanelForm dashboardPanel = new BookingPanelForm();
         buildRoomsPage(dashboardPanel);

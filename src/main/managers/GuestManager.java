@@ -40,7 +40,8 @@ public class GuestManager {
     }
 
     public static Guest getCurrentGuest() {
-        return currentGuest;
+//        return currentGuest;
+            return new Guest("123456", "123456", "Nilshad", "n@gmail.com");
     }
 
     public static void clearSession() {

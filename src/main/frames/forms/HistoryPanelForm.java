@@ -4,17 +4,91 @@
  */
 package main.frames.forms;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import main.managers.BookingManager;
+import main.managers.GuestManager;
+import main.managers.RoomManager;
+import main.models.Booking;
+import main.models.Room;
+
 /**
  *
  * @author N I L S H A D
  */
 public class HistoryPanelForm extends javax.swing.JPanel {
 
+    private String placeholder = "Search...";
+    private List<Booking> myBookingList = new ArrayList<Booking>();
+    private List<Booking> sortedBookingList = new ArrayList<>();
+    private BookingListPanel bookingListPanel;
+    
     /**
      * Creates new form BookingPanelForm
      */
     public HistoryPanelForm() {
         initComponents();
+        
+        var border = BorderFactory.createCompoundBorder(
+                searchField.getBorder(),
+                new EmptyBorder(5, 5, 5, 5)
+        );
+
+        searchField.setBorder(border);
+
+        if (searchField.getText().isEmpty()) {
+            searchField.setText(placeholder);
+            searchField.setForeground(Color.GRAY);
+        }
+        
+        myBookingList = BookingManager.getBookingListByGuestId(GuestManager.getCurrentGuest().getNicPassportNumber());
+        sortedBookingList = new ArrayList<>(myBookingList);
+        
+        int bookingCount = myBookingList.size();
+        tabelHeader.setText(bookingCount + " Bookings");
+        pnlContent.setLayout(new java.awt.BorderLayout());
+        
+        
+        bookingListPanel = new BookingListPanel(
+                sortedBookingList,
+                selectedBooking -> {
+                    titleLabel.setText("My Bookings");
+                    subtitleLabel.setText("Edit or cancel upcoming stays.");
+                    tabelHeader.setVisible(false);
+                    searchField.setVisible(false);
+
+//                    SelectRoomPanel fillPanel = new SelectRoomPanel(
+//                            selectedBooking,
+//                            () -> {
+//                                titleLabel.setText("Edit Bookings");
+//                                subtitleLabel.setText("Make changes & confirm to your booking");
+//                                tabelHeader.setVisible(true);
+//                                searchField.setVisible(true);
+//
+//                                showPanel(bookingListPanel);
+//                            });
+//                    showPanel(fillPanel);
+                }
+        );
+
+        pnlContent.add(bookingListPanel, BorderLayout.CENTER);
+        
+        
+    }
+    
+      public void showPanel(JPanel panel) {
+        pnlContent.removeAll();
+
+        pnlContent.setLayout(new BorderLayout());
+        pnlContent.add(panel, BorderLayout.CENTER);
+
+        pnlContent.revalidate();
+        pnlContent.repaint();
     }
 
     /**
@@ -26,22 +100,54 @@ public class HistoryPanelForm extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel2 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        titleLabel = new javax.swing.JLabel();
+        subtitleLabel = new javax.swing.JLabel();
+        searchField = new javax.swing.JTextField();
+        tabelHeader = new javax.swing.JLabel();
+        pnlContent = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(858, 699));
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(22, 43, 64));
-        jLabel2.setText("My Bookings");
+        titleLabel.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        titleLabel.setForeground(new java.awt.Color(22, 43, 64));
+        titleLabel.setText("My Bookings");
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel4.setForeground(java.awt.SystemColor.activeCaptionBorder);
-        jLabel4.setText("Edit or cancel upcoming stays.");
+        subtitleLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        subtitleLabel.setForeground(java.awt.SystemColor.activeCaptionBorder);
+        subtitleLabel.setText("Edit or cancel upcoming stays.");
 
-        jTextField1.setText("jTextField1");
+        searchField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                searchFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                searchFieldFocusLost(evt);
+            }
+        });
+        searchField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchFieldKeyReleased(evt);
+            }
+        });
+
+        tabelHeader.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        tabelHeader.setForeground(java.awt.SystemColor.activeCaptionBorder);
+        tabelHeader.setText("0 Bookings");
+
+        pnlContent.setBackground(new java.awt.Color(255, 255, 255));
+        pnlContent.setPreferredSize(new java.awt.Dimension(858, 520));
+
+        javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
+        pnlContent.setLayout(pnlContentLayout);
+        pnlContentLayout.setHorizontalGroup(
+            pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        pnlContentLayout.setVerticalGroup(
+            pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 538, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -50,28 +156,80 @@ public class HistoryPanelForm extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(196, Short.MAX_VALUE))
+                    .addComponent(tabelHeader)
+                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(subtitleLabel)
+                    .addComponent(titleLabel))
+                .addContainerGap(405, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pnlContent, javax.swing.GroupLayout.DEFAULT_SIZE, 846, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addComponent(jLabel2)
+                .addComponent(titleLabel)
                 .addGap(0, 0, 0)
-                .addComponent(jLabel4)
+                .addComponent(subtitleLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(277, Short.MAX_VALUE))
+                .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(tabelHeader)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlContent, javax.swing.GroupLayout.PREFERRED_SIZE, 538, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void searchFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchFieldFocusGained
+        if (searchField.getText().equals(placeholder)) {
+            searchField.setText("");
+            searchField.setForeground(Color.BLACK); // Change back to normal typing color
+        }
+    }//GEN-LAST:event_searchFieldFocusGained
+
+    private void searchFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchFieldFocusLost
+        if (searchField.getText().isEmpty()) {
+            searchField.setText(placeholder);
+            searchField.setForeground(Color.GRAY);
+        }
+    }//GEN-LAST:event_searchFieldFocusLost
+
+    private void searchFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchFieldKeyReleased
+        String text = searchField.getText().trim();
+
+        if (text.isEmpty()) {
+            sortedBookingList = new ArrayList<>(myBookingList);
+
+        } else {
+
+            sortedBookingList.clear();
+
+            for (Booking booking : myBookingList) {
+                boolean isBookingId = String.valueOf(booking.getBookingID()).startsWith(text);
+                boolean isRoomPackage = booking.getRoom().getRoomPackage().getPackageName().toLowerCase().startsWith(text.toLowerCase());
+                boolean isBedType = booking.getRoom().getBedType().toLowerCase().startsWith(text.toLowerCase());
+              
+                if (isBookingId || isRoomPackage || isBedType) {
+                    sortedBookingList.add(booking);
+                }
+            }
+        }
+
+        tabelHeader.setText(sortedBookingList.size() + " Bookings");
+
+        // Update UI
+        bookingListPanel.updateBookingList(sortedBookingList);
+    }//GEN-LAST:event_searchFieldKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JPanel pnlContent;
+    private javax.swing.JTextField searchField;
+    private javax.swing.JLabel subtitleLabel;
+    private javax.swing.JLabel tabelHeader;
+    private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
 }

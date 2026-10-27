@@ -163,10 +163,6 @@ public class RoomListPanel extends javax.swing.JPanel {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 if (!isEmpty) {
-//                    HelperFunctions.showPopMessage(
-//                            RoomListPanel.this,
-//                            "Selected room: " + roomType.getDailyRoomRate()
-//                    );
                     onRoomSelected.accept(room);
 
                 }

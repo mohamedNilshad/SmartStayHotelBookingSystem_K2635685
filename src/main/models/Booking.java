@@ -33,6 +33,8 @@ public class Booking {
         this.bookingAdvance = bookingAdvance;
         this.status = status;
     }
+    
+     public Booking(){}
 
     public int getBookingID() {
         return bookingID;
