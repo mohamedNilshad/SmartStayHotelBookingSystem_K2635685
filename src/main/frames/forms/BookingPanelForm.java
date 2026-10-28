@@ -52,7 +52,7 @@ public class BookingPanelForm extends javax.swing.JPanel {
                     tabelHeader.setVisible(false);
                     searchField.setVisible(false);
 
-                    SelectRoomPanel fillPanel = new SelectRoomPanel(
+                    NewBookingPanel fillPanel = new NewBookingPanel(
                             selectedRoom,
                             () -> {
                                 titleLabel.setText("Rooms");

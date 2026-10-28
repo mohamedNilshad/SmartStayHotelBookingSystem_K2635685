@@ -34,6 +34,18 @@ public class Booking {
         this.status = status;
     }
     
+    public Booking(int bookingID, Room room, Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, double bookingAdvance, String status) {
+        this.bookingID = bookingID;
+        this.room = room;
+        this.guest = guest;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.bookingDate = bookingDate;
+        this.numberOfGeust = numberOfGeust;
+        this.bookingAdvance = bookingAdvance;
+        this.status = status;
+    }
+    
      public Booking(){}
 
     public int getBookingID() {
