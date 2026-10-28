@@ -37,16 +37,9 @@ public class DashboardFrame extends javax.swing.JFrame {
         mainPanel.removeAll();
         mainPanel.setLayout(new java.awt.BorderLayout());
 
-      
         mainPanel.add(panel,java.awt.BorderLayout.CENTER);
-
         mainPanel.revalidate();
         mainPanel.repaint();
-//mainPanel.setLayout(new java.awt.BorderLayout());
-//    mainPanel.add(
-//        new BookingPanelForm(),
-//        java.awt.BorderLayout.CENTER
-//    );
 
     }
 
@@ -98,6 +91,11 @@ public class DashboardFrame extends javax.swing.JFrame {
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton1.setText("LOGOUT");
         jButton1.setFocusable(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setBackground(new java.awt.Color(53, 79, 104));
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -216,6 +214,12 @@ public class DashboardFrame extends javax.swing.JFrame {
         HistoryPanelForm historyPanel = new HistoryPanelForm();
         buildRoomsPage(historyPanel);
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        GuestManager.clearSession();
+        new MainFrame().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

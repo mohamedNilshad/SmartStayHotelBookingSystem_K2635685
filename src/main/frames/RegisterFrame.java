@@ -365,7 +365,7 @@ public class RegisterFrame extends javax.swing.JFrame {
         }
         
         
-       Guest guest = new Guest(phone, name, name, email);
+       Guest guest = new Guest(nic, phone, name, email);
         
         GuestManager.registerUser(guest);
 

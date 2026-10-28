@@ -21,8 +21,8 @@ public class SmartStayHotelBookingSystem {
     public static void main(String[] args) {
         RoomManager roomManager = new RoomManager();
         java.awt.EventQueue.invokeLater(() -> {
-        //new MainFrame().setVisible(true);
-        new DashboardFrame().setVisible(true);
+        new MainFrame().setVisible(true);
+//        new DashboardFrame().setVisible(true);
     });
     }
     

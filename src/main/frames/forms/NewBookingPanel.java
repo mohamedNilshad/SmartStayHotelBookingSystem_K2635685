@@ -266,7 +266,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
 
         long noOfDays = HelperFunctions.getNoOfDays(checkInDate.getDate(), checkOutDate.getDate());
         int noOfGuest = Integer.parseInt(numberOfGuest.getText());
-        int extGuestCount = (noOfGuest - room.getCapacity());
+        int extGuestCount = (noOfGuest > room.getCapacity()) ?  (noOfGuest - room.getCapacity()) : 0;
 
         double dailyRoomRate = room.getRoomPackage().getDailyRoomRate();
         double extraGuestCharge = room.getRoomPackage().getExtraGuestCharge();
@@ -301,7 +301,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
         guestPhoneLbl.setText(guestPhone);
 
         checkInDateInv.setText(tempCheckInDate);
-        checkInDateInv.setText(tempCheckOutDate);
+        checkOutDateInv.setText(tempCheckOutDate);
 
         noOfNightsInv.setText(String.valueOf(noOfDays));
         noOfGuestsInv.setText(String.valueOf(noOfGuest));
@@ -701,7 +701,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
                                         .addComponent(jLabel16)
                                         .addGap(47, 47, 47)
                                         .addComponent(roomAmount)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                                 .addGroup(bookingDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(totRoomAmount, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(totExtGuestCharge, javax.swing.GroupLayout.Alignment.TRAILING))))
@@ -884,9 +884,8 @@ public class NewBookingPanel extends javax.swing.JPanel {
                                         .addGap(15, 15, 15)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel13)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel17)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                            .addComponent(jLabel17))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(advanceAmount)))

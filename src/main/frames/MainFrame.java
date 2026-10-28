@@ -302,10 +302,9 @@ public class MainFrame extends javax.swing.JFrame {
             HelperFunctions.showPopMessage(this, "Please enter your NIC/Passport number.");
             return;
         }
+     
         
-        boolean isValid = false;
-        
-        isValid = ValidationFunctions.validateNIC(nic);
+        boolean isValid = ValidationFunctions.validateNIC(nic);
         
         if(isValid == false){
             isValid = ValidationFunctions.validatePassport(nic);

@@ -31,8 +31,8 @@ public class EditBookingPanel extends javax.swing.JPanel {
     private Room selectedRoom;
     private Booking selectedBooking;
     private List<Room> allRooms = new ArrayList<>();
-    private JScrollPane scrollPane;
     private double totalAmount;
+    private boolean isChanged;
 
     /**
      * Creates new form RoomListPanel
@@ -54,6 +54,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
 
         this.onBack = onBack;
         totalAmount = 0.0;
+        isChanged = false;
         selectedBooking = booking;
         allRooms = RoomManager.getRoomList();
         selectedRoom = booking.getRoom();
@@ -132,56 +133,32 @@ public class EditBookingPanel extends javax.swing.JPanel {
 
     private void enableButton() {
 
-        if (roomPackageDropDown.getSelectedItem() != null && bedTypeDropDown.getSelectedItem() != null && checkInDate.getDate() != null && checkOutDate.getDate() != null && numberOfGuest.getText() != null && advanceAmount.getText() != null && !advanceAmount.getText().isEmpty()) {
+        
+        boolean fieldsNotNull = roomPackageDropDown.getSelectedItem() != null
+                && bedTypeDropDown.getSelectedItem() != null
+                && checkInDate.getDate() != null
+                && checkOutDate.getDate() != null
+                && numberOfGuest.getText() != null
+                && !advanceAmount.getText().trim().isEmpty();
 
-            if (!selectedRoom.getRoomPackage().getPackageName().equals(roomPackageDropDown.getSelectedItem().toString())) {
-                jButton1.setEnabled(true);
-                confirmBooking.setEnabled(true);
+        if (fieldsNotNull) {
+            
+            boolean packageChanged = !selectedRoom.getRoomPackage().getPackageName().equals(roomPackageDropDown.getSelectedItem().toString());
+            boolean bedChanged = !selectedRoom.getBedType().equals(bedTypeDropDown.getSelectedItem().toString());
+            boolean checkInChanged = !checkInDate.getDate().toString().equals(selectedBooking.getCheckInDate().toString());
+            boolean checkOutChanged = !checkOutDate.getDate().toString().equals(selectedBooking.getCheckOutDate().toString());
+            boolean guestsChanged = !numberOfGuest.getText().equals(String.valueOf(selectedBooking.getNumberOfGeust()));
+            boolean advanceChanged = !advanceAmount.getText().equals(String.valueOf(selectedBooking.getBookingAdvance()));
 
-                bookingDetailsPanel.setVisible(false);
-                confirmBooking.setVisible(false);
+            
+            isChanged = packageChanged || bedChanged || checkInChanged || checkOutChanged || guestsChanged || advanceChanged;
 
-            } else if (!selectedRoom.getBedType().equals(bedTypeDropDown.getSelectedItem().toString())) {
-                jButton1.setEnabled(true);
-                confirmBooking.setEnabled(true);
-
-                bookingDetailsPanel.setVisible(false);
-                confirmBooking.setVisible(false);
-
-            } else if (!checkInDate.getDate().toString().equals(selectedBooking.getCheckInDate().toString())) {
-                jButton1.setEnabled(true);
-                confirmBooking.setEnabled(true);
-
-                bookingDetailsPanel.setVisible(false);
-                confirmBooking.setVisible(false);
-
-            } else if (!checkOutDate.getDate().toString().equals(selectedBooking.getCheckOutDate().toString())) {
-                jButton1.setEnabled(true);
-                confirmBooking.setEnabled(true);
-
-                bookingDetailsPanel.setVisible(false);
-                confirmBooking.setVisible(false);
-
-            } else if (!numberOfGuest.getText().equals(String.valueOf(selectedBooking.getNumberOfGeust()))) {
-                jButton1.setEnabled(true);
-                confirmBooking.setEnabled(true);
-
-                bookingDetailsPanel.setVisible(false);
-                confirmBooking.setVisible(false);
-
-            } else if (!advanceAmount.getText().equals(String.valueOf(selectedBooking.getBookingAdvance()))) {
-                jButton1.setEnabled(true);
-                confirmBooking.setEnabled(true);
-
-                bookingDetailsPanel.setVisible(false);
-                confirmBooking.setVisible(false);
-
-            } else {
-                jButton1.setEnabled(false);
-                confirmBooking.setEnabled(false);
-            }
+            jButton1.setEnabled(isChanged);
+            confirmBooking.setEnabled(isChanged);
+//            availableRoomsPanel.setVisible(isChanged);
+            bookingDetailsPanel.setVisible(!isChanged);
+            confirmBooking.setVisible(!isChanged);
         }
-
     }
 
     private JScrollPane createRoomListScrollPane(List<Room> rooms) {
@@ -302,7 +279,6 @@ public class EditBookingPanel extends javax.swing.JPanel {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 if (!isEmpty) {
-
                     selectedRoom = room;
                     showInvoice(room);
                 }
@@ -339,7 +315,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
 
         long noOfDays = HelperFunctions.getNoOfDays(checkInDate.getDate(), checkOutDate.getDate());
         int noOfGuest = Integer.parseInt(numberOfGuest.getText());
-        int extGuestCount = (noOfGuest - room.getCapacity());
+        int extGuestCount = (noOfGuest > room.getCapacity()) ? (noOfGuest - room.getCapacity()) : 0;
 
         double dailyRoomRate = room.getRoomPackage().getDailyRoomRate();
         double extraGuestCharge = room.getRoomPackage().getExtraGuestCharge();
@@ -362,12 +338,11 @@ public class EditBookingPanel extends javax.swing.JPanel {
         totalAmount += taxAmount;
 
         //totalAmount -= advncAmount;
-
         bookingDetailsPanel.setVisible(true);
         confirmBooking.setVisible(true);
-        if (advncAmount < 10000.0) {
+        if (advncAmount < 10000.0 || !isChanged) {
             confirmBooking.setEnabled(false);
-        }else{
+        } else {
             confirmBooking.setEnabled(true);
         }
 
@@ -379,7 +354,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
         guestPhoneLbl.setText(guestPhone);
 
         checkInDateInv.setText(tempCheckInDate);
-        checkInDateInv.setText(tempCheckOutDate);
+        checkOutDateInv.setText(tempCheckOutDate);
 
         noOfNightsInv.setText(String.valueOf(noOfDays));
         noOfGuestsInv.setText(String.valueOf(noOfGuest));
