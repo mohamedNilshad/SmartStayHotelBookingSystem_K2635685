@@ -5,19 +5,13 @@
 package main.frames.forms;
 
 import java.awt.*;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Locale;
 import javax.swing.*;
 import javax.swing.border.*;
-import main.models.Room;
 import java.util.List;
 import java.util.function.Consumer;
 import main.functions.HelperFunctions;
 import main.managers.BookingManager;
 import main.models.Booking;
-import main.models.room_packages.EmptyPackage;
-import main.models.room_packages.RoomPackage;
 
 /**
  *
@@ -103,7 +97,7 @@ public class BookingListPanel extends javax.swing.JPanel {
             String packageName = booking.getRoom().getRoomPackage().getPackageName();
             String bedType = booking.getRoom().getBedType();
             String noOfGuest = "x " + booking.getNumberOfGeust();
-            String totalAmount = "Rs. 10000.00";
+            String totalAmount = "Rs." + booking.getTotalAmount();
             String checkIn = HelperFunctions.formatDate(booking.getCheckInDate());
             String checkOut = HelperFunctions.formatDate(booking.getCheckOutDate());
             String status = booking.getStatus(); // "Active", "Cancelled", "Completed"

@@ -20,9 +20,12 @@ public class Booking {
     private Date bookingDate;
     private int numberOfGeust;
     private double bookingAdvance;
+    private boolean isPaid;
+    private double totalAmount;
+    
     private String status;
 
-    public Booking(Room room, Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, double bookingAdvance, String status) {
+    public Booking(Room room, Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, double bookingAdvance, boolean isPaid, double totalAmount, String status) {
         this.bookingID = BookingManager.generateBookingId();
         this.room = room;
         this.guest = guest;
@@ -31,10 +34,12 @@ public class Booking {
         this.bookingDate = bookingDate;
         this.numberOfGeust = numberOfGeust;
         this.bookingAdvance = bookingAdvance;
+        this.isPaid = isPaid;
+        this.totalAmount = totalAmount;
         this.status = status;
     }
     
-    public Booking(int bookingID, Room room, Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, double bookingAdvance, String status) {
+    public Booking(int bookingID, Room room, Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, double bookingAdvance, boolean isPaid, double totalAmount, String status) {
         this.bookingID = bookingID;
         this.room = room;
         this.guest = guest;
@@ -43,6 +48,8 @@ public class Booking {
         this.bookingDate = bookingDate;
         this.numberOfGeust = numberOfGeust;
         this.bookingAdvance = bookingAdvance;
+        this.isPaid = isPaid;
+        this.totalAmount = totalAmount;
         this.status = status;
     }
     
@@ -78,6 +85,14 @@ public class Booking {
 
     public int getNumberOfGeust() {
         return numberOfGeust;
+    }
+
+    public boolean getPaidStatus() {
+        return isPaid;
+    }
+
+    public double getTotalAmount() {
+        return totalAmount;
     }
 
     public String getStatus() {

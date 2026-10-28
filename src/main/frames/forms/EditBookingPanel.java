@@ -13,13 +13,13 @@ import java.util.Locale;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import main.functions.HelperFunctions;
+import main.functions.ValidationFunctions;
 import main.managers.BookingManager;
 import main.managers.GuestManager;
 import main.managers.RoomManager;
 import main.models.Booking;
 import main.models.Room;
 import main.models.room_packages.RoomPackage;
-import main.models.room_packages.StandardPackage;
 
 /**
  *
@@ -32,6 +32,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
     private Booking selectedBooking;
     private List<Room> allRooms = new ArrayList<>();
     private JScrollPane scrollPane;
+    private double totalAmount;
 
     /**
      * Creates new form RoomListPanel
@@ -52,6 +53,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
         confirmBooking.setVisible(false);
 
         this.onBack = onBack;
+        totalAmount = 0.0;
         selectedBooking = booking;
         allRooms = RoomManager.getRoomList();
         selectedRoom = booking.getRoom();
@@ -61,7 +63,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
             Date selectedDate = (Date) evt.getNewValue();
 
             if (selectedDate != null) {
-                boolean isNotValidDate = HelperFunctions.validateCheckInDate(selectedDate);
+                boolean isNotValidDate = ValidationFunctions.validateCheckInDate(selectedDate);
                 if (isNotValidDate) {
                     HelperFunctions.showPopMessage(this, "Check-in date must be at least 2 days from today.");
                     Date newCheckInDate = HelperFunctions.getDefaultCheckInDate();
@@ -78,7 +80,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
             Date selectedcheckOutDate = (Date) evt.getNewValue();
 
             if (selectedcheckOutDate != null) {
-                boolean isNotValidDate = HelperFunctions.validateCheckOutDate(selectedcheckOutDate, checkInDate.getDate());
+                boolean isNotValidDate = ValidationFunctions.validateCheckOutDate(selectedcheckOutDate, checkInDate.getDate());
                 if (isNotValidDate) {
                     HelperFunctions.showPopMessage(this, "Check-out date must be at least 1 day from Check-in date.");
                     checkOutDate.setDate(HelperFunctions.getDefaultCheckOutDate(checkInDate.getDate()));
@@ -108,6 +110,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
         checkInDate.setDate(selectedBooking.getCheckInDate());
         checkOutDate.setDate(selectedBooking.getCheckOutDate());
         numberOfGuest.setText(String.valueOf(selectedBooking.getNumberOfGeust()));
+        advanceAmount.setText(String.valueOf(selectedBooking.getBookingAdvance()));
         jButton1.setEnabled(false);
 
         //show selected room row
@@ -129,40 +132,47 @@ public class EditBookingPanel extends javax.swing.JPanel {
 
     private void enableButton() {
 
-        if (roomPackageDropDown.getSelectedItem() != null && bedTypeDropDown.getSelectedItem() != null && checkInDate.getDate() != null && checkOutDate.getDate() != null && numberOfGuest.getText() != null) {
-            
+        if (roomPackageDropDown.getSelectedItem() != null && bedTypeDropDown.getSelectedItem() != null && checkInDate.getDate() != null && checkOutDate.getDate() != null && numberOfGuest.getText() != null && advanceAmount.getText() != null && !advanceAmount.getText().isEmpty()) {
+
             if (!selectedRoom.getRoomPackage().getPackageName().equals(roomPackageDropDown.getSelectedItem().toString())) {
                 jButton1.setEnabled(true);
                 confirmBooking.setEnabled(true);
-                
+
                 bookingDetailsPanel.setVisible(false);
                 confirmBooking.setVisible(false);
 
             } else if (!selectedRoom.getBedType().equals(bedTypeDropDown.getSelectedItem().toString())) {
                 jButton1.setEnabled(true);
                 confirmBooking.setEnabled(true);
-                
+
                 bookingDetailsPanel.setVisible(false);
                 confirmBooking.setVisible(false);
 
             } else if (!checkInDate.getDate().toString().equals(selectedBooking.getCheckInDate().toString())) {
                 jButton1.setEnabled(true);
                 confirmBooking.setEnabled(true);
-                
+
                 bookingDetailsPanel.setVisible(false);
                 confirmBooking.setVisible(false);
 
             } else if (!checkOutDate.getDate().toString().equals(selectedBooking.getCheckOutDate().toString())) {
                 jButton1.setEnabled(true);
                 confirmBooking.setEnabled(true);
-                
+
                 bookingDetailsPanel.setVisible(false);
                 confirmBooking.setVisible(false);
 
             } else if (!numberOfGuest.getText().equals(String.valueOf(selectedBooking.getNumberOfGeust()))) {
                 jButton1.setEnabled(true);
                 confirmBooking.setEnabled(true);
-                
+
+                bookingDetailsPanel.setVisible(false);
+                confirmBooking.setVisible(false);
+
+            } else if (!advanceAmount.getText().equals(String.valueOf(selectedBooking.getBookingAdvance()))) {
+                jButton1.setEnabled(true);
+                confirmBooking.setEnabled(true);
+
                 bookingDetailsPanel.setVisible(false);
                 confirmBooking.setVisible(false);
 
@@ -319,29 +329,30 @@ public class EditBookingPanel extends javax.swing.JPanel {
         int roomId = room.getRoomID();
         String packageName = room.getRoomPackage().getPackageName();
         String bedType = room.getBedType();
-        
+
         String guestName = GuestManager.getCurrentGuest().getFullName();
         String guestEmail = GuestManager.getCurrentGuest().getEmailAddress();
         String guestPhone = GuestManager.getCurrentGuest().getContactNumber();
-        
+
         String tempCheckInDate = HelperFunctions.formatDate(checkInDate.getDate());
         String tempCheckOutDate = HelperFunctions.formatDate(checkOutDate.getDate());
-        
+
         long noOfDays = HelperFunctions.getNoOfDays(checkInDate.getDate(), checkOutDate.getDate());
         int noOfGuest = Integer.parseInt(numberOfGuest.getText());
         int extGuestCount = (noOfGuest - room.getCapacity());
-        
+
         double dailyRoomRate = room.getRoomPackage().getDailyRoomRate();
         double extraGuestCharge = room.getRoomPackage().getExtraGuestCharge();
         double extAmount = extGuestCount * extraGuestCharge;
-        
+        double advncAmount = Double.parseDouble(advanceAmount.getText().trim());
+
         double taxRate = room.getRoomPackage().getTaxRate();
         double discountRate = 0.0;
         if (noOfDays >= 5) {
             discountRate = room.getDiscountRate();
         }
-        
-        double totalAmount = dailyRoomRate * noOfDays;
+
+        totalAmount = dailyRoomRate * noOfDays;
         totalAmount += extAmount;
 
         double discountAmount = totalAmount * (discountRate / 100);
@@ -350,13 +361,16 @@ public class EditBookingPanel extends javax.swing.JPanel {
         double taxAmount = totalAmount * (taxRate / 100);
         totalAmount += taxAmount;
 
-        totalAmount -= 10000.0;
-        
-        
-        
+        //totalAmount -= advncAmount;
+
         bookingDetailsPanel.setVisible(true);
         confirmBooking.setVisible(true);
-        
+        if (advncAmount < 10000.0) {
+            confirmBooking.setEnabled(false);
+        }else{
+            confirmBooking.setEnabled(true);
+        }
+
         roomNumber.setText("Room " + roomId);
         roomInfo.setText(packageName + " • " + bedType + " bed");
 
@@ -372,18 +386,17 @@ public class EditBookingPanel extends javax.swing.JPanel {
 
         roomAmount.setText("Rs. " + dailyRoomRate + "  x  " + noOfDays);
         totRoomAmount.setText("Rs. " + dailyRoomRate * noOfDays);
-        
+
         extGuestCharge.setText("Rs. " + extraGuestCharge + "  x  " + extGuestCount);
         totExtGuestCharge.setText("Rs. " + extAmount);
 
-        
         discountPercentLbl.setText("(" + discountRate + " %)");
-        totDiscountAmt.setText("Rs." + discountAmount);
+        totDiscountAmt.setText("-Rs." + discountAmount);
 
         taxPercentLbl.setText("(" + taxRate + " %)");
         totTaxAmt.setText("Rs." + taxAmount);
 
-        
+        bookingAdvance.setText("-Rs. " + advncAmount);
         totalAmountLbl.setText("Rs. " + totalAmount);
     }
 
@@ -448,6 +461,8 @@ public class EditBookingPanel extends javax.swing.JPanel {
         availableRoomsPanel = new javax.swing.JPanel();
         roomListCount = new javax.swing.JLabel();
         confirmBooking = new javax.swing.JButton();
+        advanceAmount = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(858, 520));
@@ -659,12 +674,13 @@ public class EditBookingPanel extends javax.swing.JPanel {
         taxPercentLbl.setText("10%");
 
         bookingAdvance.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        bookingAdvance.setForeground(new java.awt.Color(51, 204, 0));
         bookingAdvance.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         bookingAdvance.setText("Rs. 10000.0");
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(76, 74, 74));
-        jLabel14.setText("Booking advance");
+        jLabel14.setText("Refundable booking advance");
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(76, 74, 74));
@@ -686,11 +702,12 @@ public class EditBookingPanel extends javax.swing.JPanel {
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(76, 74, 74));
-        jLabel16.setText("Amount");
+        jLabel16.setText("Base room charge");
 
         jSeparator4.setForeground(new java.awt.Color(255, 255, 255));
 
         totDiscountAmt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        totDiscountAmt.setForeground(new java.awt.Color(51, 204, 0));
         totDiscountAmt.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         totDiscountAmt.setText("Rs. 2000.0");
 
@@ -730,7 +747,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
                                     .addComponent(jLabel1)
                                     .addComponent(roomNumber)
                                     .addComponent(roomInfo))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(bookingDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(guestNameLbl, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(guestEmailLbl, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -760,12 +777,12 @@ public class EditBookingPanel extends javax.swing.JPanel {
                                 .addGroup(bookingDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel16)
                                     .addComponent(jLabel3))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(bookingDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                                .addGroup(bookingDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(bookingDetailsPanelLayout.createSequentialGroup()
                                         .addComponent(extGuestCharge)
                                         .addGap(29, 29, 29)
-                                        .addComponent(totExtGuestCharge))
+                                        .addComponent(totExtGuestCharge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addGroup(bookingDetailsPanelLayout.createSequentialGroup()
                                         .addComponent(roomAmount)
                                         .addGap(29, 29, 29)
@@ -870,6 +887,17 @@ public class EditBookingPanel extends javax.swing.JPanel {
             }
         });
 
+        advanceAmount.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        advanceAmount.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        advanceAmount.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                advanceAmountKeyReleased(evt);
+            }
+        });
+
+        jLabel17.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel17.setText("Booking advance Rs. ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -887,15 +915,21 @@ public class EditBookingPanel extends javax.swing.JPanel {
                                         .addComponent(roomPackageDropDown, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(jLabel11)
                                     .addComponent(checkInDate, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel13))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel13))
+                                        .addGap(33, 33, 33)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel17)
+                                            .addComponent(advanceAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(16, 16, 16)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jLabel12)
                                     .addComponent(jLabel10)
                                     .addComponent(checkOutDate, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
-                                    .addComponent(bedTypeDropDown, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addComponent(bedTypeDropDown, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(roomListCount)
                             .addComponent(availableRoomsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -933,9 +967,13 @@ public class EditBookingPanel extends javax.swing.JPanel {
                                         .addGap(22, 22, 22)
                                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel13)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(jLabel13)
+                                            .addComponent(jLabel17))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(advanceAmount))))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(roomListCount)
                                 .addGap(4, 4, 4)
@@ -989,32 +1027,38 @@ public class EditBookingPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_nogPlusActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        double number = Double.parseDouble(advanceAmount.getText().trim());
+        if (number < 10000.0) {
+            HelperFunctions.showPopMessage(this, "Amount should be at least Rs.10000.0");
+            advanceAmount.requestFocus();
 
-        bookingDetailsPanel.setVisible(false);
-        confirmBooking.setVisible(false);
+        } else {
+            bookingDetailsPanel.setVisible(false);
+            confirmBooking.setVisible(false);
 
-        List<Room> availableRoomList = BookingManager.getAvailableRoomList(
-                bedTypeDropDown.getSelectedItem().toString(),
-                roomPackageDropDown.getSelectedItem().toString(),
-                checkInDate.getDate(),
-                checkOutDate.getDate(),
-                selectedBooking.getBookingID()
-        );
+            List<Room> availableRoomList = BookingManager.getAvailableRoomList(
+                    bedTypeDropDown.getSelectedItem().toString(),
+                    roomPackageDropDown.getSelectedItem().toString(),
+                    checkInDate.getDate(),
+                    checkOutDate.getDate(),
+                    selectedBooking.getBookingID()
+            );
 
-        availableRoomsPanel.setVisible(true);
-        availableRoomsPanel.removeAll();
+            availableRoomsPanel.setVisible(true);
+            availableRoomsPanel.removeAll();
 
-        roomListCount.setVisible(true);
-        roomListCount.setText("Available rooms (" + availableRoomList.size() + ")");
+            roomListCount.setVisible(true);
+            roomListCount.setText("Available rooms (" + availableRoomList.size() + ")");
 
-        availableRoomsPanel.add(createRoomListScrollPane(availableRoomList), BorderLayout.CENTER);
-        availableRoomsPanel.revalidate();
-        availableRoomsPanel.repaint();
+            availableRoomsPanel.add(createRoomListScrollPane(availableRoomList), BorderLayout.CENTER);
+            availableRoomsPanel.revalidate();
+            availableRoomsPanel.repaint();
+        }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void confirmBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmBookingActionPerformed
 
-        
         Booking booking = new Booking(
                 selectedBooking.getBookingID(),
                 selectedRoom,
@@ -1023,7 +1067,9 @@ public class EditBookingPanel extends javax.swing.JPanel {
                 checkOutDate.getDate(),
                 HelperFunctions.getCurrentDate(),
                 Integer.parseInt(numberOfGuest.getText()),
-                10000,
+                Double.parseDouble(advanceAmount.getText().trim()),
+                false,
+                totalAmount,
                 BookingManager.getBookingStatus(0)
         );
 
@@ -1036,8 +1082,21 @@ public class EditBookingPanel extends javax.swing.JPanel {
         enableButton();
     }//GEN-LAST:event_bedTypeDropDownActionPerformed
 
+    private void advanceAmountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_advanceAmountKeyReleased
+        String value = advanceAmount.getText().trim();
+        boolean isValid = ValidationFunctions.validateDoubleValue(this, value);
+        if (!isValid) {
+            advanceAmount.setText(String.valueOf(selectedBooking.getBookingAdvance()));
+            advanceAmount.requestFocus();
+        } else {
+            enableButton();
+        }
+
+    }//GEN-LAST:event_advanceAmountKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField advanceAmount;
     private javax.swing.JPanel availableRoomsPanel;
     private javax.swing.JComboBox<String> bedTypeDropDown;
     private javax.swing.JLabel bookingAdvance;
@@ -1062,6 +1121,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
