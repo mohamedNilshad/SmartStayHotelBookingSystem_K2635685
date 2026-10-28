@@ -28,14 +28,14 @@ public class BookingListPanel extends javax.swing.JPanel {
     private JPanel listPanel;
     private JScrollPane scrollPane;
     private JLabel titleLabel;
-    private final Consumer<Booking> onBookingSelected;
+    private final Consumer<Booking> onBookingEdit;
 
     /**
      * Creates new form RoomListPanel
      */
-    public BookingListPanel(List<Booking> bookingList, Consumer<Booking> onBookingSelected) {
+    public BookingListPanel(List<Booking> bookingList, Consumer<Booking> onBookingEdit) {
         initComponents();
-        this.onBookingSelected = onBookingSelected;
+        this.onBookingEdit = onBookingEdit;
         setLayout(new BorderLayout());
         listPanel = new JPanel();
 
@@ -166,7 +166,7 @@ public class BookingListPanel extends javax.swing.JPanel {
             JButton editBtn = createActionButton("Edit", new Color(37, 99, 235), (isActive && !isCompleted && !isCancelled));
             JButton cancelBtn = createActionButton("Cancel", new Color(220, 38, 38), (isActive && !isCompleted && !isCancelled));
 
-//            editBtn.addActionListener(e -> onBookingEdit.accept(booking));
+            editBtn.addActionListener(e -> onBookingEdit.accept(booking));
             cancelBtn.addActionListener(e -> {
                 
                 List<Booking> updatedBookingList = BookingManager.setBookingStatus(1, booking.getBookingID());
@@ -196,9 +196,9 @@ public class BookingListPanel extends javax.swing.JPanel {
         row.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                if (!isEmpty) {
-                    onBookingSelected.accept(booking);
-                }
+//                if (!isEmpty) {
+//                    onBookingSelected.accept(booking);
+//                }
             }
 
             @Override

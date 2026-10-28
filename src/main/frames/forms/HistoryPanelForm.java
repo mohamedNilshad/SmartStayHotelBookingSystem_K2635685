@@ -57,22 +57,22 @@ public class HistoryPanelForm extends javax.swing.JPanel {
         bookingListPanel = new BookingListPanel(
                 sortedBookingList,
                 selectedBooking -> {
-                    titleLabel.setText("My Bookings");
-                    subtitleLabel.setText("Edit or cancel upcoming stays.");
+                    titleLabel.setText("Edit Bookings");
+                    subtitleLabel.setText("Make changes & confirm to your booking");
                     tabelHeader.setVisible(false);
                     searchField.setVisible(false);
 
-//                    SelectRoomPanel fillPanel = new SelectRoomPanel(
-//                            selectedBooking,
-//                            () -> {
-//                                titleLabel.setText("Edit Bookings");
-//                                subtitleLabel.setText("Make changes & confirm to your booking");
-//                                tabelHeader.setVisible(true);
-//                                searchField.setVisible(true);
-//
-//                                showPanel(bookingListPanel);
-//                            });
-//                    showPanel(fillPanel);
+                    EditBookingPanel fillPanel = new EditBookingPanel(
+                            selectedBooking,
+                            () -> {
+                                titleLabel.setText("My Bookings");
+                                subtitleLabel.setText("Edit or cancel upcoming stays.");
+                                tabelHeader.setVisible(true);
+                                searchField.setVisible(true);
+
+                                showPanel(bookingListPanel);
+                            });
+                    showPanel(fillPanel);
                 }
         );
 
