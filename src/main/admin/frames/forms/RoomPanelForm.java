@@ -130,6 +130,7 @@ public class RoomPanelForm extends javax.swing.JPanel {
         tabelHeader = new javax.swing.JLabel();
         canvas1 = new java.awt.Canvas();
         pnlContent = new javax.swing.JPanel();
+        newRoomBtn = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(858, 705));
@@ -175,6 +176,17 @@ public class RoomPanelForm extends javax.swing.JPanel {
             .addGap(0, 538, Short.MAX_VALUE)
         );
 
+        newRoomBtn.setBackground(new java.awt.Color(51, 51, 255));
+        newRoomBtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        newRoomBtn.setForeground(new java.awt.Color(255, 255, 255));
+        newRoomBtn.setText("New");
+        newRoomBtn.setFocusable(false);
+        newRoomBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newRoomBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -192,11 +204,14 @@ public class RoomPanelForm extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(14, 14, 14)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(subtitleLabel)
                                     .addComponent(titleLabel)
-                                    .addComponent(tabelHeader))))
-                        .addGap(0, 399, Short.MAX_VALUE)))
+                                    .addComponent(tabelHeader)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 310, Short.MAX_VALUE)
+                                        .addComponent(newRoomBtn)))))
+                        .addGap(17, 17, 17)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -207,7 +222,9 @@ public class RoomPanelForm extends javax.swing.JPanel {
                 .addGap(0, 0, 0)
                 .addComponent(subtitleLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(newRoomBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(searchField, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
                 .addGap(14, 14, 14)
                 .addComponent(tabelHeader)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -255,9 +272,102 @@ public class RoomPanelForm extends javax.swing.JPanel {
         roomListPanel.updateRoomList(sortedRoomList);
     }//GEN-LAST:event_searchFieldKeyReleased
 
+    private void newRoomBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newRoomBtnActionPerformed
+        titleLabel.setText("New Room");
+        subtitleLabel.setText("Add new room.");
+        tabelHeader.setVisible(false);
+        searchField.setVisible(false);
+        newRoomBtn.setVisible(false);
+
+        NewRoomPanel newRoomPanel = new NewRoomPanel(
+                onNewRoom -> {
+                    titleLabel.setText("Rooms");
+                    subtitleLabel.setText("Pick a room to manage.");
+                    tabelHeader.setVisible(true);
+                    searchField.setVisible(true);
+                    newRoomBtn.setVisible(true);
+
+                    roomListPanel = new RoomListPanel(
+                            sortedRoomList,
+                            editRoom -> {
+                                titleLabel.setText("Update Room");
+                                subtitleLabel.setText("Edit this room.");
+                                tabelHeader.setVisible(false);
+                                searchField.setVisible(false);
+
+                                EditRoomPanel fillPanel = new EditRoomPanel(
+                                        editRoom,
+                                        onUpdatedRoom -> {
+                                            titleLabel.setText("Rooms");
+                                            subtitleLabel.setText("Pick a room to manage.");
+                                            tabelHeader.setVisible(true);
+                                            searchField.setVisible(true);
+
+                                            roomList.replaceAll(r -> r.getRoomID() == onUpdatedRoom.getRoomID() ? onUpdatedRoom : r);
+                                            sortedRoomList.replaceAll(r -> r.getRoomID() == onUpdatedRoom.getRoomID() ? onUpdatedRoom : r);
+                                            // Update UI
+                                            tabelHeader.setText(sortedRoomList.size() + " rooms available");
+                                            roomListPanel.updateRoomList(sortedRoomList);
+                                            showPanel(roomListPanel);
+                                        },
+                                        () -> {
+                                            titleLabel.setText("Rooms");
+                                            subtitleLabel.setText("Pick a room to manage.");
+                                            tabelHeader.setVisible(true);
+                                            searchField.setVisible(true);
+
+                                            showPanel(roomListPanel);
+                                        }
+                                );
+                                showPanel(fillPanel);
+                            },
+                            deleteRoom -> {
+                                int roomDeleted = RoomManager.deleteRoom(deleteRoom.getRoomID());
+
+                                switch (roomDeleted) {
+                                    case 1:
+                                        HelperFunctions.showPopMessage(this, "Room deleted successfully!", "Deletion Successful");
+                                        // Update UI
+                                        sortedRoomList.remove(deleteRoom);
+                                        tabelHeader.setText(sortedRoomList.size() + " rooms available");
+                                        roomListPanel.updateRoomList(sortedRoomList);
+                                        roomList = RoomManager.getRoomList();
+                                        break;
+                                    case -1:
+                                        HelperFunctions.showPopMessage(this, "This room has a booking", "Deletion Failed");
+                                        break;
+                                    default:
+                                        HelperFunctions.showPopMessage(this, "Room deleted failed!", "Deletion Failed");
+                                        break;
+                                }
+
+                            }
+                    );
+                    roomList.add(onNewRoom);
+                    sortedRoomList.add(onNewRoom);
+                    // Update UI
+                    tabelHeader.setText(sortedRoomList.size() + " rooms available");
+                    roomListPanel.updateRoomList(sortedRoomList);
+
+                    showPanel(roomListPanel);
+                },
+                () -> {
+                    titleLabel.setText("Rooms");
+                    subtitleLabel.setText("Pick a room to manage.");
+                    tabelHeader.setVisible(true);
+                    searchField.setVisible(true);
+                    newRoomBtn.setVisible(true);
+
+                    showPanel(roomListPanel);
+                }
+        );
+        showPanel(newRoomPanel);
+    }//GEN-LAST:event_newRoomBtnActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Canvas canvas1;
+    private javax.swing.JButton newRoomBtn;
     private javax.swing.JPanel pnlContent;
     private javax.swing.JTextField searchField;
     private javax.swing.JLabel subtitleLabel;
