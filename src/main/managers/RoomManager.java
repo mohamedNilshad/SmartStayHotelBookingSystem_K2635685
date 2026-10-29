@@ -64,6 +64,15 @@ public class RoomManager {
     public static List<RoomPackage> getRoomPackageList() {
         return new ArrayList<>(roomPackageList);
     }
+    
+    public static RoomPackage getRoomPackageByName(String value) {
+        for(RoomPackage roomPackage : roomPackageList){
+            if(roomPackage.getPackageName().equals(value)){
+                return roomPackage;
+            }
+        }
+        return null;
+    }
 
     public static List<Room> getRoomList() {
         return new ArrayList<>(roomList);
@@ -75,6 +84,10 @@ public class RoomManager {
 
     public static void addNewRoom(Room room) {
         roomList.add(room);
+    }
+    
+    public static void updateRoom(Room room) {
+        roomList.replaceAll(r -> r.getRoomID() == room.getRoomID() ? room : r);
     }
 
     public static void updateRoomStatus(int roomId, String roomStatus) {
@@ -114,5 +127,11 @@ public class RoomManager {
         }
         return false;
     }
+
+    public static String[] getRoomStatus() {
+        return roomStatus;
+    }
+    
+    
 
 }

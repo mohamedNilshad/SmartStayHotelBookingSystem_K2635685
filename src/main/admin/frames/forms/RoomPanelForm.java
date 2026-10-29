@@ -47,23 +47,37 @@ public class RoomPanelForm extends javax.swing.JPanel {
 
         roomListPanel = new RoomListPanel(
                 sortedRoomList,
-                onEditRoom -> {
+                editRoom -> {
                     titleLabel.setText("Update Room");
                     subtitleLabel.setText("Edit this room.");
                     tabelHeader.setVisible(false);
                     searchField.setVisible(false);
 
-//                    NewBookingPanel fillPanel = new NewBookingPanel(
-//                            selectedRoom,
-//                            () -> {
-//                                titleLabel.setText("Rooms");
-//                                subtitleLabel.setText("Pick a room to manage.");
-//                                tabelHeader.setVisible(true);
-//                                searchField.setVisible(true);
-//
-//                                showPanel(roomListPanel);
-//                            });
-//                    showPanel(fillPanel);
+                    EditRoomPanel fillPanel = new EditRoomPanel(
+                            editRoom,
+                            onUpdatedRoom -> {
+                                titleLabel.setText("Rooms");
+                                subtitleLabel.setText("Pick a room to manage.");
+                                tabelHeader.setVisible(true);
+                                searchField.setVisible(true);
+
+                                roomList.replaceAll(r -> r.getRoomID() == onUpdatedRoom.getRoomID() ? onUpdatedRoom : r);
+                                sortedRoomList.replaceAll(r -> r.getRoomID() == onUpdatedRoom.getRoomID() ? onUpdatedRoom : r);
+                                // Update UI
+                                tabelHeader.setText(sortedRoomList.size() + " rooms available");
+                                roomListPanel.updateRoomList(sortedRoomList);
+                                showPanel(roomListPanel);
+                            },
+                            () -> {
+                                titleLabel.setText("Rooms");
+                                subtitleLabel.setText("Pick a room to manage.");
+                                tabelHeader.setVisible(true);
+                                searchField.setVisible(true);
+
+                                showPanel(roomListPanel);
+                            }
+                    );
+                    showPanel(fillPanel);
                 },
                 deleteRoom -> {
                     int roomDeleted = RoomManager.deleteRoom(deleteRoom.getRoomID());
