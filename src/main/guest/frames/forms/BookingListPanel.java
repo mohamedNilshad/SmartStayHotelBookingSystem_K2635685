@@ -162,9 +162,18 @@ public class BookingListPanel extends javax.swing.JPanel {
 
             editBtn.addActionListener(e -> onBookingEdit.accept(booking));
             cancelBtn.addActionListener(e -> {
+                 int result = HelperFunctions.showConfirmDialog(
+                    "Are you sure you want to cancel this booking?",
+                    "Confirm Booking Cancellation"
+                );
+
+                if (result == JOptionPane.YES_OPTION) {
+                    List<Booking> updatedBookingList = BookingManager.setBookingStatus(1, booking.getBookingID()); // Cancellation
+
+                    updateBookingList(updatedBookingList);
+                    HelperFunctions.showPopMessage(this, "Booking cancelled successfully!", "Cancellation Successful");
+                }
                 
-                List<Booking> updatedBookingList = BookingManager.setBookingStatus(1, booking.getBookingID());
-                updateBookingList(updatedBookingList);
             });
 
             JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));

@@ -301,7 +301,7 @@ public class MainFrame extends javax.swing.JFrame {
         String nic = jTextField1.getText().trim();
 
         if (nic.isEmpty()) {
-            HelperFunctions.showPopMessage(this, "Please enter your NIC/Passport number.");
+            HelperFunctions.showPopMessage(this, "Please enter your NIC/Passport number.", "");
             return;
         }
 
@@ -312,7 +312,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
 
         if (isValid == false) {
-            HelperFunctions.showPopMessage(this, "Invalid entered NIC/Passport number !");
+            HelperFunctions.showPopMessage(this, "Invalid entered NIC/Passport number !", "");
             return;
         }
 

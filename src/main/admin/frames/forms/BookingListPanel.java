@@ -105,7 +105,7 @@ public class BookingListPanel extends javax.swing.JPanel {
             String checkOut = HelperFunctions.formatDate(booking.getCheckOutDate());
             String status = booking.getStatus(); // "Active", "Cancelled", "Completed"
 
-            String guestName = guest.getFullName() ;
+            String guestName = guest.getFullName();
             String guestPhone = guest.getContactNumber();
             String guestEmail = guest.getEmailAddress();
 
@@ -114,8 +114,8 @@ public class BookingListPanel extends javax.swing.JPanel {
             boolean canModify = "Active".equals(status)
                     && !HelperFunctions.isOneDayBefore(booking.getCheckInDate())
                     && !isCompleted && !isCancelled;
+            boolean canComplete = "Active".equals(status);
 
-        
             JLabel idLbl = new JLabel(bookingId);
             idLbl.setFont(new Font("Arial", Font.BOLD, 18));
             idLbl.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -131,7 +131,6 @@ public class BookingListPanel extends javax.swing.JPanel {
             left.add(Box.createVerticalStrut(8));
             left.add(badge);
 
-           
             JLabel nameLbl = new JLabel(guestName);
             nameLbl.setFont(new Font("Arial", Font.BOLD, 15));
 
@@ -152,7 +151,6 @@ public class BookingListPanel extends javax.swing.JPanel {
             guestText.add(Box.createVerticalStrut(3));
             guestText.add(emailLbl);
 
-            
             JPanel avatarWrap = new JPanel(new GridBagLayout());
             avatarWrap.setOpaque(false);
             avatarWrap.add(createAvatar(guestName));
@@ -162,7 +160,6 @@ public class BookingListPanel extends javax.swing.JPanel {
             guestPanel.add(avatarWrap, BorderLayout.WEST);
             guestPanel.add(guestText, BorderLayout.CENTER);
 
-           
             JLabel roomLbl = new JLabel("Room " + roomId + "  •  " + packageName);
             roomLbl.setFont(new Font("Arial", Font.BOLD, 15));
             roomLbl.setForeground(muted);
@@ -184,7 +181,6 @@ public class BookingListPanel extends javax.swing.JPanel {
             stayPanel.add(Box.createVerticalStrut(3));
             stayPanel.add(dateLbl);
 
-           
             stayPanel.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createMatteBorder(0, 1, 0, 0, new Color(225, 230, 236)),
                     new EmptyBorder(0, 20, 0, 0)
@@ -195,7 +191,6 @@ public class BookingListPanel extends javax.swing.JPanel {
             center.add(guestPanel);
             center.add(stayPanel);
 
-        
             JLabel amountLbl = new JLabel(totalAmount);
             amountLbl.setFont(new Font("Arial", Font.BOLD, 15));
             amountLbl.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -207,11 +202,34 @@ public class BookingListPanel extends javax.swing.JPanel {
 
             JButton editBtn = createActionButton("Edit", new Color(37, 99, 235), canModify);
             JButton cancelBtn = createActionButton("Cancel", new Color(220, 38, 38), canModify);
+            JButton completeBtn = createActionButton("Complete", new Color(22, 163, 74), canComplete);
 
             editBtn.addActionListener(e -> onBookingEdit.accept(booking));
             cancelBtn.addActionListener(e -> {
-                List<Booking> updatedBookingList = BookingManager.setBookingStatus(1, booking.getBookingID());
-                updateBookingList(updatedBookingList);
+
+                int result = HelperFunctions.showConfirmDialog(
+                        "Are you sure you want to cancel this booking?",
+                        "Confirm Booking Cancellation"
+                );
+
+                if (result == JOptionPane.YES_OPTION) {
+                    List<Booking> updatedBookingList = BookingManager.setBookingStatus(1, booking.getBookingID()); // Cancellation
+
+                    updateBookingList(updatedBookingList);
+
+                    HelperFunctions.showPopMessage(this, "Booking cancelled successfully!", "Cancellation Successful");
+                }
+            });
+            completeBtn.addActionListener(e -> {
+                Double balance = showCompleteBookingDialog(booking);
+
+                if (balance != null) { // null means the user closed or cancelled the dialog
+//                    List<Booking> updatedBookingList = BookingManager.completeBooking(booking.getBookingID(), balance);
+
+//                    updateBookingList(updatedBookingList);
+
+                    HelperFunctions.showPopMessage(this, "Booking completed successfully!", "Completion Successful");
+                }
             });
 
             JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
@@ -219,6 +237,7 @@ public class BookingListPanel extends javax.swing.JPanel {
             buttons.setAlignmentX(Component.RIGHT_ALIGNMENT);
             buttons.add(editBtn);
             buttons.add(cancelBtn);
+            buttons.add(completeBtn);
 
             JPanel right = new JPanel();
             right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
@@ -249,6 +268,135 @@ public class BookingListPanel extends javax.swing.JPanel {
         });
 
         return row;
+    }
+
+    private Double showCompleteBookingDialog(Booking booking) {
+        Window owner = SwingUtilities.getWindowAncestor(this);
+        JDialog dialog = new JDialog(owner, "Complete Booking", Dialog.ModalityType.APPLICATION_MODAL);
+
+        final Double[] result = {null};
+        Color muted = new Color(95, 110, 130);
+
+        JPanel content = new JPanel();
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+        content.setBackground(Color.WHITE);
+        content.setBorder(new EmptyBorder(20, 24, 20, 24));
+
+        // Header
+        JLabel title = new JLabel("Complete Booking #" + booking.getBookingID());
+        title.setFont(new Font("Arial", Font.BOLD, 18));
+        title.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel subtitle = new JLabel(booking.getGuest().getFullName() + "  •  Room " + booking.getRoom().getRoomID());
+        subtitle.setFont(new Font("Arial", Font.PLAIN, 13));
+        subtitle.setForeground(muted);
+        subtitle.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // Total (read-only)
+        JLabel totalCaption = new JLabel("Total amount");
+        totalCaption.setFont(new Font("Arial", Font.PLAIN, 12));
+        totalCaption.setForeground(muted);
+        totalCaption.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel totalValue = new JLabel("Rs." + (booking.getTotalAmount() - booking.getBookingAdvance()));
+        totalValue.setFont(new Font("Arial", Font.BOLD, 16));
+        totalValue.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // Balance input
+        JLabel balanceCaption = new JLabel("Balance amount (Rs.)");
+        balanceCaption.setFont(new Font("Arial", Font.PLAIN, 12));
+        balanceCaption.setForeground(muted);
+        balanceCaption.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JTextField balanceField = new JTextField();
+        balanceField.setFont(new Font("Arial", Font.PLAIN, 15));
+        balanceField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(200, 208, 218), 1, true),
+                new EmptyBorder(8, 10, 8, 10)
+        ));
+        balanceField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        balanceField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+
+        // Error message (hidden until needed)
+        JLabel errorLbl = new JLabel(" ");
+        errorLbl.setFont(new Font("Arial", Font.PLAIN, 12));
+        errorLbl.setForeground(new Color(220, 38, 38));
+        errorLbl.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // Buttons
+        JButton cancelBtn = createActionButton("Cancel", new Color(95, 110, 130), true);
+        JButton confirmBtn = new JButton("Confirm");
+        confirmBtn.setFont(new Font("Arial", Font.BOLD, 12));
+        confirmBtn.setForeground(Color.WHITE);
+        confirmBtn.setBackground(new Color(22, 163, 74));
+        confirmBtn.setOpaque(true);
+        confirmBtn.setBorderPainted(false);
+        confirmBtn.setFocusPainted(false);
+        confirmBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        confirmBtn.setBorder(new EmptyBorder(7, 18, 7, 18));
+
+        Runnable confirmAction = () -> {
+            String text = balanceField.getText().trim().replace(",", "");
+
+            if (text.isEmpty()) {
+                errorLbl.setText("Please enter the balance amount.");
+                return;
+            }
+
+            double balance;
+            try {
+                balance = Double.parseDouble(text);
+            } catch (NumberFormatException ex) {
+                errorLbl.setText("Enter a valid number, e.g. 2500 or 2500.50");
+                return;
+            }
+
+            if (balance < 0) {
+                errorLbl.setText("Balance cannot be negative.");
+                return;
+            }
+
+            result[0] = balance;
+            dialog.dispose();
+        };
+
+        confirmBtn.addActionListener(e -> confirmAction.run());
+        balanceField.addActionListener(e -> confirmAction.run()); // Enter key confirms
+        cancelBtn.addActionListener(e -> dialog.dispose());
+
+        JPanel buttonRow = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        buttonRow.setOpaque(false);
+        buttonRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+        buttonRow.add(cancelBtn);
+        buttonRow.add(confirmBtn);
+
+        content.add(title);
+        content.add(Box.createVerticalStrut(4));
+        content.add(subtitle);
+        content.add(Box.createVerticalStrut(18));
+        content.add(totalCaption);
+        content.add(Box.createVerticalStrut(2));
+        content.add(totalValue);
+        content.add(Box.createVerticalStrut(16));
+        content.add(balanceCaption);
+        content.add(Box.createVerticalStrut(4));
+        content.add(balanceField);
+        content.add(Box.createVerticalStrut(4));
+        content.add(errorLbl);
+        content.add(Box.createVerticalStrut(12));
+        content.add(buttonRow);
+
+        dialog.setContentPane(content);
+        dialog.getRootPane().setDefaultButton(confirmBtn);
+        dialog.setPreferredSize(new Dimension(380, 340));
+        dialog.pack();
+        dialog.setResizable(false);
+        dialog.setLocationRelativeTo(owner);
+
+        SwingUtilities.invokeLater(balanceField::requestFocusInWindow);
+        dialog.setVisible(true); // blocks here until the dialog is closed
+
+        return result[0];
     }
 
     private JLabel createStatusBadge(String status) {

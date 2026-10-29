@@ -338,29 +338,29 @@ public class RegisterFrame extends javax.swing.JFrame {
         String nic = jTextField1.getText().trim();
 
         if (nic.isEmpty()) {
-            HelperFunctions.showPopMessage(this, "Please enter your NIC/Passport number !!");
+            HelperFunctions.showPopMessage(this, "Please enter your NIC/Passport number !!", "");
             return;
         }
         if (name.isEmpty()) {
-            HelperFunctions.showPopMessage(this, "Please enter your Full name !!");
+            HelperFunctions.showPopMessage(this, "Please enter your Full name !!", "");
             return;
         }
         if (phone.isEmpty()) {
-            HelperFunctions.showPopMessage(this, "Please enter your Contact number !!");
+            HelperFunctions.showPopMessage(this, "Please enter your Contact number !!", "");
             return;
         }
         if (email.isEmpty()) {
-            HelperFunctions.showPopMessage(this, "Please enter your Email address !!");
+            HelperFunctions.showPopMessage(this, "Please enter your Email address !!", "");
             return;
         }
         
         if(!ValidationFunctions.validatePhone(phone)){
-            HelperFunctions.showPopMessage(this, "Invalid Contact number !!");
+            HelperFunctions.showPopMessage(this, "Invalid Contact number !!", "");
             return;
         }
         
         if(!ValidationFunctions.validateEmail(email)){
-            HelperFunctions.showPopMessage(this, "Invalid Email address !!");
+            HelperFunctions.showPopMessage(this, "Invalid Email address !!", "");
             return;
         }
         
@@ -369,7 +369,7 @@ public class RegisterFrame extends javax.swing.JFrame {
         
         GuestManager.registerUser(guest);
 
-        HelperFunctions.showPopMessage(this, "Registration successful!");
+        HelperFunctions.showPopMessage(this, "Registration successful!", "");
 
         
         new GuestDashboardFrame().setVisible(true);

@@ -264,16 +264,16 @@ public class AdminLoginFrame extends javax.swing.JFrame {
         String password = passwordTextField.getText().trim();
 
         if (password.isEmpty()) {
-            HelperFunctions.showPopMessage(this, "Please enter Password !!");
+            HelperFunctions.showPopMessage(this, "Please enter Password !!", "");
             return;
         }
         if (email.isEmpty()) {
-            HelperFunctions.showPopMessage(this, "Please enter your Email address !!");
+            HelperFunctions.showPopMessage(this, "Please enter your Email address !!", "");
             return;
         }
         
         if(!ValidationFunctions.validateEmail(email)){
-            HelperFunctions.showPopMessage(this, "Invalid Email address !!");
+            HelperFunctions.showPopMessage(this, "Invalid Email address !!", "");
             return;
         }
        
@@ -284,7 +284,7 @@ public class AdminLoginFrame extends javax.swing.JFrame {
             this.dispose();
             
         }else{
-            HelperFunctions.showPopMessage(this, "Login failed !!");
+            HelperFunctions.showPopMessage(this, "Login failed !!", "");
         }
      
 

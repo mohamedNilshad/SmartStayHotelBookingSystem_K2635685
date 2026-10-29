@@ -464,7 +464,7 @@
                                           <Component id="roomAmount" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <EmptySpace pref="47" max="32767" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="totRoomAmount" alignment="1" min="-2" max="-2" attributes="0"/>
                                       <Component id="totExtGuestCharge" alignment="1" min="-2" max="-2" attributes="0"/>

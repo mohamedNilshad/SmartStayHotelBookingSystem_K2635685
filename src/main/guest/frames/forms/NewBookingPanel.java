@@ -64,7 +64,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
             if (selectedDate != null) {
                 boolean isNotValidDate = ValidationFunctions.validateCheckInDate(selectedDate);
                 if (isNotValidDate) {
-                    HelperFunctions.showPopMessage(this, "Check-in date must be at least 2 days from today.");
+                    HelperFunctions.showPopMessage(this, "Check-in date must be at least 2 days from today.", "");
                     Date newCheckInDate = HelperFunctions.getDefaultCheckInDate();
                     checkInDate.setDate(newCheckInDate);
                     checkOutDate.setDate(HelperFunctions.getDefaultCheckOutDate(newCheckInDate));
@@ -81,7 +81,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
             if (selectedcheckOutDate != null) {
                 boolean isNotValidDate = ValidationFunctions.validateCheckOutDate(selectedcheckOutDate, checkInDate.getDate());
                 if (isNotValidDate) {
-                    HelperFunctions.showPopMessage(this, "Check-out date must be at least 1 day from Check-in date.");
+                    HelperFunctions.showPopMessage(this, "Check-out date must be at least 1 day from Check-in date.", "");
                     checkOutDate.setDate(HelperFunctions.getDefaultCheckOutDate(checkInDate.getDate()));
                 }
             }
@@ -264,22 +264,22 @@ public class NewBookingPanel extends javax.swing.JPanel {
         String tempCheckInDate = HelperFunctions.formatDate(checkInDate.getDate());
         String tempCheckOutDate = HelperFunctions.formatDate(checkOutDate.getDate());
 
-        long noOfDays = HelperFunctions.getNoOfDays(checkInDate.getDate(), checkOutDate.getDate());
+        long noOfNights = HelperFunctions.getNoOfDays(checkInDate.getDate(), checkOutDate.getDate());
         int noOfGuest = Integer.parseInt(numberOfGuest.getText());
         int extGuestCount = (noOfGuest > room.getCapacity()) ?  (noOfGuest - room.getCapacity()) : 0;
 
         double dailyRoomRate = room.getRoomPackage().getDailyRoomRate();
         double extraGuestCharge = room.getRoomPackage().getExtraGuestCharge();
-        double extAmount = extGuestCount * extraGuestCharge;
+        double extAmount = extGuestCount * extraGuestCharge * noOfNights;
         double advncAmount = Double.parseDouble(advanceAmount.getText().trim());
 
         double taxRate = room.getRoomPackage().getTaxRate();
         double discountRate = 0.0;
-        if (noOfDays >= 5) {
+        if (noOfNights >= 5) {
             discountRate = room.getDiscountRate();
         }
 
-        totalAmount = dailyRoomRate * noOfDays;
+        totalAmount = dailyRoomRate * noOfNights;
         totalAmount += extAmount;
 
         double discountAmount = totalAmount * (discountRate / 100);
@@ -288,7 +288,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
         double taxAmount = totalAmount * (taxRate / 100);
         totalAmount += taxAmount;
 
-        //totalAmount -= advncAmount;
+        totalAmount -= advncAmount;
 
         bookingDetailsPanel.setVisible(true);
         confirmBooking.setVisible(true);
@@ -303,11 +303,11 @@ public class NewBookingPanel extends javax.swing.JPanel {
         checkInDateInv.setText(tempCheckInDate);
         checkOutDateInv.setText(tempCheckOutDate);
 
-        noOfNightsInv.setText(String.valueOf(noOfDays));
+        noOfNightsInv.setText(String.valueOf(noOfNights));
         noOfGuestsInv.setText(String.valueOf(noOfGuest));
 
-        roomAmount.setText("Rs. " + dailyRoomRate + "  x  " + noOfDays);
-        totRoomAmount.setText("Rs. " + dailyRoomRate * noOfDays);
+        roomAmount.setText("Rs. " + dailyRoomRate + "  x  " + noOfNights);
+        totRoomAmount.setText("Rs. " + dailyRoomRate * noOfNights);
 
         extGuestCharge.setText("Rs. " + extraGuestCharge + "  x  " + extGuestCount);
         totExtGuestCharge.setText("Rs. " + extAmount);
@@ -944,7 +944,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         double number = Double.parseDouble(advanceAmount.getText().trim());
         if (number < 10000.0) {
-            HelperFunctions.showPopMessage(this, "Amount should be at least Rs.10000.0");
+            HelperFunctions.showPopMessage(this, "Amount should be at least Rs.10000.0", "");
             advanceAmount.requestFocus();
 
         } else {
@@ -988,7 +988,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
         );
 
         BookingManager.addNewBooking(booking);
-        HelperFunctions.showPopMessage(this, "Room No " + selectedRoom.getRoomID() + " booked successfully!");
+        HelperFunctions.showPopMessage(this, "Room No " + selectedRoom.getRoomID() + " booked successfully!", "");
         onBack.run();
     }//GEN-LAST:event_confirmBookingActionPerformed
 

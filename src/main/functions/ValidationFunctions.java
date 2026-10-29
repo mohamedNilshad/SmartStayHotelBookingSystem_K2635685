@@ -5,10 +5,10 @@
 package main.functions;
 
 import java.awt.Component;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -63,7 +63,7 @@ public class ValidationFunctions {
     public static boolean validateDoubleValue(Component parentComponent, String value) {
 
         if (value.isEmpty()) {
-            HelperFunctions.showPopMessage( parentComponent,"Please enter a amount.");
+            HelperFunctions.showPopMessage(parentComponent, "Please enter a amount.", "");
             return false;
         }
 
@@ -73,16 +73,16 @@ public class ValidationFunctions {
             if (!Double.isFinite(number)) {
                 throw new NumberFormatException();
             }
-            
+
             return true;
 
         } catch (NumberFormatException e) {
-            HelperFunctions.showPopMessage( parentComponent,"Please enter a valid amount.");
+            HelperFunctions.showPopMessage(parentComponent, "Please enter a valid amount.", "");
             return false;
         }
     }
-    
-        public static boolean validateCheckInDate(Date selectedDate) {
+
+    public static boolean validateCheckInDate(Date selectedDate) {
 
         Calendar today = Calendar.getInstance();
 
@@ -126,5 +126,15 @@ public class ValidationFunctions {
         checkOutCalendar.set(Calendar.MILLISECOND, 0);
 
         return checkOutCalendar.before(checkInCalendar);
+    }
+
+    public static boolean isSameDate(Date date1, Date date2) {
+        if (date1 == null || date2 == null) {
+            return false;
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        return sdf.format(date1).equals(sdf.format(date2));
     }
 }

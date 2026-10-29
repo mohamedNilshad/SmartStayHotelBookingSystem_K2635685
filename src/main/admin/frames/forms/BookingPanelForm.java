@@ -7,10 +7,12 @@ package main.admin.frames.forms;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import main.functions.ValidationFunctions;
 import main.managers.BookingManager;
 import main.models.Booking;
 
@@ -48,8 +50,6 @@ public class BookingPanelForm extends javax.swing.JPanel {
         bookingStatus = BookingManager.getBookingStatus();
         bookingStatus.add(0, "All");
 
-        
-
         bookingStatusDropDown.setSelectedItem(bookingStatus.getFirst());
 
         bookingList = BookingManager.getBookingList();
@@ -82,36 +82,63 @@ public class BookingPanelForm extends javax.swing.JPanel {
         );
 
         pnlContent.add(bookingListPanel, BorderLayout.CENTER);
-        
+
         bookingStatusDropDown.removeAllItems();
 
         for (String status : bookingStatus) {
             bookingStatusDropDown.addItem(status);
         }
-        
-        
 
     }
-    
-    private void sortWithStatus(){
-        String value = bookingStatusDropDown.getSelectedItem().toString();
-        sortedBookingList.clear();
-        
-        if(value.equals(bookingStatus.getFirst())){
-            sortedBookingList = new ArrayList<>(bookingList);
+
+    private void filterBookingList() {
+        String text = searchField.getText().trim();
+        String statusValue = String.valueOf(
+                bookingStatusDropDown.getSelectedItem()
+        );
+
+        // Get selected date from JDateChooser
+        Date checkInDate = checkInDateField.getDate();
+
+        // Ignore search placeholder
+        if (text.equals(placeholder)) {
+            text = "";
         }
+
+        String searchText = text.toLowerCase();
+
+        sortedBookingList = new ArrayList<>();
 
         for (Booking booking : bookingList) {
 
-            if (booking.getStatus().equals(value)) {
+            boolean isBookingId = String.valueOf(booking.getBookingID()).startsWith(searchText);
+
+            boolean isGuestName = booking.getGuest().getFullName().toLowerCase().contains(searchText);
+
+            boolean isGuestPhone = booking.getGuest().getContactNumber().toLowerCase().contains(searchText);
+
+            boolean isRoomPackage = booking.getRoom().getRoomPackage().getPackageName().toLowerCase().contains(searchText);
+
+            boolean isBedType = booking.getRoom().getBedType().toLowerCase().contains(searchText);
+
+            
+            // Status filter
+            boolean isStatus = statusValue == null || statusValue.equals(bookingStatus.getFirst()) || booking.getStatus().equalsIgnoreCase(statusValue);
+
+            // Check-in date filter
+            boolean isCheckInDate  = checkInDate == null || ValidationFunctions.isSameDate(booking.getCheckInDate(), checkInDate);
+
+            boolean matchesSearch = searchText.isEmpty() || isBookingId || isGuestName || isGuestPhone || isRoomPackage || isBedType;
+
+            if (matchesSearch && isStatus && isCheckInDate) {
                 sortedBookingList.add(booking);
             }
         }
 
         tabelHeader.setText(sortedBookingList.size() + " Bookings");
         bookingListPanel.updateBookingList(sortedBookingList);
-
     }
+
 
     private void showPanel(JPanel panel) {
         pnlContent.removeAll();
@@ -139,6 +166,8 @@ public class BookingPanelForm extends javax.swing.JPanel {
         pnlContent = new javax.swing.JPanel();
         bookingStatusDropDown = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
+        checkInDateField = new com.toedter.calendar.JDateChooser();
+        jLabel11 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(858, 699));
@@ -194,6 +223,15 @@ public class BookingPanelForm extends javax.swing.JPanel {
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel9.setText("Sort by Booking status");
 
+        checkInDateField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                checkInDateFieldPropertyChange(evt);
+            }
+        });
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel11.setText("Check-in date");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -210,8 +248,12 @@ public class BookingPanelForm extends javax.swing.JPanel {
                         .addGap(39, 39, 39)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel9)
-                            .addComponent(bookingStatusDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(393, Short.MAX_VALUE))
+                            .addComponent(bookingStatusDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(44, 44, 44)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel11)
+                            .addComponent(checkInDateField, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(83, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(pnlContent, javax.swing.GroupLayout.DEFAULT_SIZE, 846, Short.MAX_VALUE)
@@ -232,7 +274,11 @@ public class BookingPanelForm extends javax.swing.JPanel {
                             .addComponent(bookingStatusDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel9)
-                        .addGap(38, 38, 38)))
+                        .addGap(38, 38, 38))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkInDateField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(tabelHeader)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -256,42 +302,22 @@ public class BookingPanelForm extends javax.swing.JPanel {
     }//GEN-LAST:event_searchFieldFocusLost
 
     private void searchFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchFieldKeyReleased
-        String text = searchField.getText().trim();
-        String statusValue = bookingStatusDropDown.getSelectedItem().toString();
-
-        if (text.isEmpty() && statusValue.equals(bookingStatus.getFirst())) {
-            sortedBookingList = new ArrayList<>(bookingList);
-
-        } else {
-
-            sortedBookingList.clear();
-
-            for (Booking booking : bookingList) {
-                boolean isBookingId = String.valueOf(booking.getBookingID()).startsWith(text);
-                boolean isGuestName = booking.getGuest().getFullName().toLowerCase().startsWith(text.toLowerCase());
-                boolean isGuestPhone = booking.getGuest().getContactNumber().toLowerCase().startsWith(text.toLowerCase());
-                boolean isRoomPackage = booking.getRoom().getRoomPackage().getPackageName().toLowerCase().startsWith(text.toLowerCase());
-                boolean isBedType = booking.getRoom().getBedType().toLowerCase().startsWith(text.toLowerCase());
-                
-                boolean isStatus = statusValue.equals(bookingStatus.getFirst()) ? true : booking.getStatus().equals(statusValue);
-
-                if ((isBookingId || isGuestName || isRoomPackage || isBedType || isGuestPhone) && isStatus) {
-                    sortedBookingList.add(booking);
-                }
-            }
-        }
-        tabelHeader.setText(sortedBookingList.size() + " Bookings");
-        bookingListPanel.updateBookingList(sortedBookingList);
-
+        filterBookingList();
     }//GEN-LAST:event_searchFieldKeyReleased
 
     private void bookingStatusDropDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookingStatusDropDownActionPerformed
-        sortWithStatus();
+        filterBookingList();
     }//GEN-LAST:event_bookingStatusDropDownActionPerformed
+
+    private void checkInDateFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_checkInDateFieldPropertyChange
+        filterBookingList();
+    }//GEN-LAST:event_checkInDateFieldPropertyChange
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> bookingStatusDropDown;
+    private com.toedter.calendar.JDateChooser checkInDateField;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel pnlContent;
     private javax.swing.JTextField searchField;

@@ -12,6 +12,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  *
@@ -19,11 +21,19 @@ import java.util.Locale;
  */
 public class HelperFunctions {
 
-    public static void showPopMessage(Component parentComponent, String msg) {
-        javax.swing.JOptionPane.showMessageDialog(parentComponent, msg);
+    public static void showPopMessage(Component parentComponent, String title, String body) {
+        showMessageDialog(parentComponent, title, body, JOptionPane.INFORMATION_MESSAGE);
     }
 
-
+    public static int showConfirmDialog(String title, String subtitle) {
+        return JOptionPane.showConfirmDialog(
+                null,
+                title,
+                subtitle,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+    }
 
     public static Date getDefaultCheckInDate() {
         Calendar calendar = Calendar.getInstance();
