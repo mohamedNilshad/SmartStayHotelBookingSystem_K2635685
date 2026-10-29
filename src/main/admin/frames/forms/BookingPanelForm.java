@@ -4,7 +4,6 @@
  */
 package main.admin.frames.forms;
 
-import main.admin.frames.forms.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -24,8 +23,9 @@ public class BookingPanelForm extends javax.swing.JPanel {
     private final String placeholder = "Search...";
     private List<Booking> bookingList = new ArrayList<>();
     private List<Booking> sortedBookingList = new ArrayList<>();
+    private List<String> bookingStatus = new ArrayList<>();
     private BookingListPanel bookingListPanel;
-    
+
     /**
      * Creates new form BookingPanelForm
      */
@@ -43,15 +43,22 @@ public class BookingPanelForm extends javax.swing.JPanel {
             searchField.setText(placeholder);
             searchField.setForeground(Color.GRAY);
         }
+        bookingStatusDropDown.setBackground(Color.white);
+
+        bookingStatus = BookingManager.getBookingStatus();
+        bookingStatus.add(0, "All");
+
         
+
+        bookingStatusDropDown.setSelectedItem(bookingStatus.getFirst());
+
         bookingList = BookingManager.getBookingList();
         sortedBookingList = new ArrayList<>(bookingList);
-        
+
         int bookingCount = bookingList.size();
         tabelHeader.setText(bookingCount + " Bookings");
         pnlContent.setLayout(new java.awt.BorderLayout());
-        
-        
+
         bookingListPanel = new BookingListPanel(
                 sortedBookingList,
                 selectedBooking -> {
@@ -76,10 +83,37 @@ public class BookingPanelForm extends javax.swing.JPanel {
 
         pnlContent.add(bookingListPanel, BorderLayout.CENTER);
         
+        bookingStatusDropDown.removeAllItems();
+
+        for (String status : bookingStatus) {
+            bookingStatusDropDown.addItem(status);
+        }
         
+        
+
     }
     
-      public void showPanel(JPanel panel) {
+    private void sortWithStatus(){
+        String value = bookingStatusDropDown.getSelectedItem().toString();
+        sortedBookingList.clear();
+        
+        if(value.equals(bookingStatus.getFirst())){
+            sortedBookingList = new ArrayList<>(bookingList);
+        }
+
+        for (Booking booking : bookingList) {
+
+            if (booking.getStatus().equals(value)) {
+                sortedBookingList.add(booking);
+            }
+        }
+
+        tabelHeader.setText(sortedBookingList.size() + " Bookings");
+        bookingListPanel.updateBookingList(sortedBookingList);
+
+    }
+
+    private void showPanel(JPanel panel) {
         pnlContent.removeAll();
 
         pnlContent.setLayout(new BorderLayout());
@@ -103,6 +137,8 @@ public class BookingPanelForm extends javax.swing.JPanel {
         searchField = new javax.swing.JTextField();
         tabelHeader = new javax.swing.JLabel();
         pnlContent = new javax.swing.JPanel();
+        bookingStatusDropDown = new javax.swing.JComboBox<>();
+        jLabel9 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(858, 699));
@@ -147,6 +183,17 @@ public class BookingPanelForm extends javax.swing.JPanel {
             .addGap(0, 538, Short.MAX_VALUE)
         );
 
+        bookingStatusDropDown.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        bookingStatusDropDown.setOpaque(true);
+        bookingStatusDropDown.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bookingStatusDropDownActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel9.setText("Sort by Booking status");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -155,10 +202,16 @@ public class BookingPanelForm extends javax.swing.JPanel {
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tabelHeader)
-                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(subtitleLabel)
-                    .addComponent(titleLabel))
-                .addContainerGap(405, Short.MAX_VALUE))
+                    .addComponent(titleLabel)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(subtitleLabel)
+                            .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(39, 39, 39)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addComponent(bookingStatusDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(393, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(pnlContent, javax.swing.GroupLayout.DEFAULT_SIZE, 846, Short.MAX_VALUE)
@@ -170,9 +223,16 @@ public class BookingPanelForm extends javax.swing.JPanel {
                 .addGap(17, 17, 17)
                 .addComponent(titleLabel)
                 .addGap(0, 0, 0)
-                .addComponent(subtitleLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(subtitleLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bookingStatusDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addGap(38, 38, 38)))
                 .addGap(18, 18, 18)
                 .addComponent(tabelHeader)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -197,8 +257,9 @@ public class BookingPanelForm extends javax.swing.JPanel {
 
     private void searchFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchFieldKeyReleased
         String text = searchField.getText().trim();
+        String statusValue = bookingStatusDropDown.getSelectedItem().toString();
 
-        if (text.isEmpty()) {
+        if (text.isEmpty() && statusValue.equals(bookingStatus.getFirst())) {
             sortedBookingList = new ArrayList<>(bookingList);
 
         } else {
@@ -211,21 +272,27 @@ public class BookingPanelForm extends javax.swing.JPanel {
                 boolean isGuestPhone = booking.getGuest().getContactNumber().toLowerCase().startsWith(text.toLowerCase());
                 boolean isRoomPackage = booking.getRoom().getRoomPackage().getPackageName().toLowerCase().startsWith(text.toLowerCase());
                 boolean isBedType = booking.getRoom().getBedType().toLowerCase().startsWith(text.toLowerCase());
-              
-                if (isBookingId || isGuestName || isRoomPackage || isBedType || isGuestPhone) {
+                
+                boolean isStatus = statusValue.equals(bookingStatus.getFirst()) ? true : booking.getStatus().equals(statusValue);
+
+                if ((isBookingId || isGuestName || isRoomPackage || isBedType || isGuestPhone) && isStatus) {
                     sortedBookingList.add(booking);
                 }
             }
         }
-
         tabelHeader.setText(sortedBookingList.size() + " Bookings");
-
-        // Update UI
         bookingListPanel.updateBookingList(sortedBookingList);
+
     }//GEN-LAST:event_searchFieldKeyReleased
+
+    private void bookingStatusDropDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookingStatusDropDownActionPerformed
+        sortWithStatus();
+    }//GEN-LAST:event_bookingStatusDropDownActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> bookingStatusDropDown;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel pnlContent;
     private javax.swing.JTextField searchField;
     private javax.swing.JLabel subtitleLabel;

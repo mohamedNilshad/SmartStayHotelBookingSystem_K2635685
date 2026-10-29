@@ -17,7 +17,8 @@ import main.models.Room;
  */
 public class BookingManager {
 
-    private static String[] bookingStatus = {"Active", "Cancelled", "Completed"};
+//    private static String[] bookingStatus = {"Active", "Cancelled", "Completed"};
+    private static List<String> bookingStatus = new ArrayList<>(Arrays.asList("Active", "Cancelled", "Completed"));
     private static List<Booking> bookingList = new ArrayList<>();
 
     //Temp
@@ -85,7 +86,7 @@ public class BookingManager {
             if (booking.getBookingID() == bookingId) {
                 continue;           // ignore itself (when editing)
             }
-            if (!booking.getStatus().equals(bookingStatus[0])) {
+            if (!booking.getStatus().equals(bookingStatus.getFirst())) {
                 continue; // only "Active" bookings block
             }
             if (isOverlapping(checkInDate, checkOutDate,
@@ -133,19 +134,25 @@ public class BookingManager {
     }
 
     public static String getBookingStatus(int index) {
-        return bookingStatus[index];
+        return bookingStatus.get(index);
     }
 
     public static List<Booking> setBookingStatus(int index, int bookingId) {
 
         for (Booking booking : bookingList) {
             if (booking.getBookingID() == bookingId) {
-                booking.setStatus(bookingStatus[index]);
+                booking.setStatus(bookingStatus.get(index));
                 break;
             }
         }
 
         return getBookingList();
     }
+
+    public static List<String> getBookingStatus() {
+        return new ArrayList<>(bookingStatus);
+    }
+    
+    
 
 }
