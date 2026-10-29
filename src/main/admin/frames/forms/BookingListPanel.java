@@ -1,0 +1,370 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+ */
+package main.admin.frames.forms;
+
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.*;
+import java.util.List;
+import java.util.function.Consumer;
+import main.functions.HelperFunctions;
+import main.managers.BookingManager;
+import main.models.Booking;
+import main.models.Guest;
+
+/**
+ *
+ * @author N I L S H A D
+ */
+public class BookingListPanel extends javax.swing.JPanel {
+
+    private JPanel listPanel;
+    private JScrollPane scrollPane;
+    private JLabel titleLabel;
+    private final Consumer<Booking> onBookingEdit;
+
+    /**
+     * Creates new form RoomListPanel
+     */
+    public BookingListPanel(List<Booking> bookingList, Consumer<Booking> onBookingEdit) {
+        initComponents();
+        this.onBookingEdit = onBookingEdit;
+        setLayout(new BorderLayout());
+        listPanel = new JPanel();
+
+        listPanel.setLayout(
+                new BoxLayout(listPanel, BoxLayout.Y_AXIS)
+        );
+        listPanel.setBackground(Color.WHITE);
+
+        scrollPane = new JScrollPane(listPanel);
+
+        scrollPane.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
+        );
+
+        scrollPane.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+        );
+
+        add(scrollPane, java.awt.BorderLayout.CENTER);
+
+        updateBookingList(bookingList);
+    }
+
+    public void updateBookingList(List<Booking> bookingList) {
+
+        listPanel.removeAll();
+        if (bookingList.isEmpty()) {
+            listPanel.add(createBookingRow(new Booking(), true));
+        } else {
+            for (Booking booking : bookingList) {
+                listPanel.add(createBookingRow(booking, false));
+            }
+        }
+
+        listPanel.revalidate();
+        listPanel.repaint();
+
+    }
+
+    private JPanel createBookingRow(Booking booking, boolean isEmpty) {
+
+        JPanel row = new JPanel(new BorderLayout(20, 0));
+        row.setBackground(Color.WHITE);
+        row.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(215, 222, 230)),
+                new EmptyBorder(14, 16, 14, 16)
+        ));
+        row.setMinimumSize(new Dimension(0, 110));
+        row.setPreferredSize(new Dimension(650, 110));
+        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 110));
+        row.setAlignmentX(Component.LEFT_ALIGNMENT);
+        row.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        Color muted = new Color(95, 110, 130);
+
+        if (isEmpty) {
+            JLabel emptyText = new JLabel("No bookings available", SwingConstants.CENTER);
+            emptyText.setFont(new Font("Arial", Font.PLAIN, 15));
+            emptyText.setForeground(Color.GRAY);
+            row.add(emptyText, BorderLayout.CENTER);
+
+        } else {
+            Guest guest = booking.getGuest();
+
+            String bookingId = "#" + booking.getBookingID();
+            String roomId = String.valueOf(booking.getRoom().getRoomID());
+            String packageName = booking.getRoom().getRoomPackage().getPackageName();
+            String bedType = booking.getRoom().getBedType();
+            String noOfGuest = "x " + booking.getNumberOfGeust();
+            String totalAmount = "Rs." + booking.getTotalAmount();
+            String checkIn = HelperFunctions.formatDate(booking.getCheckInDate());
+            String checkOut = HelperFunctions.formatDate(booking.getCheckOutDate());
+            String status = booking.getStatus(); // "Active", "Cancelled", "Completed"
+
+            String guestName = guest.getFullName() ;
+            String guestPhone = guest.getContactNumber();
+            String guestEmail = guest.getEmailAddress();
+
+            boolean isCancelled = "Cancelled".equals(status);
+            boolean isCompleted = "Completed".equals(status);
+            boolean canModify = "Active".equals(status)
+                    && !HelperFunctions.isOneDayBefore(booking.getCheckInDate())
+                    && !isCompleted && !isCancelled;
+
+        
+            JLabel idLbl = new JLabel(bookingId);
+            idLbl.setFont(new Font("Arial", Font.BOLD, 18));
+            idLbl.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+            JLabel badge = createStatusBadge(status);
+            badge.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+            JPanel left = new JPanel();
+            left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
+            left.setOpaque(false);
+            left.setPreferredSize(new Dimension(90, 60));
+            left.add(idLbl);
+            left.add(Box.createVerticalStrut(8));
+            left.add(badge);
+
+           
+            JLabel nameLbl = new JLabel(guestName);
+            nameLbl.setFont(new Font("Arial", Font.BOLD, 15));
+
+            JLabel phoneLbl = new JLabel("📞 " + guestPhone);
+            phoneLbl.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 13));
+            phoneLbl.setForeground(muted);
+
+            JLabel emailLbl = new JLabel("✉ " + guestEmail);
+            emailLbl.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 13));
+            emailLbl.setForeground(muted);
+
+            JPanel guestText = new JPanel();
+            guestText.setLayout(new BoxLayout(guestText, BoxLayout.Y_AXIS));
+            guestText.setOpaque(false);
+            guestText.add(nameLbl);
+            guestText.add(Box.createVerticalStrut(5));
+            guestText.add(phoneLbl);
+            guestText.add(Box.createVerticalStrut(3));
+            guestText.add(emailLbl);
+
+            
+            JPanel avatarWrap = new JPanel(new GridBagLayout());
+            avatarWrap.setOpaque(false);
+            avatarWrap.add(createAvatar(guestName));
+
+            JPanel guestPanel = new JPanel(new BorderLayout(12, 0));
+            guestPanel.setOpaque(false);
+            guestPanel.add(avatarWrap, BorderLayout.WEST);
+            guestPanel.add(guestText, BorderLayout.CENTER);
+
+           
+            JLabel roomLbl = new JLabel("Room " + roomId + "  •  " + packageName);
+            roomLbl.setFont(new Font("Arial", Font.BOLD, 15));
+            roomLbl.setForeground(muted);
+
+            JLabel occupancyLbl = new JLabel("🛏 " + bedType + "  |  👥 " + noOfGuest);
+            occupancyLbl.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 13));
+            occupancyLbl.setForeground(muted);
+
+            JLabel dateLbl = new JLabel("📅 " + checkIn + "  →  " + checkOut);
+            dateLbl.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 13));
+            dateLbl.setForeground(muted);
+
+            JPanel stayPanel = new JPanel();
+            stayPanel.setLayout(new BoxLayout(stayPanel, BoxLayout.Y_AXIS));
+            stayPanel.setOpaque(false);
+            stayPanel.add(roomLbl);
+            stayPanel.add(Box.createVerticalStrut(5));
+            stayPanel.add(occupancyLbl);
+            stayPanel.add(Box.createVerticalStrut(3));
+            stayPanel.add(dateLbl);
+
+           
+            stayPanel.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(0, 1, 0, 0, new Color(225, 230, 236)),
+                    new EmptyBorder(0, 20, 0, 0)
+            ));
+
+            JPanel center = new JPanel(new GridLayout(1, 2, 20, 0));
+            center.setOpaque(false);
+            center.add(guestPanel);
+            center.add(stayPanel);
+
+        
+            JLabel amountLbl = new JLabel(totalAmount);
+            amountLbl.setFont(new Font("Arial", Font.BOLD, 15));
+            amountLbl.setAlignmentX(Component.RIGHT_ALIGNMENT);
+
+            JLabel totalCaption = new JLabel("Total");
+            totalCaption.setFont(new Font("Arial", Font.PLAIN, 11));
+            totalCaption.setForeground(Color.GRAY);
+            totalCaption.setAlignmentX(Component.RIGHT_ALIGNMENT);
+
+            JButton editBtn = createActionButton("Edit", new Color(37, 99, 235), canModify);
+            JButton cancelBtn = createActionButton("Cancel", new Color(220, 38, 38), canModify);
+
+            editBtn.addActionListener(e -> onBookingEdit.accept(booking));
+            cancelBtn.addActionListener(e -> {
+                List<Booking> updatedBookingList = BookingManager.setBookingStatus(1, booking.getBookingID());
+                updateBookingList(updatedBookingList);
+            });
+
+            JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+            buttons.setOpaque(false);
+            buttons.setAlignmentX(Component.RIGHT_ALIGNMENT);
+            buttons.add(editBtn);
+            buttons.add(cancelBtn);
+
+            JPanel right = new JPanel();
+            right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
+            right.setOpaque(false);
+            right.add(amountLbl);
+            right.add(totalCaption);
+            right.add(Box.createVerticalStrut(8));
+            right.add(buttons);
+
+            row.add(left, BorderLayout.WEST);
+            row.add(center, BorderLayout.CENTER);
+            row.add(right, BorderLayout.EAST);
+        }
+
+        row.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                row.setBackground(new Color(240, 244, 248));
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), row);
+                if (!row.contains(p)) {
+                    row.setBackground(Color.WHITE);
+                }
+            }
+        });
+
+        return row;
+    }
+
+    private JLabel createStatusBadge(String status) {
+        Color bg;
+        Color fg;
+
+        String s = status == null ? "" : status;
+        switch (s) {
+            case "Active":
+                bg = new Color(220, 252, 231);
+                fg = new Color(22, 101, 52);
+                break;
+            case "Cancelled":
+                bg = new Color(254, 226, 226);
+                fg = new Color(153, 27, 27);
+                break;
+            case "Completed":
+                bg = new Color(226, 232, 240);
+                fg = new Color(51, 65, 85);
+                break;
+            default:
+                bg = new Color(241, 245, 249);
+                fg = Color.GRAY;
+        }
+
+        JLabel badge = new JLabel(s, SwingConstants.CENTER) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(getBackground());
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), getHeight(), getHeight());
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        badge.setOpaque(false);
+        badge.setBackground(bg);
+        badge.setForeground(fg);
+        badge.setFont(new Font("Arial", Font.BOLD, 11));
+        badge.setBorder(new EmptyBorder(3, 12, 3, 12));
+        return badge;
+    }
+
+    private JButton createActionButton(String text, Color color, boolean enabled) {
+        JButton btn = new JButton(text);
+        btn.setFont(new Font("Arial", Font.BOLD, 12));
+        btn.setFocusPainted(false);
+        btn.setContentAreaFilled(false);
+        btn.setOpaque(false);
+        btn.setEnabled(enabled);
+        btn.setCursor(new Cursor(enabled ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
+
+        Color c = enabled ? color : new Color(180, 186, 195);
+        btn.setForeground(c);
+        btn.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(c, 1, true),
+                new EmptyBorder(5, 14, 5, 14)
+        ));
+        return btn;
+    }
+
+    private JLabel createAvatar(String name) {
+        String initials = getInitials(name);
+
+        JLabel avatar = new JLabel(initials, SwingConstants.CENTER) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(getBackground());
+                g2.fillOval(0, 0, getWidth(), getHeight());
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        avatar.setOpaque(false);
+        avatar.setBackground(new Color(219, 234, 254));
+        avatar.setForeground(new Color(30, 64, 175));
+        avatar.setFont(new Font("Arial", Font.BOLD, 14));
+        avatar.setPreferredSize(new Dimension(40, 40));
+        return avatar;
+    }
+
+    private String getInitials(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return "?";
+        }
+        String[] parts = name.trim().split("\\s+");
+        String first = parts[0].substring(0, 1);
+        String last = parts.length > 1 ? parts[parts.length - 1].substring(0, 1) : "";
+        return (first + last).toUpperCase();
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // End of variables declaration//GEN-END:variables
+}

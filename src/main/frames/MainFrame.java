@@ -218,6 +218,11 @@ public class MainFrame extends javax.swing.JFrame {
 
         jButton2.setText("Admin Login");
         jButton2.setFocusable(false);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -287,9 +292,6 @@ public class MainFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    
-    
-    
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
@@ -302,22 +304,21 @@ public class MainFrame extends javax.swing.JFrame {
             HelperFunctions.showPopMessage(this, "Please enter your NIC/Passport number.");
             return;
         }
-     
-        
+
         boolean isValid = ValidationFunctions.validateNIC(nic);
-        
-        if(isValid == false){
+
+        if (isValid == false) {
             isValid = ValidationFunctions.validatePassport(nic);
         }
-        
-        if(isValid == false){
+
+        if (isValid == false) {
             HelperFunctions.showPopMessage(this, "Invalid entered NIC/Passport number !");
             return;
         }
 
         if (GuestManager.isRegistered(nic)) {
 
-            DashboardFrame dashboard = new DashboardFrame();
+            GuestDashboardFrame dashboard = new GuestDashboardFrame();
             dashboard.setVisible(true);
             this.dispose();
 
@@ -328,6 +329,13 @@ public class MainFrame extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
+        AdminLoginFrame admin = new AdminLoginFrame();
+        admin.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments

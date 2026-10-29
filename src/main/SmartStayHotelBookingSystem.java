@@ -1,7 +1,8 @@
 package main;
 
-import main.frames.DashboardFrame;
+import main.frames.AdminDashboardFrame;
 import main.frames.MainFrame;
+import main.managers.AdminManager;
 import main.managers.RoomManager;
 
 /*
@@ -20,9 +21,11 @@ public class SmartStayHotelBookingSystem {
      */
     public static void main(String[] args) {
         RoomManager roomManager = new RoomManager();
+        AdminManager adminManager = new AdminManager();
+        
         java.awt.EventQueue.invokeLater(() -> {
-        new MainFrame().setVisible(true);
-//        new DashboardFrame().setVisible(true);
+//        new MainFrame().setVisible(true);
+        new AdminDashboardFrame().setVisible(true);
     });
     }
     

@@ -372,7 +372,7 @@ public class RegisterFrame extends javax.swing.JFrame {
         HelperFunctions.showPopMessage(this, "Registration successful!");
 
         
-        new DashboardFrame().setVisible(true);
+        new GuestDashboardFrame().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
