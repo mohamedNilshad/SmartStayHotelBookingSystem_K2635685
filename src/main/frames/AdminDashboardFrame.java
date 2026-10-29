@@ -3,6 +3,7 @@ package main.frames;
 import java.awt.Color;
 import javax.swing.JPanel;
 import main.admin.frames.forms.BookingPanelForm;
+import main.admin.frames.forms.RoomPanelForm;
 import main.managers.AdminManager;
 import main.models.Admin;
 
@@ -228,9 +229,9 @@ public class AdminDashboardFrame extends javax.swing.JFrame {
         bookingMenu.setBackground(Color.decode("#1F3A56"));
         guestsMenu.setBackground(Color.decode("#1F3A56"));
         
-        //HistoryPanelForm
-        BookingPanelForm historyPanel = new BookingPanelForm();
-        buildRoomsPage(historyPanel);
+        //RoomPanelForm
+        RoomPanelForm roomPanel = new RoomPanelForm();
+        buildRoomsPage(roomPanel);
     }//GEN-LAST:event_roomsMenuActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

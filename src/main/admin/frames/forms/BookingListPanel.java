@@ -120,7 +120,7 @@ public class BookingListPanel extends javax.swing.JPanel {
             idLbl.setFont(new Font("Arial", Font.BOLD, 18));
             idLbl.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-            JLabel badge = createStatusBadge(status);
+            JLabel badge = HelperFunctions.createStatusBadge(status);
             badge.setAlignmentX(Component.LEFT_ALIGNMENT);
 
             JPanel left = new JPanel();
@@ -153,7 +153,7 @@ public class BookingListPanel extends javax.swing.JPanel {
 
             JPanel avatarWrap = new JPanel(new GridBagLayout());
             avatarWrap.setOpaque(false);
-            avatarWrap.add(createAvatar(guestName));
+            avatarWrap.add(HelperFunctions.createAvatar(guestName));
 
             JPanel guestPanel = new JPanel(new BorderLayout(12, 0));
             guestPanel.setOpaque(false);
@@ -200,9 +200,9 @@ public class BookingListPanel extends javax.swing.JPanel {
             totalCaption.setForeground(Color.GRAY);
             totalCaption.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
-            JButton editBtn = createActionButton("Edit", new Color(37, 99, 235), canModify);
-            JButton cancelBtn = createActionButton("Cancel", new Color(220, 38, 38), canModify);
-            JButton completeBtn = createActionButton("Complete", new Color(22, 163, 74), canComplete);
+            JButton editBtn = HelperFunctions.createActionButton("Edit", new Color(37, 99, 235), canModify);
+            JButton cancelBtn = HelperFunctions.createActionButton("Cancel", new Color(220, 38, 38), canModify);
+            JButton completeBtn = HelperFunctions.createActionButton("Complete", new Color(22, 163, 74), canComplete);
 
             editBtn.addActionListener(e -> onBookingEdit.accept(booking));
             cancelBtn.addActionListener(e -> {
@@ -324,7 +324,7 @@ public class BookingListPanel extends javax.swing.JPanel {
         errorLbl.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // Buttons
-        JButton cancelBtn = createActionButton("Cancel", new Color(95, 110, 130), true);
+        JButton cancelBtn = HelperFunctions.createActionButton("Cancel", new Color(95, 110, 130), true);
         JButton confirmBtn = new JButton("Confirm");
         confirmBtn.setFont(new Font("Arial", Font.BOLD, 12));
         confirmBtn.setForeground(Color.WHITE);
@@ -399,97 +399,7 @@ public class BookingListPanel extends javax.swing.JPanel {
         return result[0];
     }
 
-    private JLabel createStatusBadge(String status) {
-        Color bg;
-        Color fg;
 
-        String s = status == null ? "" : status;
-        switch (s) {
-            case "Active":
-                bg = new Color(220, 252, 231);
-                fg = new Color(22, 101, 52);
-                break;
-            case "Cancelled":
-                bg = new Color(254, 226, 226);
-                fg = new Color(153, 27, 27);
-                break;
-            case "Completed":
-                bg = new Color(226, 232, 240);
-                fg = new Color(51, 65, 85);
-                break;
-            default:
-                bg = new Color(241, 245, 249);
-                fg = Color.GRAY;
-        }
-
-        JLabel badge = new JLabel(s, SwingConstants.CENTER) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(getBackground());
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), getHeight(), getHeight());
-                g2.dispose();
-                super.paintComponent(g);
-            }
-        };
-        badge.setOpaque(false);
-        badge.setBackground(bg);
-        badge.setForeground(fg);
-        badge.setFont(new Font("Arial", Font.BOLD, 11));
-        badge.setBorder(new EmptyBorder(3, 12, 3, 12));
-        return badge;
-    }
-
-    private JButton createActionButton(String text, Color color, boolean enabled) {
-        JButton btn = new JButton(text);
-        btn.setFont(new Font("Arial", Font.BOLD, 12));
-        btn.setFocusPainted(false);
-        btn.setContentAreaFilled(false);
-        btn.setOpaque(false);
-        btn.setEnabled(enabled);
-        btn.setCursor(new Cursor(enabled ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
-
-        Color c = enabled ? color : new Color(180, 186, 195);
-        btn.setForeground(c);
-        btn.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(c, 1, true),
-                new EmptyBorder(5, 14, 5, 14)
-        ));
-        return btn;
-    }
-
-    private JLabel createAvatar(String name) {
-        String initials = getInitials(name);
-
-        JLabel avatar = new JLabel(initials, SwingConstants.CENTER) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(getBackground());
-                g2.fillOval(0, 0, getWidth(), getHeight());
-                g2.dispose();
-                super.paintComponent(g);
-            }
-        };
-        avatar.setOpaque(false);
-        avatar.setBackground(new Color(219, 234, 254));
-        avatar.setForeground(new Color(30, 64, 175));
-        avatar.setFont(new Font("Arial", Font.BOLD, 14));
-        avatar.setPreferredSize(new Dimension(40, 40));
-        return avatar;
-    }
-
-    private String getInitials(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            return "?";
-        }
-        String[] parts = name.trim().split("\\s+");
-        String first = parts[0].substring(0, 1);
-        String last = parts.length > 1 ? parts[parts.length - 1].substring(0, 1) : "";
-        return (first + last).toUpperCase();
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.

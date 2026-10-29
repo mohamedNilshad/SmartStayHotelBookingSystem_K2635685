@@ -6,6 +6,7 @@ package main.managers;
 
 import java.util.ArrayList;
 import java.util.List;
+import main.models.Booking;
 import main.models.Room;
 import main.models.room_packages.DeluxePackage;
 import main.models.room_packages.FamilySuitePackage;
@@ -18,6 +19,7 @@ import main.models.room_packages.SuitePackage;
  * @author N I L S H A D
  */
 public class RoomManager {
+
     private static String[] bedTypes = {"Single", "Double", "Queen", "King"};
     private static String[] roomStatus = {"Available", "Reserved", "Under Maintenance"};
     private static List<RoomPackage> roomPackageList = new ArrayList<>();
@@ -58,8 +60,7 @@ public class RoomManager {
 
         return nameList;
     }
-    
-    
+
     public static List<RoomPackage> getRoomPackageList() {
         return new ArrayList<>(roomPackageList);
     }
@@ -87,6 +88,31 @@ public class RoomManager {
                 break;
             }
         }
+    }
+    
+    public static int deleteRoom(int roomId){
+        
+        if(roomHasActiveBookings(roomId)){
+            return -1;
+        }
+        
+        for (int i = 0; i < roomList.size(); i++) {
+            Room room = roomList.get(i);
+            if (room.getRoomID() == roomId ) {
+                roomList.remove(i);
+                return 1;
+            }
+        }
+        return 0;
+    }
+
+    private static boolean roomHasActiveBookings(int roomId) {
+        for (Booking b : BookingManager.getBookingList()) {
+            if (b.getRoom().getRoomID() == roomId && BookingManager.getBookingStatus(0).equals(b.getStatus())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
