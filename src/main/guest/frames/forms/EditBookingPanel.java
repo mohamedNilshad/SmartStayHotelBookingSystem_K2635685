@@ -12,12 +12,14 @@ import java.util.Date;
 import java.util.Locale;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import main.functions.CalculateTotal;
 import main.functions.HelperFunctions;
 import main.functions.ValidationFunctions;
 import main.managers.BookingManager;
 import main.managers.GuestManager;
 import main.managers.RoomManager;
 import main.models.Booking;
+import main.models.Invoice;
 import main.models.Room;
 import main.models.room_packages.RoomPackage;
 
@@ -30,9 +32,9 @@ public class EditBookingPanel extends javax.swing.JPanel {
     private final Runnable onBack;
     private Room selectedRoom;
     private Booking selectedBooking;
-    private List<Room> allRooms = new ArrayList<>();
     private double totalAmount;
     private boolean isChanged;
+    private Invoice invoice;
 
     /**
      * Creates new form RoomListPanel
@@ -56,7 +58,6 @@ public class EditBookingPanel extends javax.swing.JPanel {
         totalAmount = 0.0;
         isChanged = false;
         selectedBooking = booking;
-        allRooms = RoomManager.getRoomList();
         selectedRoom = booking.getRoom();
 
         checkInDate.getDateEditor().addPropertyChangeListener("date", evt -> {
@@ -111,7 +112,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
         checkInDate.setDate(selectedBooking.getCheckInDate());
         checkOutDate.setDate(selectedBooking.getCheckOutDate());
         numberOfGuest.setText(String.valueOf(selectedBooking.getNumberOfGeust()));
-        advanceAmount.setText(String.valueOf(selectedBooking.getBookingAdvance()));
+        advanceAmount.setText(String.valueOf(selectedBooking.getInvoice().getBookingAdvance()));
         jButton1.setEnabled(false);
 
         //show selected room row
@@ -148,7 +149,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
             boolean checkInChanged = !checkInDate.getDate().toString().equals(selectedBooking.getCheckInDate().toString());
             boolean checkOutChanged = !checkOutDate.getDate().toString().equals(selectedBooking.getCheckOutDate().toString());
             boolean guestsChanged = !numberOfGuest.getText().equals(String.valueOf(selectedBooking.getNumberOfGeust()));
-            boolean advanceChanged = !advanceAmount.getText().equals(String.valueOf(selectedBooking.getBookingAdvance()));
+            boolean advanceChanged = !advanceAmount.getText().equals(String.valueOf(selectedBooking.getInvoice().getBookingAdvance()));
 
             
             isChanged = packageChanged || bedChanged || checkInChanged || checkOutChanged || guestsChanged || advanceChanged;
@@ -280,6 +281,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 if (!isEmpty) {
                     selectedRoom = room;
+                    invoice = CalculateTotal.calculation(selectedRoom, checkInDate.getDate(), checkOutDate.getDate(), numberOfGuest.getText(), advanceAmount.getText().trim());
                     showInvoice(room);
                 }
 
@@ -312,39 +314,17 @@ public class EditBookingPanel extends javax.swing.JPanel {
 
         String tempCheckInDate = HelperFunctions.formatDate(checkInDate.getDate());
         String tempCheckOutDate = HelperFunctions.formatDate(checkOutDate.getDate());
-
-        long noOfNights = HelperFunctions.getNoOfDays(checkInDate.getDate(), checkOutDate.getDate());
+        
+        long noOfNights = HelperFunctions.getNoOfNights(checkInDate.getDate(), checkOutDate.getDate());
         int noOfGuest = Integer.parseInt(numberOfGuest.getText());
-        int extGuestCount = (noOfGuest > room.getCapacity()) ? (noOfGuest - room.getCapacity()) : 0;
-
+        int extGuestCount = (noOfGuest > room.getCapacity()) ?  (noOfGuest - room.getCapacity()) : 0;
+        
         double dailyRoomRate = room.getRoomPackage().getDailyRoomRate();
         double extraGuestCharge = room.getRoomPackage().getExtraGuestCharge();
         double extAmount = extGuestCount * extraGuestCharge * noOfNights;
-        double advncAmount = Double.parseDouble(advanceAmount.getText().trim());
 
-        double taxRate = room.getRoomPackage().getTaxRate();
-        double discountRate = 0.0;
-        if (noOfNights >= 5) {
-            discountRate = room.getDiscountRate();
-        }
-
-        totalAmount = dailyRoomRate * noOfNights;
-        totalAmount += extAmount;
-
-        double discountAmount = totalAmount * (discountRate / 100);
-        totalAmount -= discountAmount;
-
-        double taxAmount = totalAmount * (taxRate / 100);
-        totalAmount += taxAmount;
-
-        totalAmount -= advncAmount;
         bookingDetailsPanel.setVisible(true);
         confirmBooking.setVisible(true);
-        if (advncAmount < 10000.0 || !isChanged) {
-            confirmBooking.setEnabled(false);
-        } else {
-            confirmBooking.setEnabled(true);
-        }
 
         roomNumber.setText(roomId);
         roomInfo.setText(packageName + " • " + bedType + " bed");
@@ -365,14 +345,14 @@ public class EditBookingPanel extends javax.swing.JPanel {
         extGuestCharge.setText("Rs. " + extraGuestCharge + "  x  " + extGuestCount);
         totExtGuestCharge.setText("Rs. " + extAmount);
 
-        discountPercentLbl.setText("(" + discountRate + " %)");
-        totDiscountAmt.setText("-Rs." + discountAmount);
+        discountPercentLbl.setText("(" + invoice.getDiscountRate() + " %)");
+        totDiscountAmt.setText("-Rs." + invoice.getDiscountAmount());
 
-        taxPercentLbl.setText("(" + taxRate + " %)");
-        totTaxAmt.setText("Rs." + taxAmount);
-
-        bookingAdvance.setText("-Rs. " + advncAmount);
-        totalAmountLbl.setText("Rs. " + totalAmount);
+        taxPercentLbl.setText("(" + invoice.getTaxRate() + " %)");
+        totTaxAmt.setText("Rs." + invoice.getTaxAmount());
+        
+        bookingAdvance.setText("-Rs. " + invoice.getBookingAdvance());
+        totalAmountLbl.setText("Rs. " + invoice.getTotalAmount());
     }
 
     /**
@@ -1042,9 +1022,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
                 checkOutDate.getDate(),
                 HelperFunctions.getCurrentDate(),
                 Integer.parseInt(numberOfGuest.getText()),
-                Double.parseDouble(advanceAmount.getText().trim()),
-                false,
-                totalAmount,
+                invoice,
                 BookingManager.getBookingStatus(0)
         );
 
@@ -1061,7 +1039,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
         String value = advanceAmount.getText().trim();
         boolean isValid = ValidationFunctions.validateDoubleValue(this, value);
         if (!isValid) {
-            advanceAmount.setText(String.valueOf(selectedBooking.getBookingAdvance()));
+            advanceAmount.setText(String.valueOf(selectedBooking.getInvoice().getBookingAdvance()));
             advanceAmount.requestFocus();
         } else {
             enableButton();

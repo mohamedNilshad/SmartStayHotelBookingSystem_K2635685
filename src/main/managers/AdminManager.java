@@ -20,7 +20,7 @@ public class AdminManager {
     
     
     public AdminManager(){
-        adminList.add(new Admin("Test@123", "0771235265", "Nilshad", "n@gmail.com"));
+        adminList.add(new Admin("Test@123", "0771235265", "Nilshad", "nilshad@gmail.com"));
     }
 
     public static boolean verifyLogin(String email, String password) {

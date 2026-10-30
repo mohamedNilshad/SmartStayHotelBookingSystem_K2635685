@@ -102,7 +102,7 @@ public class BookingListPanel extends javax.swing.JPanel {
             String packageName = booking.getRoom().getRoomPackage().getPackageName();
             String bedType = booking.getRoom().getBedType();
             String noOfGuest = "x " + booking.getNumberOfGeust();
-            String totalAmount = "Rs." + booking.getTotalAmount();
+            String totalAmount = "Rs." + booking.getInvoice().getTotalAmount();
             String checkIn = HelperFunctions.formatDate(booking.getCheckInDate());
             String checkOut = HelperFunctions.formatDate(booking.getCheckOutDate());
             String status = booking.getStatus(); // "Active", "Cancelled", "Completed"
@@ -300,7 +300,7 @@ public class BookingListPanel extends javax.swing.JPanel {
         totalCaption.setForeground(muted);
         totalCaption.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel totalValue = new JLabel("Rs." + (booking.getTotalAmount() - booking.getBookingAdvance()));
+        JLabel totalValue = new JLabel("Rs." + (booking.getInvoice().getTotalAmount() - booking.getInvoice().getBookingAdvance()));
         totalValue.setFont(new Font("Arial", Font.BOLD, 16));
         totalValue.setAlignmentX(Component.LEFT_ALIGNMENT);
 

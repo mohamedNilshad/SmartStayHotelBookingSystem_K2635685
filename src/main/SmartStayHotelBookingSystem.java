@@ -26,8 +26,8 @@ public class SmartStayHotelBookingSystem {
         BookingManager _ = new BookingManager();
         
         java.awt.EventQueue.invokeLater(() -> {
-//        new MainFrame().setVisible(true);
-        new AdminDashboardFrame().setVisible(true);
+        new MainFrame().setVisible(true);
+//        new AdminDashboardFrame().setVisible(true);
     });
     }
     

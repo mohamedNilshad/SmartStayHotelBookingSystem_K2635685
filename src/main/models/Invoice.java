@@ -24,8 +24,8 @@ public class Invoice {
     private double discountRate;
     private double discountAmount;
 
-    public Invoice(int invoiceID, Date invoiceDate, double totalAmount, double subTotalAmount, double bookingAdvance, boolean isPaid, Date paidDate, double taxRate, double taxAmount, double discountRate, double discountAmount) {
-        this.invoiceID = invoiceID;
+    public Invoice(Date invoiceDate, double totalAmount, double subTotalAmount, double bookingAdvance, boolean isPaid, Date paidDate, double taxRate, double taxAmount, double discountRate, double discountAmount) {
+        this.invoiceID = BookingManager.generateBookingId();
         this.invoiceDate = invoiceDate;
         this.totalAmount = totalAmount;
         this.subTotalAmount = subTotalAmount;

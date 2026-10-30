@@ -19,13 +19,11 @@ public class Booking {
     private Date checkOutDate;
     private Date bookingDate;
     private int numberOfGeust;
-    private double bookingAdvance;
-    private boolean isPaid;
-    private double totalAmount;
+    private Invoice invoice;
     
     private String status;
 
-    public Booking(Room room, Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, double bookingAdvance, boolean isPaid, double totalAmount, String status) {
+    public Booking(Room room, Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, Invoice invoice, String status) {
         this.bookingID = BookingManager.generateBookingId();
         this.room = room;
         this.guest = guest;
@@ -33,13 +31,11 @@ public class Booking {
         this.checkOutDate = checkOutDate;
         this.bookingDate = bookingDate;
         this.numberOfGeust = numberOfGeust;
-        this.bookingAdvance = bookingAdvance;
-        this.isPaid = isPaid;
-        this.totalAmount = totalAmount;
+        this.invoice = invoice;
         this.status = status;
     }
     
-    public Booking(int bookingID, Room room, Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, double bookingAdvance, boolean isPaid, double totalAmount, String status) {
+    public Booking(int bookingID, Room room, Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, Invoice invoice, String status) {
         this.bookingID = bookingID;
         this.room = room;
         this.guest = guest;
@@ -47,9 +43,7 @@ public class Booking {
         this.checkOutDate = checkOutDate;
         this.bookingDate = bookingDate;
         this.numberOfGeust = numberOfGeust;
-        this.bookingAdvance = bookingAdvance;
-        this.isPaid = isPaid;
-        this.totalAmount = totalAmount;
+        this.invoice = invoice;
         this.status = status;
     }
     
@@ -79,8 +73,8 @@ public class Booking {
         return checkOutDate;
     }
 
-    public double getBookingAdvance() {
-        return bookingAdvance;
+    public Invoice getInvoice() {
+        return invoice;
     }
 
     public Date getBookingDate() {
@@ -89,14 +83,6 @@ public class Booking {
 
     public int getNumberOfGeust() {
         return numberOfGeust;
-    }
-
-    public boolean getPaidStatus() {
-        return isPaid;
-    }
-
-    public double getTotalAmount() {
-        return totalAmount;
     }
 
     public String getStatus() {

@@ -79,14 +79,14 @@ public class HelperFunctions {
         return given.equals(LocalDate.now().plusDays(1));
     }
 
-    public static long getNoOfDays(Date startDateObj, Date endDateObj) {
+    public static long getNoOfNights(Date startDateObj, Date endDateObj) {
         LocalDate startDate = startDateObj.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate endDate = endDateObj.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-        // 3. Calculate the difference in days
-        long daysCount = ChronoUnit.DAYS.between(startDate, endDate);
+        // Calculate the difference in days
+        long nightsCount = ChronoUnit.DAYS.between(startDate, endDate);
 
-        return daysCount;
+        return nightsCount;
     }
 
     public static Date getCurrentDate() {

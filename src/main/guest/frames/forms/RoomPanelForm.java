@@ -210,7 +210,11 @@ public class RoomPanelForm extends javax.swing.JPanel {
             sortedRoomList.clear();
 
             for (Room room : roomList) {
-                if (room.getRoomPackage().getPackageName().toLowerCase().startsWith(text.toLowerCase())) {
+                boolean isPackageName = room.getRoomPackage().getPackageName().toLowerCase().startsWith(text.toLowerCase());
+                boolean isBedType = room.getBedType().toLowerCase().startsWith(text.toLowerCase());
+                boolean isRoomId = room.getRoomIDString().toLowerCase().startsWith(text.toLowerCase());
+                
+                if (isPackageName || isBedType || isRoomId) {
                     sortedRoomList.add(room);
                 }
             }

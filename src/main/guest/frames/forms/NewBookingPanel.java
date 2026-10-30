@@ -12,12 +12,14 @@ import java.util.Date;
 import java.util.Locale;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import main.functions.CalculateTotal;
 import main.functions.HelperFunctions;
 import main.functions.ValidationFunctions;
 import main.managers.BookingManager;
 import main.managers.GuestManager;
 import main.managers.RoomManager;
 import main.models.Booking;
+import main.models.Invoice;
 import main.models.Room;
 import main.models.room_packages.RoomPackage;
 
@@ -29,9 +31,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
 
     private final Runnable onBack;
     private Room selectedRoom;
-    private List<Room> allRooms = new ArrayList<>();
-    private JScrollPane scrollPane;
-    private double totalAmount;
+    private Invoice invoice;
 
     /**
      * Creates new form RoomListPanel
@@ -53,8 +53,6 @@ public class NewBookingPanel extends javax.swing.JPanel {
         confirmBooking.setVisible(false);
 
         this.onBack = onBack;
-        totalAmount = 0.0;
-        allRooms = RoomManager.getRoomList();
         selectedRoom = room;
 
         checkInDate.getDateEditor().addPropertyChangeListener("date", evt -> {
@@ -129,14 +127,14 @@ public class NewBookingPanel extends javax.swing.JPanel {
 
         listPanel.add(Box.createVerticalGlue());
 
-        JScrollPane scrollPane = new JScrollPane(listPanel);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.getViewport().setBackground(Color.WHITE);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        JScrollPane rowScrollPane = new JScrollPane(listPanel);
+        rowScrollPane.setBorder(BorderFactory.createEmptyBorder());
+        rowScrollPane.getViewport().setBackground(Color.WHITE);
+        rowScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        rowScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        rowScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
-        return scrollPane;
+        return rowScrollPane;
     }
 
     private JPanel createRoomRow(Room room, boolean isEmpty) {
@@ -231,6 +229,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 if (!isEmpty) {
                     selectedRoom = room;
+                    invoice = CalculateTotal.calculation(selectedRoom, checkInDate.getDate(), checkOutDate.getDate(), numberOfGuest.getText(), advanceAmount.getText().trim());
                     showInvoice(room);
                 }
 
@@ -252,6 +251,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
         return row;
     }
 
+    
     private void showInvoice(Room room) {
         String roomId = room.getRoomIDString();
         String packageName = room.getRoomPackage().getPackageName();
@@ -263,32 +263,14 @@ public class NewBookingPanel extends javax.swing.JPanel {
 
         String tempCheckInDate = HelperFunctions.formatDate(checkInDate.getDate());
         String tempCheckOutDate = HelperFunctions.formatDate(checkOutDate.getDate());
-
-        long noOfNights = HelperFunctions.getNoOfDays(checkInDate.getDate(), checkOutDate.getDate());
+        
+        long noOfNights = HelperFunctions.getNoOfNights(checkInDate.getDate(), checkOutDate.getDate());
         int noOfGuest = Integer.parseInt(numberOfGuest.getText());
         int extGuestCount = (noOfGuest > room.getCapacity()) ?  (noOfGuest - room.getCapacity()) : 0;
-
+        
         double dailyRoomRate = room.getRoomPackage().getDailyRoomRate();
         double extraGuestCharge = room.getRoomPackage().getExtraGuestCharge();
         double extAmount = extGuestCount * extraGuestCharge * noOfNights;
-        double advncAmount = Double.parseDouble(advanceAmount.getText().trim());
-
-        double taxRate = room.getRoomPackage().getTaxRate();
-        double discountRate = 0.0;
-        if (noOfNights >= 5) {
-            discountRate = room.getDiscountRate();
-        }
-
-        totalAmount = dailyRoomRate * noOfNights;
-        totalAmount += extAmount;
-
-        double discountAmount = totalAmount * (discountRate / 100);
-        totalAmount -= discountAmount;
-
-        double taxAmount = totalAmount * (taxRate / 100);
-        totalAmount += taxAmount;
-
-        totalAmount -= advncAmount;
 
         bookingDetailsPanel.setVisible(true);
         confirmBooking.setVisible(true);
@@ -312,14 +294,14 @@ public class NewBookingPanel extends javax.swing.JPanel {
         extGuestCharge.setText("Rs. " + extraGuestCharge + "  x  " + extGuestCount);
         totExtGuestCharge.setText("Rs. " + extAmount);
 
-        discountPercentLbl.setText("(" + discountRate + " %)");
-        totDiscountAmt.setText("-Rs." + discountAmount);
+        discountPercentLbl.setText("(" + invoice.getDiscountRate() + " %)");
+        totDiscountAmt.setText("-Rs." + invoice.getDiscountAmount());
 
-        taxPercentLbl.setText("(" + taxRate + " %)");
-        totTaxAmt.setText("Rs." + taxAmount);
+        taxPercentLbl.setText("(" + invoice.getTaxRate() + " %)");
+        totTaxAmt.setText("Rs." + invoice.getTaxAmount());
         
-        bookingAdvance.setText("-Rs. " + advncAmount);
-        totalAmountLbl.setText("Rs. " + totalAmount);
+        bookingAdvance.setText("-Rs. " + invoice.getBookingAdvance());
+        totalAmountLbl.setText("Rs. " + invoice.getTotalAmount());
     }
 
     /**
@@ -981,9 +963,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
                 checkOutDate.getDate(),
                 HelperFunctions.getCurrentDate(),
                 Integer.parseInt(numberOfGuest.getText()),
-                Double.parseDouble(advanceAmount.getText().trim()),
-                false,
-                totalAmount,
+                invoice,
                 BookingManager.getBookingStatus(0)
         );
 
