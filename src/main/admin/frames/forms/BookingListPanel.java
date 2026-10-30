@@ -7,12 +7,12 @@ package main.admin.frames.forms;
 import java.awt.*;
 import javax.swing.*;
 import java.util.List;
-import java.util.function.Consumer;
 import main.components.BookingRowComponent;
 import main.components.CompleteBookingComponent;
 import main.functions.HelperFunctions;
 import main.managers.BookingManager;
 import main.models.Booking;
+import main.models.Invoice;
 
 /**
  *
@@ -22,19 +22,15 @@ public class BookingListPanel extends javax.swing.JPanel {
 
     private final JPanel listPanel;
     private final JScrollPane scrollPane;
-    private final Consumer<Booking> onBookingEdit;
 
     /**
      * Creates new form RoomListPanel
      *
      * @param bookingList
-     * @param onBookingEdit
      */
-    public BookingListPanel(List<Booking> bookingList, Consumer<Booking> onBookingEdit) {
+    public BookingListPanel(List<Booking> bookingList) {
         initComponents();
-
-        this.onBookingEdit = onBookingEdit;
-
+        
         setLayout(new BorderLayout());
         listPanel = new JPanel();
 
@@ -57,28 +53,15 @@ public class BookingListPanel extends javax.swing.JPanel {
         listPanel.removeAll();
         if (bookingList.isEmpty()) {
             JPanel row = BookingRowComponent.createBookingRow(
-                    new Booking(),
-                    true,
-                    true,
-                    // Edit
-                    null,
-                    // Cancel
-                    null,
-                    // Complete
-                    null
+                    new Booking(), true, true, null, null, null
             );
             listPanel.add(row);
         } else {
             for (Booking bookingItem : bookingList) {
                 JPanel row = BookingRowComponent.createBookingRow(
-                        bookingItem,
-                        false,
-                        true,
+                        bookingItem, false, true,
                         // Edit
-                        booking -> {
-                            // Open edit booking screen
-                            onBookingEdit.accept(booking);
-                        },
+                        null,
                         // Cancel
                         booking -> {
 
@@ -99,12 +82,13 @@ public class BookingListPanel extends javax.swing.JPanel {
                         booking -> {
 
                             Double balance = CompleteBookingComponent.showCompleteBookingDialog(this, booking);
-                            System.out.println(balance);
+                            
+                            
 
                             if (balance != null) { // null means the user closed or cancelled the dialog
-//                    List<Booking> updatedBookingList = BookingManager.completeBooking(booking.getBookingID(), balance);
-
-//                    updateBookingList(updatedBookingList);
+                                List<Booking> updatedBookingList = BookingManager.completeBooking(booking.getBookingID(), balance);
+                                updateBookingList(updatedBookingList);
+                                //show final invoice
                                 HelperFunctions.showPopMessage(this, "Booking completed successfully!", "Completion Successful");
                             }
                         }

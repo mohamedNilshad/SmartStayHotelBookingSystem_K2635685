@@ -30,9 +30,15 @@ import main.models.Booking;
  * @author N I L S H A D
  */
 public class CompleteBookingComponent {
-    
-    
-    public static Double showCompleteBookingDialog(Component c , Booking booking) {
+
+    public static Double showCompleteBookingDialog(Component c, Booking booking) {
+
+        String bookingId = booking.getBookingIDString();
+        String guestName = booking.getGuest().getFullName();
+        String roomId = booking.getRoom().getRoomIDString();
+        double totalAmount = booking.getInvoice().getTotalAmount();
+        double balanceAmount = booking.getInvoice().getTotalAmount() - booking.getInvoice().getBookingAdvance();
+
         Window owner = SwingUtilities.getWindowAncestor(c);
         JDialog dialog = new JDialog(owner, "Complete Booking", Dialog.ModalityType.APPLICATION_MODAL);
 
@@ -45,11 +51,11 @@ public class CompleteBookingComponent {
         content.setBorder(new EmptyBorder(20, 24, 20, 24));
 
         // Header
-        JLabel title = new JLabel("Complete Booking " + booking.getBookingIDString());
+        JLabel title = new JLabel("Complete Booking: " + bookingId);
         title.setFont(new Font("Arial", Font.BOLD, 18));
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel subtitle = new JLabel(booking.getGuest().getFullName() + "  •  " + booking.getRoom().getRoomIDString());
+        JLabel subtitle = new JLabel(guestName + "  •  " + roomId);
         subtitle.setFont(new Font("Arial", Font.PLAIN, 13));
         subtitle.setForeground(muted);
         subtitle.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -60,17 +66,27 @@ public class CompleteBookingComponent {
         totalCaption.setForeground(muted);
         totalCaption.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel totalValue = new JLabel("Rs." + (booking.getInvoice().getTotalAmount() - booking.getInvoice().getBookingAdvance()));
+        JLabel totalValue = new JLabel(String.format("Rs. %,.2f", totalAmount));
         totalValue.setFont(new Font("Arial", Font.BOLD, 16));
         totalValue.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Balance input
-        JLabel balanceCaption = new JLabel("Balance amount (Rs.)");
+        JLabel balanceCaption = new JLabel("Balance amount to pay");
         balanceCaption.setFont(new Font("Arial", Font.PLAIN, 12));
         balanceCaption.setForeground(muted);
         balanceCaption.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JTextField balanceField = new JTextField();
+        JLabel balanceValue = new JLabel(String.format("Rs. %,.2f", balanceAmount));
+        balanceValue.setFont(new Font("Arial", Font.BOLD, 16));
+        balanceValue.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // Balance input
+        JLabel balanceAmountCaption = new JLabel("Enter amount (Rs.)");
+        balanceAmountCaption.setFont(new Font("Arial", Font.PLAIN, 12));
+        balanceAmountCaption.setForeground(muted);
+        balanceAmountCaption.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JTextField balanceField = new JTextField(String.format("%.2f", balanceAmount));
+        balanceField.selectAll();
         balanceField.setFont(new Font("Arial", Font.PLAIN, 15));
         balanceField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(200, 208, 218), 1, true),
@@ -99,6 +115,10 @@ public class CompleteBookingComponent {
 
         Runnable confirmAction = () -> {
             String text = balanceField.getText().trim().replace(",", "");
+            if(balanceAmount <= 0){
+                result[0] = balanceAmount;
+                dialog.dispose();
+            }
 
             if (text.isEmpty()) {
                 errorLbl.setText("Please enter the balance amount.");
@@ -115,6 +135,15 @@ public class CompleteBookingComponent {
 
             if (balance < 0) {
                 errorLbl.setText("Balance cannot be negative.");
+                return;
+            }
+            if (balance > balanceAmount) {
+                errorLbl.setText("Amount cannot exceed the balance of Rs. " + String.format("%,.2f", balanceAmount));
+                return;
+            }
+            
+            if (balance < balanceAmount) {
+                errorLbl.setText("Amount cannot be less than Rs." + String.format("%,.2f", balanceAmount));
                 return;
             }
 
@@ -136,11 +165,18 @@ public class CompleteBookingComponent {
         content.add(Box.createVerticalStrut(4));
         content.add(subtitle);
         content.add(Box.createVerticalStrut(18));
+
         content.add(totalCaption);
         content.add(Box.createVerticalStrut(2));
         content.add(totalValue);
+        content.add(Box.createVerticalStrut(12));
+
+        content.add(balanceCaption);          // was missing
+        content.add(Box.createVerticalStrut(2));
+        content.add(balanceValue);            // was missing
         content.add(Box.createVerticalStrut(16));
-        content.add(balanceCaption);
+
+        content.add(balanceAmountCaption);
         content.add(Box.createVerticalStrut(4));
         content.add(balanceField);
         content.add(Box.createVerticalStrut(4));
@@ -150,7 +186,7 @@ public class CompleteBookingComponent {
 
         dialog.setContentPane(content);
         dialog.getRootPane().setDefaultButton(confirmBtn);
-        dialog.setPreferredSize(new Dimension(380, 340));
+        dialog.setPreferredSize(new Dimension(380, 400));
         dialog.pack();
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(owner);

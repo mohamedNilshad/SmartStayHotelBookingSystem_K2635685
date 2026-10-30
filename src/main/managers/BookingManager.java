@@ -7,6 +7,7 @@ package main.managers;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import main.functions.HelperFunctions;
 import main.models.Booking;
 import main.models.Guest;
 import main.models.Invoice;
@@ -123,6 +124,27 @@ public class BookingManager {
                 break;
             }
         }
+    }
+    
+    public static List<Booking> completeBooking(int bookingId, double paidAmount) {
+        
+        for (int i = 0; i < bookingList.size(); i++) {
+            if (bookingList.get(i).getBookingID() == bookingId) {
+                
+                Booking tempBooking = bookingList.get(i);
+                
+                Invoice updatedInvoice = tempBooking.getInvoice();
+                updatedInvoice.setPaidDate(HelperFunctions.getCurrentDate());
+                updatedInvoice.setIsPaid(true);
+                
+                
+                tempBooking.setStatus(bookingStatus.get(2));
+                tempBooking.setInvoice(updatedInvoice);
+                bookingList.set(i, tempBooking);
+                break;
+            }
+        }
+        return new ArrayList<>(bookingList);
     }
 
     public static void updateBookingStatus(int bookingId, String bookingStatus) {

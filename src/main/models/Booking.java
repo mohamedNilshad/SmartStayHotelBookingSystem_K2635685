@@ -91,4 +91,10 @@ public class Booking {
     
     
     public void setStatus(String status) { this.status = status; }
+
+    public void setInvoice(Invoice invoice) {
+        this.invoice = invoice;
+    }
+    
+    
 }
