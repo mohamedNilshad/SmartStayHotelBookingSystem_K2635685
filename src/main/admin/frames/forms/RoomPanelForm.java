@@ -260,7 +260,10 @@ public class RoomPanelForm extends javax.swing.JPanel {
             sortedRoomList.clear();
 
             for (Room room : roomList) {
-                if (room.getRoomPackage().getPackageName().toLowerCase().startsWith(text.toLowerCase())) {
+                boolean isPackageName = room.getRoomPackage().getPackageName().toLowerCase().contains(text.toLowerCase());
+                boolean isRoomId = room.getRoomIDString().toLowerCase().contains(text.toLowerCase());
+                
+                if (isPackageName || isRoomId) {
                     sortedRoomList.add(room);
                 }
             }

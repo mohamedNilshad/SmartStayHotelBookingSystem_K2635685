@@ -33,7 +33,7 @@ public class BookingPanelForm extends javax.swing.JPanel {
      */
     public BookingPanelForm() {
         initComponents();
-        new BookingManager();
+        
         var border = BorderFactory.createCompoundBorder(
                 searchField.getBorder(),
                 new EmptyBorder(5, 5, 5, 5)
@@ -62,10 +62,10 @@ public class BookingPanelForm extends javax.swing.JPanel {
         bookingListPanel = new BookingListPanel(
                 sortedBookingList,
                 selectedBooking -> {
-                    titleLabel.setText("Edit Bookings");
-                    subtitleLabel.setText("Make changes & confirm to your booking");
-                    tabelHeader.setVisible(false);
-                    searchField.setVisible(false);
+//                    titleLabel.setText("Edit Bookings");
+//                    subtitleLabel.setText("Make changes & confirm to your booking");
+//                    tabelHeader.setVisible(false);
+//                    searchField.setVisible(false);
 
 //                    EditBookingPanel fillPanel = new EditBookingPanel(
 //                            selectedBooking,
@@ -111,7 +111,7 @@ public class BookingPanelForm extends javax.swing.JPanel {
 
         for (Booking booking : bookingList) {
 
-            boolean isBookingId = String.valueOf(booking.getBookingID()).startsWith(searchText);
+            boolean isBookingId = booking.getBookingIDString().contains(searchText);
 
             boolean isGuestName = booking.getGuest().getFullName().toLowerCase().contains(searchText);
 

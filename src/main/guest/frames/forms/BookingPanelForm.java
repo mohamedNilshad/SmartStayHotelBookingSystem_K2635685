@@ -13,9 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import main.managers.BookingManager;
 import main.managers.GuestManager;
-import main.managers.RoomManager;
 import main.models.Booking;
-import main.models.Room;
 
 /**
  *
@@ -23,8 +21,8 @@ import main.models.Room;
  */
 public class BookingPanelForm extends javax.swing.JPanel {
 
-    private String placeholder = "Search...";
-    private List<Booking> myBookingList = new ArrayList<Booking>();
+    private final String placeholder = "Search...";
+    private List<Booking> myBookingList = new ArrayList<>();
     private List<Booking> sortedBookingList = new ArrayList<>();
     private BookingListPanel bookingListPanel;
     
@@ -208,7 +206,7 @@ public class BookingPanelForm extends javax.swing.JPanel {
             sortedBookingList.clear();
 
             for (Booking booking : myBookingList) {
-                boolean isBookingId = String.valueOf(booking.getBookingID()).startsWith(text);
+                boolean isBookingId = booking.getBookingIDString().toLowerCase().contains(text.toLowerCase());
                 boolean isRoomPackage = booking.getRoom().getRoomPackage().getPackageName().toLowerCase().startsWith(text.toLowerCase());
                 boolean isBedType = booking.getRoom().getBedType().toLowerCase().startsWith(text.toLowerCase());
               

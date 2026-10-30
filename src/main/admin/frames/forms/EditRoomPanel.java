@@ -62,7 +62,7 @@ public class EditRoomPanel extends javax.swing.JPanel {
         numberOfGuest.setText(String.valueOf(selectedRoom.getCapacity()));
         discountRateField.setText(String.valueOf(selectedRoom.getDiscountRate()));
         breakFastCheckbox.setSelected(selectedRoom.getBreakfast());
-        roomIdLbl.setText("Room No: " + selectedRoom.getRoomID());
+        roomIdLbl.setText(selectedRoom.getRoomIDString());
         updateBtn.setEnabled(false);
      
     }
@@ -290,10 +290,11 @@ public class EditRoomPanel extends javax.swing.JPanel {
                     .addComponent(jLabel10)
                     .addComponent(jLabel17))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(roomPackageDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bedTypeDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(discountRateField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(discountRateField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(roomPackageDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(bedTypeDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel13)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

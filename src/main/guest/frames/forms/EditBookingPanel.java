@@ -212,7 +212,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
         } else {
 
             // Room number
-            JLabel number = new JLabel(String.valueOf(room.getRoomID()));
+            JLabel number = new JLabel(room.getRoomIDString());
             number.setFont(new Font("Arial", Font.BOLD, 18));
             number.setPreferredSize(new Dimension(60, 35));
 
@@ -302,7 +302,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
     }
 
     private void showInvoice(Room room) {
-        int roomId = room.getRoomID();
+        String roomId = room.getRoomIDString();
         String packageName = room.getRoomPackage().getPackageName();
         String bedType = room.getBedType();
 
@@ -346,7 +346,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
             confirmBooking.setEnabled(true);
         }
 
-        roomNumber.setText("Room " + roomId);
+        roomNumber.setText(roomId);
         roomInfo.setText(packageName + " • " + bedType + " bed");
 
         guestNameLbl.setText(guestName);
@@ -1049,7 +1049,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
         );
 
         BookingManager.updateBooking(booking);
-        HelperFunctions.showPopMessage(this, "Room No " + selectedRoom.getRoomID() + " booking updated successfully!", "");
+        HelperFunctions.showPopMessage(this, "Room No " + selectedRoom.getRoomIDString() + " booking updated successfully!", "");
         onBack.run();
     }//GEN-LAST:event_confirmBookingActionPerformed
 

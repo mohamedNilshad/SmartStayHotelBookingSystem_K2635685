@@ -92,8 +92,8 @@ public class BookingListPanel extends javax.swing.JPanel {
             row.add(emptyText, BorderLayout.CENTER);
             
         } else {
-            String bookingId = "#" + booking.getBookingID();
-            String roomId = String.valueOf(booking.getRoom().getRoomID());
+            String bookingId = booking.getBookingIDString();
+            String roomId = booking.getRoom().getRoomIDString();
             String packageName = booking.getRoom().getRoomPackage().getPackageName();
             String bedType = booking.getRoom().getBedType();
             String noOfGuest = "x " + booking.getNumberOfGeust();
@@ -123,7 +123,7 @@ public class BookingListPanel extends javax.swing.JPanel {
             left.add(badge);
 
             
-            JLabel roomLbl = new JLabel("Room " + roomId + "  •  " + packageName);
+            JLabel roomLbl = new JLabel(roomId + "  •  " + packageName);
             roomLbl.setFont(new Font("Arial", Font.BOLD, 15));
             roomLbl.setForeground(muted);
 

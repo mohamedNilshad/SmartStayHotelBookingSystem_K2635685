@@ -31,7 +31,15 @@ public class Room {
         this.discountRate = discountRate;
     }
 
-    public int getRoomID() { return roomID; }
+    
+    public String getRoomIDString() { 
+        return "R"+String.format("%03d", roomID);
+    }
+    
+    public int getRoomID() { 
+        return roomID;
+    }
+    
     public RoomPackage getRoomPackage() { return roomPackage; }
     public String getStatus() { return roomStatus; }
     public boolean getBreakfast() { return breakfast; }

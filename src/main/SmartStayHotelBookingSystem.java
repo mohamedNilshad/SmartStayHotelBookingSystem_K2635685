@@ -3,6 +3,7 @@ package main;
 import main.frames.AdminDashboardFrame;
 import main.frames.MainFrame;
 import main.managers.AdminManager;
+import main.managers.BookingManager;
 import main.managers.RoomManager;
 
 /*
@@ -20,8 +21,9 @@ public class SmartStayHotelBookingSystem {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        RoomManager roomManager = new RoomManager();
-        AdminManager adminManager = new AdminManager();
+        RoomManager _ = new RoomManager();
+        AdminManager _ = new AdminManager();
+        BookingManager _ = new BookingManager();
         
         java.awt.EventQueue.invokeLater(() -> {
 //        new MainFrame().setVisible(true);

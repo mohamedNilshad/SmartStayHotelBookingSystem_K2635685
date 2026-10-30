@@ -12,8 +12,6 @@ import javax.swing.border.*;
 import main.models.Room;
 import java.util.List;
 import java.util.function.Consumer;
-import main.models.room_packages.EmptyPackage;
-import main.models.room_packages.RoomPackage;
 
 /**
  *
@@ -95,7 +93,7 @@ public class RoomListPanel extends javax.swing.JPanel {
         } else {
 
             // Room number
-            JLabel number = new JLabel(String.valueOf(room.getRoomID()));
+            JLabel number = new JLabel(room.getRoomIDString());
             number.setFont(new Font("Arial", Font.BOLD, 18));
             number.setPreferredSize(new Dimension(60, 35));
 

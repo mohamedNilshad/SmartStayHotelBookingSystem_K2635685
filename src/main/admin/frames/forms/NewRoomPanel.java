@@ -57,7 +57,7 @@ public class NewRoomPanel extends javax.swing.JPanel {
         numberOfGuest.setText("1");
         discountRateField.setText("12.0");
         breakFastCheckbox.setSelected(false);
-        roomIdLbl.setText("Room No: " + RoomManager.generateRoomId());
+        roomIdLbl.setText("R" + String.format("%03d", RoomManager.generateRoomId()));
 
      
     }

@@ -27,6 +27,8 @@ public class BookingListPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form RoomListPanel
+     * @param bookingList
+     * @param onBookingEdit
      */
     public BookingListPanel(List<Booking> bookingList, Consumer<Booking> onBookingEdit) {
         initComponents();
@@ -95,8 +97,8 @@ public class BookingListPanel extends javax.swing.JPanel {
         } else {
             Guest guest = booking.getGuest();
 
-            String bookingId = "#" + booking.getBookingID();
-            String roomId = String.valueOf(booking.getRoom().getRoomID());
+            String bookingId = booking.getBookingIDString();
+            String roomId = booking.getRoom().getRoomIDString();
             String packageName = booking.getRoom().getRoomPackage().getPackageName();
             String bedType = booking.getRoom().getBedType();
             String noOfGuest = "x " + booking.getNumberOfGeust();
@@ -160,7 +162,7 @@ public class BookingListPanel extends javax.swing.JPanel {
             guestPanel.add(avatarWrap, BorderLayout.WEST);
             guestPanel.add(guestText, BorderLayout.CENTER);
 
-            JLabel roomLbl = new JLabel("Room " + roomId + "  •  " + packageName);
+            JLabel roomLbl = new JLabel(roomId + "  •  " + packageName);
             roomLbl.setFont(new Font("Arial", Font.BOLD, 15));
             roomLbl.setForeground(muted);
 
@@ -283,11 +285,11 @@ public class BookingListPanel extends javax.swing.JPanel {
         content.setBorder(new EmptyBorder(20, 24, 20, 24));
 
         // Header
-        JLabel title = new JLabel("Complete Booking #" + booking.getBookingID());
+        JLabel title = new JLabel("Complete Booking " + booking.getBookingIDString());
         title.setFont(new Font("Arial", Font.BOLD, 18));
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel subtitle = new JLabel(booking.getGuest().getFullName() + "  •  Room " + booking.getRoom().getRoomID());
+        JLabel subtitle = new JLabel(booking.getGuest().getFullName() + "  •  " + booking.getRoom().getRoomIDString());
         subtitle.setFont(new Font("Arial", Font.PLAIN, 13));
         subtitle.setForeground(muted);
         subtitle.setAlignmentX(Component.LEFT_ALIGNMENT);

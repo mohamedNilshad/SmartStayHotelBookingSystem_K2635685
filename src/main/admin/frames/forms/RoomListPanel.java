@@ -28,6 +28,9 @@ public class RoomListPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form RoomListPanel
+     * @param roomList
+     * @param onRoomEdit
+     * @param onRoomDelete
      */
     public RoomListPanel(List<Room> roomList, Consumer<Room> onRoomEdit, Consumer<Room> onRoomDelete) {
         initComponents();
@@ -95,7 +98,7 @@ public class RoomListPanel extends javax.swing.JPanel {
             Color muted = new Color(95, 110, 130);
 
             // Room number
-            JLabel number = new JLabel(String.valueOf(room.getRoomID()));
+            JLabel number = new JLabel(room.getRoomIDString());
             number.setFont(new Font("Arial", Font.BOLD, 18));
             number.setPreferredSize(new Dimension(60, 35));
 
@@ -134,7 +137,7 @@ public class RoomListPanel extends javax.swing.JPanel {
 
             deleteBtn.addActionListener(e -> {
                 int result = HelperFunctions.showConfirmDialog(
-                        "Are you sure you want to delete room " + room.getRoomID() + "?",
+                        "Are you sure you want to delete room " + room.getRoomIDString() + "?",
                         "Confirm Room Deletion"
                 );
 

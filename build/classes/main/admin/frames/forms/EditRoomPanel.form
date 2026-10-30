@@ -81,10 +81,12 @@
                   <Component id="jLabel17" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="roomPackageDropDown" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
-                  <Component id="bedTypeDropDown" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="discountRateField" alignment="1" min="-2" pref="32" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="roomPackageDropDown" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
+                      <Component id="bedTypeDropDown" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jLabel13" min="-2" max="-2" attributes="0"/>

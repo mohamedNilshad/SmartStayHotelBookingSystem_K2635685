@@ -163,7 +163,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
         } else {
 
             // Room number
-            JLabel number = new JLabel(String.valueOf(room.getRoomID()));
+            JLabel number = new JLabel(room.getRoomIDString());
             number.setFont(new Font("Arial", Font.BOLD, 18));
             number.setPreferredSize(new Dimension(60, 35));
 
@@ -253,7 +253,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
     }
 
     private void showInvoice(Room room) {
-        int roomId = room.getRoomID();
+        String roomId = room.getRoomIDString();
         String packageName = room.getRoomPackage().getPackageName();
         String bedType = room.getBedType();
 
@@ -293,7 +293,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
         bookingDetailsPanel.setVisible(true);
         confirmBooking.setVisible(true);
 
-        roomNumber.setText("Room " + roomId);
+        roomNumber.setText(roomId);
         roomInfo.setText(packageName + " • " + bedType + " bed");
 
         guestNameLbl.setText(guestName);
@@ -701,7 +701,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
                                         .addComponent(jLabel16)
                                         .addGap(47, 47, 47)
                                         .addComponent(roomAmount)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(bookingDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(totRoomAmount, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(totExtGuestCharge, javax.swing.GroupLayout.Alignment.TRAILING))))
@@ -988,7 +988,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
         );
 
         BookingManager.addNewBooking(booking);
-        HelperFunctions.showPopMessage(this, "Room No " + selectedRoom.getRoomID() + " booked successfully!", "");
+        HelperFunctions.showPopMessage(this, "Room No " + selectedRoom.getRoomIDString() + " booked successfully!", "");
         onBack.run();
     }//GEN-LAST:event_confirmBookingActionPerformed
 

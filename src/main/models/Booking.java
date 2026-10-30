@@ -53,7 +53,11 @@ public class Booking {
         this.status = status;
     }
     
-     public Booking(){}
+    public Booking(){}
+    
+    public String getBookingIDString() { 
+        return "BK_"+String.format("%04d", bookingID);
+    }
 
     public int getBookingID() {
         return bookingID;
