@@ -26,7 +26,7 @@ public class BookingPanelForm extends javax.swing.JPanel {
     private List<Booking> bookingList = new ArrayList<>();
     private List<Booking> sortedBookingList = new ArrayList<>();
     private List<String> bookingStatus = new ArrayList<>();
-    private BookingListPanel bookingListPanel;
+    private final BookingListPanel bookingListPanel;
 
     /**
      * Creates new form BookingPanelForm
@@ -81,7 +81,7 @@ public class BookingPanelForm extends javax.swing.JPanel {
                 }
         );
 
-        pnlContent.add(bookingListPanel, BorderLayout.CENTER);
+        showPanel(bookingListPanel);
 
         bookingStatusDropDown.removeAllItems();
 
@@ -111,15 +111,15 @@ public class BookingPanelForm extends javax.swing.JPanel {
 
         for (Booking booking : bookingList) {
 
-            boolean isBookingId = booking.getBookingIDString().contains(searchText);
+            boolean isBookingId = booking.getBookingIDString().toLowerCase().contains(searchText.toLowerCase());
 
-            boolean isGuestName = booking.getGuest().getFullName().toLowerCase().contains(searchText);
+            boolean isGuestName = booking.getGuest().getFullName().toLowerCase().contains(searchText.toLowerCase());
 
-            boolean isGuestPhone = booking.getGuest().getContactNumber().toLowerCase().contains(searchText);
+            boolean isGuestPhone = booking.getGuest().getContactNumber().toLowerCase().contains(searchText.toLowerCase());
 
             boolean isRoomPackage = booking.getRoom().getRoomPackage().getPackageName().toLowerCase().contains(searchText);
 
-            boolean isBedType = booking.getRoom().getBedType().toLowerCase().contains(searchText);
+            boolean isBedType = booking.getRoom().getBedType().toLowerCase().contains(searchText.toLowerCase());
 
             
             // Status filter

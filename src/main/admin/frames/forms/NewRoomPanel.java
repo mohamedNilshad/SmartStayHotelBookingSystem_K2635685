@@ -18,8 +18,8 @@ import main.models.room_packages.RoomPackage;
  */
 public class NewRoomPanel extends javax.swing.JPanel {
 
-    private Consumer<Room> onNewRoom;
-    private Runnable onBack;
+    private final Consumer<Room> onNewRoom;
+    private final Runnable onBack;
 
     /**
      * Creates new form RoomListPanel
@@ -105,19 +105,9 @@ public class NewRoomPanel extends javax.swing.JPanel {
 
         roomPackageDropDown.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         roomPackageDropDown.setOpaque(true);
-        roomPackageDropDown.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                roomPackageDropDownActionPerformed(evt);
-            }
-        });
 
         bedTypeDropDown.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         bedTypeDropDown.setOpaque(true);
-        bedTypeDropDown.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bedTypeDropDownActionPerformed(evt);
-            }
-        });
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel10.setText("Bed type");
@@ -181,7 +171,7 @@ public class NewRoomPanel extends javax.swing.JPanel {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        addNewBtn.setBackground(new java.awt.Color(51, 255, 51));
+        addNewBtn.setBackground(new java.awt.Color(42, 199, 42));
         addNewBtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         addNewBtn.setForeground(new java.awt.Color(255, 255, 255));
         addNewBtn.setText("Add");
@@ -200,11 +190,6 @@ public class NewRoomPanel extends javax.swing.JPanel {
         breakFastCheckbox.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         breakFastCheckbox.setText("Breakfast ?");
         breakFastCheckbox.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        breakFastCheckbox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                breakFastCheckboxItemStateChanged(evt);
-            }
-        });
 
         discountRateField.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         discountRateField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -285,10 +270,6 @@ public class NewRoomPanel extends javax.swing.JPanel {
         onBack.run();
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void roomPackageDropDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomPackageDropDownActionPerformed
-
-    }//GEN-LAST:event_roomPackageDropDownActionPerformed
-
     private void nogMinusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nogMinusActionPerformed
         int value = Integer.parseInt(numberOfGuest.getText());
         if (value > 1) {
@@ -322,10 +303,6 @@ public class NewRoomPanel extends javax.swing.JPanel {
         
     }//GEN-LAST:event_addNewBtnActionPerformed
 
-    private void bedTypeDropDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bedTypeDropDownActionPerformed
-    
-    }//GEN-LAST:event_bedTypeDropDownActionPerformed
-
     private void discountRateFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_discountRateFieldKeyReleased
         String value = discountRateField.getText().trim();
         boolean isValid = ValidationFunctions.validateDoubleValue(this, value);
@@ -340,10 +317,6 @@ public class NewRoomPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_discountRateFieldKeyReleased
-
-    private void breakFastCheckboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_breakFastCheckboxItemStateChanged
-
-    }//GEN-LAST:event_breakFastCheckboxItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

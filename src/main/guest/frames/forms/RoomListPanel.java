@@ -26,6 +26,8 @@ public class RoomListPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form RoomListPanel
+     * @param roomList
+     * @param onRoomSelected
      */
     public RoomListPanel(List<Room> roomList, Consumer<Room> onRoomSelected) {
         initComponents();

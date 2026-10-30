@@ -19,7 +19,7 @@ import main.models.Room;
  */
 public class RoomPanelForm extends javax.swing.JPanel {
 
-    private String placeholder = "Search...";
+    private final String placeholder = "Search...";
     private List<Room> roomList = RoomManager.getRoomList();
     private List<Room> sortedRoomList = new ArrayList<>();
     private RoomListPanel roomListPanel;
@@ -44,7 +44,80 @@ public class RoomPanelForm extends javax.swing.JPanel {
 
         tabelHeader.setText(roomCount + " rooms available");
         pnlContent.setLayout(new java.awt.BorderLayout());
+        
+        buildRoomListPanel();
 
+//        roomListPanel = new RoomListPanel(
+//                sortedRoomList,
+//                editRoom -> {
+//                    titleLabel.setText("Update Room");
+//                    subtitleLabel.setText("Edit this room.");
+//                    tabelHeader.setVisible(false);
+//                    searchField.setVisible(false);
+//
+//                    EditRoomPanel fillPanel = new EditRoomPanel(
+//                            editRoom,
+//                            onUpdatedRoom -> {
+//                                titleLabel.setText("Rooms");
+//                                subtitleLabel.setText("Pick a room to manage.");
+//                                tabelHeader.setVisible(true);
+//                                searchField.setVisible(true);
+//
+//                                roomList.replaceAll(r -> r.getRoomID() == onUpdatedRoom.getRoomID() ? onUpdatedRoom : r);
+//                                sortedRoomList.replaceAll(r -> r.getRoomID() == onUpdatedRoom.getRoomID() ? onUpdatedRoom : r);
+//                                // Update UI
+//                                tabelHeader.setText(sortedRoomList.size() + " rooms available");
+//                                roomListPanel.updateRoomList(sortedRoomList);
+//                                showPanel(roomListPanel);
+//                            },
+//                            () -> {
+//                                titleLabel.setText("Rooms");
+//                                subtitleLabel.setText("Pick a room to manage.");
+//                                tabelHeader.setVisible(true);
+//                                searchField.setVisible(true);
+//
+//                                showPanel(roomListPanel);
+//                            }
+//                    );
+//                    showPanel(fillPanel);
+//                },
+//                deleteRoom -> {
+//                    int roomDeleted = RoomManager.deleteRoom(deleteRoom.getRoomID());
+//
+//                    switch (roomDeleted) {
+//                        case 1:
+//                            HelperFunctions.showPopMessage(this, "Room deleted successfully!", "Deletion Successful");
+//                            // Update UI
+//                            sortedRoomList.remove(deleteRoom);
+//                            tabelHeader.setText(sortedRoomList.size() + " rooms available");
+//                            roomListPanel.updateRoomList(sortedRoomList);
+//                            roomList = RoomManager.getRoomList();
+//                            break;
+//                        case -1:
+//                            HelperFunctions.showPopMessage(this, "This room has a booking", "Deletion Failed");
+//                            break;
+//                        default:
+//                            HelperFunctions.showPopMessage(this, "Room deleted failed!", "Deletion Failed");
+//                            break;
+//                    }
+//
+//                }
+//        );
+
+        showPanel(roomListPanel);
+    }
+
+    private void showPanel(JPanel panel) {
+        pnlContent.removeAll();
+
+        pnlContent.setLayout(new BorderLayout());
+        pnlContent.add(panel, BorderLayout.CENTER);
+
+        pnlContent.revalidate();
+        pnlContent.repaint();
+    }
+
+    private void buildRoomListPanel() {
         roomListPanel = new RoomListPanel(
                 sortedRoomList,
                 editRoom -> {
@@ -52,6 +125,7 @@ public class RoomPanelForm extends javax.swing.JPanel {
                     subtitleLabel.setText("Edit this room.");
                     tabelHeader.setVisible(false);
                     searchField.setVisible(false);
+                    newRoomBtn.setVisible(false);
 
                     EditRoomPanel fillPanel = new EditRoomPanel(
                             editRoom,
@@ -60,6 +134,7 @@ public class RoomPanelForm extends javax.swing.JPanel {
                                 subtitleLabel.setText("Pick a room to manage.");
                                 tabelHeader.setVisible(true);
                                 searchField.setVisible(true);
+                                newRoomBtn.setVisible(true);
 
                                 roomList.replaceAll(r -> r.getRoomID() == onUpdatedRoom.getRoomID() ? onUpdatedRoom : r);
                                 sortedRoomList.replaceAll(r -> r.getRoomID() == onUpdatedRoom.getRoomID() ? onUpdatedRoom : r);
@@ -73,6 +148,7 @@ public class RoomPanelForm extends javax.swing.JPanel {
                                 subtitleLabel.setText("Pick a room to manage.");
                                 tabelHeader.setVisible(true);
                                 searchField.setVisible(true);
+                                newRoomBtn.setVisible(true);
 
                                 showPanel(roomListPanel);
                             }
@@ -101,18 +177,6 @@ public class RoomPanelForm extends javax.swing.JPanel {
 
                 }
         );
-
-        pnlContent.add(roomListPanel, BorderLayout.CENTER);
-    }
-
-    public void showPanel(JPanel panel) {
-        pnlContent.removeAll();
-
-        pnlContent.setLayout(new BorderLayout());
-        pnlContent.add(panel, BorderLayout.CENTER);
-
-        pnlContent.revalidate();
-        pnlContent.repaint();
     }
 
     /**
@@ -262,7 +326,7 @@ public class RoomPanelForm extends javax.swing.JPanel {
             for (Room room : roomList) {
                 boolean isPackageName = room.getRoomPackage().getPackageName().toLowerCase().contains(text.toLowerCase());
                 boolean isRoomId = room.getRoomIDString().toLowerCase().contains(text.toLowerCase());
-                
+
                 if (isPackageName || isRoomId) {
                     sortedRoomList.add(room);
                 }
@@ -289,63 +353,65 @@ public class RoomPanelForm extends javax.swing.JPanel {
                     tabelHeader.setVisible(true);
                     searchField.setVisible(true);
                     newRoomBtn.setVisible(true);
+                    
+                    buildRoomListPanel();
 
-                    roomListPanel = new RoomListPanel(
-                            sortedRoomList,
-                            editRoom -> {
-                                titleLabel.setText("Update Room");
-                                subtitleLabel.setText("Edit this room.");
-                                tabelHeader.setVisible(false);
-                                searchField.setVisible(false);
-
-                                EditRoomPanel fillPanel = new EditRoomPanel(
-                                        editRoom,
-                                        onUpdatedRoom -> {
-                                            titleLabel.setText("Rooms");
-                                            subtitleLabel.setText("Pick a room to manage.");
-                                            tabelHeader.setVisible(true);
-                                            searchField.setVisible(true);
-
-                                            roomList.replaceAll(r -> r.getRoomID() == onUpdatedRoom.getRoomID() ? onUpdatedRoom : r);
-                                            sortedRoomList.replaceAll(r -> r.getRoomID() == onUpdatedRoom.getRoomID() ? onUpdatedRoom : r);
-                                            // Update UI
-                                            tabelHeader.setText(sortedRoomList.size() + " rooms available");
-                                            roomListPanel.updateRoomList(sortedRoomList);
-                                            showPanel(roomListPanel);
-                                        },
-                                        () -> {
-                                            titleLabel.setText("Rooms");
-                                            subtitleLabel.setText("Pick a room to manage.");
-                                            tabelHeader.setVisible(true);
-                                            searchField.setVisible(true);
-
-                                            showPanel(roomListPanel);
-                                        }
-                                );
-                                showPanel(fillPanel);
-                            },
-                            deleteRoom -> {
-                                int roomDeleted = RoomManager.deleteRoom(deleteRoom.getRoomID());
-
-                                switch (roomDeleted) {
-                                    case 1:
-                                        HelperFunctions.showPopMessage(this, "Room deleted successfully!", "Deletion Successful");
-                                        // Update UI
-                                        sortedRoomList.remove(deleteRoom);
-                                        tabelHeader.setText(sortedRoomList.size() + " rooms available");
-                                        roomListPanel.updateRoomList(sortedRoomList);
-                                        roomList = RoomManager.getRoomList();
-                                        break;
-                                    case -1:
-                                        HelperFunctions.showPopMessage(this, "This room has a booking", "Deletion Failed");
-                                        break;
-                                    default:
-                                        HelperFunctions.showPopMessage(this, "Room deleted failed!", "Deletion Failed");
-                                        break;
-                                }
-
-                            }
-                    );
+//                    roomListPanel = new RoomListPanel(
+//                            sortedRoomList,
+//                            editRoom -> {
+//                                titleLabel.setText("Update Room");
+//                                subtitleLabel.setText("Edit this room.");
+//                                tabelHeader.setVisible(false);
+//                                searchField.setVisible(false);
+//
+//                                EditRoomPanel fillPanel = new EditRoomPanel(
+//                                        editRoom,
+//                                        onUpdatedRoom -> {
+//                                            titleLabel.setText("Rooms");
+//                                            subtitleLabel.setText("Pick a room to manage.");
+//                                            tabelHeader.setVisible(true);
+//                                            searchField.setVisible(true);
+//
+//                                            roomList.replaceAll(r -> r.getRoomID() == onUpdatedRoom.getRoomID() ? onUpdatedRoom : r);
+//                                            sortedRoomList.replaceAll(r -> r.getRoomID() == onUpdatedRoom.getRoomID() ? onUpdatedRoom : r);
+//                                            // Update UI
+//                                            tabelHeader.setText(sortedRoomList.size() + " rooms available");
+//                                            roomListPanel.updateRoomList(sortedRoomList);
+//                                            showPanel(roomListPanel);
+//                                        },
+//                                        () -> {
+//                                            titleLabel.setText("Rooms");
+//                                            subtitleLabel.setText("Pick a room to manage.");
+//                                            tabelHeader.setVisible(true);
+//                                            searchField.setVisible(true);
+//
+//                                            showPanel(roomListPanel);
+//                                        }
+//                                );
+//                                showPanel(fillPanel);
+//                            },
+//                            deleteRoom -> {
+//                                int roomDeleted = RoomManager.deleteRoom(deleteRoom.getRoomID());
+//
+//                                switch (roomDeleted) {
+//                                    case 1:
+//                                        HelperFunctions.showPopMessage(this, "Room deleted successfully!", "Deletion Successful");
+//                                        // Update UI
+//                                        sortedRoomList.remove(deleteRoom);
+//                                        tabelHeader.setText(sortedRoomList.size() + " rooms available");
+//                                        roomListPanel.updateRoomList(sortedRoomList);
+//                                        roomList = RoomManager.getRoomList();
+//                                        break;
+//                                    case -1:
+//                                        HelperFunctions.showPopMessage(this, "This room has a booking", "Deletion Failed");
+//                                        break;
+//                                    default:
+//                                        HelperFunctions.showPopMessage(this, "Room deleted failed!", "Deletion Failed");
+//                                        break;
+//                                }
+//
+//                            }
+//                    );
                     roomList.add(onNewRoom);
                     sortedRoomList.add(onNewRoom);
                     // Update UI

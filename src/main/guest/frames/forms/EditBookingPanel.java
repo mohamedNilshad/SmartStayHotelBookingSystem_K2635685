@@ -5,13 +5,10 @@
 package main.guest.frames.forms;
 
 import java.awt.*;
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+import main.components.RoomRowComponent;
 import main.functions.CalculateTotal;
 import main.functions.HelperFunctions;
 import main.functions.ValidationFunctions;
@@ -31,8 +28,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
 
     private final Runnable onBack;
     private Room selectedRoom;
-    private Booking selectedBooking;
-    private double totalAmount;
+    private final Booking selectedBooking;
     private boolean isChanged;
     private Invoice invoice;
 
@@ -55,7 +51,6 @@ public class EditBookingPanel extends javax.swing.JPanel {
         confirmBooking.setVisible(false);
 
         this.onBack = onBack;
-        totalAmount = 0.0;
         isChanged = false;
         selectedBooking = booking;
         selectedRoom = booking.getRoom();
@@ -127,6 +122,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
         availableRoomsPanel.repaint();
 
         //show invoice
+        invoice = CalculateTotal.calculation(selectedRoom, checkInDate.getDate(), checkOutDate.getDate(), numberOfGuest.getText(), advanceAmount.getText().trim());
         showInvoice(selectedRoom);
         confirmBooking.setEnabled(false);
 
@@ -134,7 +130,6 @@ public class EditBookingPanel extends javax.swing.JPanel {
 
     private void enableButton() {
 
-        
         boolean fieldsNotNull = roomPackageDropDown.getSelectedItem() != null
                 && bedTypeDropDown.getSelectedItem() != null
                 && checkInDate.getDate() != null
@@ -143,7 +138,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
                 && !advanceAmount.getText().trim().isEmpty();
 
         if (fieldsNotNull) {
-            
+
             boolean packageChanged = !selectedRoom.getRoomPackage().getPackageName().equals(roomPackageDropDown.getSelectedItem().toString());
             boolean bedChanged = !selectedRoom.getBedType().equals(bedTypeDropDown.getSelectedItem().toString());
             boolean checkInChanged = !checkInDate.getDate().toString().equals(selectedBooking.getCheckInDate().toString());
@@ -151,7 +146,6 @@ public class EditBookingPanel extends javax.swing.JPanel {
             boolean guestsChanged = !numberOfGuest.getText().equals(String.valueOf(selectedBooking.getNumberOfGeust()));
             boolean advanceChanged = !advanceAmount.getText().equals(String.valueOf(selectedBooking.getInvoice().getBookingAdvance()));
 
-            
             isChanged = packageChanged || bedChanged || checkInChanged || checkOutChanged || guestsChanged || advanceChanged;
 
             jButton1.setEnabled(isChanged);
@@ -170,10 +164,27 @@ public class EditBookingPanel extends javax.swing.JPanel {
         listPanel.setBackground(Color.WHITE);
 
         if (rooms == null || rooms.isEmpty()) {
-            listPanel.add(createRoomRow(null, true));
+            listPanel.add(
+                    RoomRowComponent.createRoomRow(
+                            null, true, false,
+                            null, null,
+                            null
+                    )
+            );
         } else {
-            for (Room room : rooms) {
-                listPanel.add(createRoomRow(room, false));
+            for (Room roomItem : rooms) {
+                listPanel.add(
+                        RoomRowComponent.createRoomRow(
+                                roomItem, false, false,
+                                null, null,
+                                room -> {
+//                                    selectedRoom = r;
+                                    invoice = CalculateTotal.calculation(room, checkInDate.getDate(),
+                                            checkOutDate.getDate(), numberOfGuest.getText(), advanceAmount.getText().trim());
+                                    showInvoice(room);
+                                }
+                        )
+                );
             }
         }
 
@@ -189,120 +200,6 @@ public class EditBookingPanel extends javax.swing.JPanel {
         return scrollPane;
     }
 
-    private JPanel createRoomRow(Room room, boolean isEmpty) {
-        JPanel row = new JPanel(new BorderLayout(15, 0));
-
-        row.setBackground(Color.WHITE);
-        row.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(
-                        0, 0, 1, 0, new Color(215, 222, 230)
-                ),
-                new EmptyBorder(14, 16, 14, 16)
-        ));
-        row.setMaximumSize(
-                new Dimension(Integer.MAX_VALUE, 76)
-        );
-        row.setPreferredSize(new Dimension(650, 76));
-
-        row.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        if (isEmpty) {
-            JLabel emptyText = new JLabel("No rooms available", SwingConstants.CENTER);
-            emptyText.setFont(new Font("Arial", Font.PLAIN, 15));
-            emptyText.setForeground(Color.GRAY);
-            row.add(emptyText, BorderLayout.CENTER);
-        } else {
-
-            // Room number
-            JLabel number = new JLabel(room.getRoomIDString());
-            number.setFont(new Font("Arial", Font.BOLD, 18));
-            number.setPreferredSize(new Dimension(60, 35));
-
-            // Room details
-            JPanel details = new JPanel();
-            details.setLayout(new BoxLayout(details, BoxLayout.Y_AXIS));
-            details.setOpaque(false);
-
-            JLabel type = new JLabel(room.getRoomPackage().getPackageName());
-            type.setFont(new Font("Arial", Font.BOLD, 15));
-            type.setForeground(new Color(95, 110, 130));
-
-            String breakfast = room.getBreakfast() ? "  |  🍲 Breakfast" : "";
-
-            JLabel info = new JLabel("🛏 " + room.getBedType() + breakfast + "  |  👥 x " + room.getCapacity());
-            info.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 13));
-            info.setForeground(new Color(95, 110, 130));
-
-            details.add(type);
-            details.add(Box.createVerticalStrut(5));
-            details.add(info);
-
-            // Price
-            NumberFormat currency = NumberFormat.getInstance(
-                    Locale.US
-            );
-
-            JLabel price = new JLabel(
-                    "Rs. " + currency.format(room.getRoomPackage().getDailyRoomRate())
-            );
-            price.setFont(new Font("Arial", Font.BOLD, 14));
-
-            JLabel perNight = new JLabel("per night");
-            perNight.setFont(new Font("Arial", Font.PLAIN, 11));
-            perNight.setForeground(Color.GRAY);
-
-            JPanel pricePanel = new JPanel();
-            pricePanel.setLayout(
-                    new BoxLayout(pricePanel, BoxLayout.Y_AXIS)
-            );
-            pricePanel.setOpaque(false);
-            pricePanel.setPreferredSize(new Dimension(120, 40));
-
-            pricePanel.add(price);
-            pricePanel.add(perNight);
-
-            JLabel arrow = new JLabel("\u203A");
-            arrow.setFont(new Font("Arial", Font.PLAIN, 24));
-            arrow.setForeground(new Color(95, 110, 130));
-
-            JPanel right = new JPanel(new BorderLayout(12, 0));
-            right.setOpaque(false);
-            right.add(pricePanel, BorderLayout.CENTER);
-            right.add(arrow, BorderLayout.EAST);
-
-            row.add(number, BorderLayout.WEST);
-            row.add(details, BorderLayout.CENTER);
-            row.add(right, BorderLayout.EAST);
-        }
-
-        // Click a room row
-        row.addMouseListener(new java.awt.event.MouseAdapter() {
-
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                if (!isEmpty) {
-                    selectedRoom = room;
-                    invoice = CalculateTotal.calculation(selectedRoom, checkInDate.getDate(), checkOutDate.getDate(), numberOfGuest.getText(), advanceAmount.getText().trim());
-                    showInvoice(room);
-                }
-
-            }
-
-            @Override
-            public void mouseEntered(
-                    java.awt.event.MouseEvent e) {
-                row.setBackground(new Color(240, 244, 248));
-            }
-
-            @Override
-            public void mouseExited(
-                    java.awt.event.MouseEvent e) {
-                row.setBackground(Color.WHITE);
-            }
-        });
-
-        return row;
-    }
-
     private void showInvoice(Room room) {
         String roomId = room.getRoomIDString();
         String packageName = room.getRoomPackage().getPackageName();
@@ -314,11 +211,11 @@ public class EditBookingPanel extends javax.swing.JPanel {
 
         String tempCheckInDate = HelperFunctions.formatDate(checkInDate.getDate());
         String tempCheckOutDate = HelperFunctions.formatDate(checkOutDate.getDate());
-        
+
         long noOfNights = HelperFunctions.getNoOfNights(checkInDate.getDate(), checkOutDate.getDate());
         int noOfGuest = Integer.parseInt(numberOfGuest.getText());
-        int extGuestCount = (noOfGuest > room.getCapacity()) ?  (noOfGuest - room.getCapacity()) : 0;
-        
+        int extGuestCount = (noOfGuest > room.getCapacity()) ? (noOfGuest - room.getCapacity()) : 0;
+
         double dailyRoomRate = room.getRoomPackage().getDailyRoomRate();
         double extraGuestCharge = room.getRoomPackage().getExtraGuestCharge();
         double extAmount = extGuestCount * extraGuestCharge * noOfNights;
@@ -342,7 +239,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
         roomAmount.setText("Rs. " + dailyRoomRate + "  x  " + noOfNights);
         totRoomAmount.setText("Rs. " + dailyRoomRate * noOfNights);
 
-        extGuestCharge.setText("Rs. " + extraGuestCharge + "  x  " + extGuestCount);
+        extGuestCharge.setText("Rs. " + extraGuestCharge + "  x  " + extGuestCount + "  x  " + noOfNights);
         totExtGuestCharge.setText("Rs. " + extAmount);
 
         discountPercentLbl.setText("(" + invoice.getDiscountRate() + " %)");
@@ -350,7 +247,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
 
         taxPercentLbl.setText("(" + invoice.getTaxRate() + " %)");
         totTaxAmt.setText("Rs." + invoice.getTaxAmount());
-        
+
         bookingAdvance.setText("-Rs. " + invoice.getBookingAdvance());
         totalAmountLbl.setText("Rs. " + invoice.getTotalAmount());
     }
@@ -606,7 +503,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
 
         extGuestCharge.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         extGuestCharge.setForeground(new java.awt.Color(76, 74, 74));
-        extGuestCharge.setText("Rs. 1000.0  x  2");
+        extGuestCharge.setText("Rs. 1000.0  x  2  x  1");
 
         totExtGuestCharge.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         totExtGuestCharge.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -732,15 +629,15 @@ public class EditBookingPanel extends javax.swing.JPanel {
                                 .addGroup(bookingDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel16)
                                     .addComponent(jLabel3))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(84, 84, 84)
                                 .addGroup(bookingDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(bookingDetailsPanelLayout.createSequentialGroup()
                                         .addComponent(extGuestCharge)
-                                        .addGap(29, 29, 29)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(totExtGuestCharge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addGroup(bookingDetailsPanelLayout.createSequentialGroup()
                                         .addComponent(roomAmount)
-                                        .addGap(29, 29, 29)
+                                        .addGap(50, 50, 50)
                                         .addComponent(totRoomAmount)))))
                         .addContainerGap())))
             .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING)

@@ -18,8 +18,8 @@ import main.models.Room;
  */
 public class RoomPanelForm extends javax.swing.JPanel {
 
-    private String placeholder = "Search...";
-    private List<Room> roomList = RoomManager.getRoomList();
+    private final String placeholder = "Search...";
+    private final List<Room> roomList = RoomManager.getRoomList();
     private List<Room> sortedRoomList = new ArrayList<>();
     private RoomListPanel roomListPanel;
 
@@ -72,7 +72,7 @@ public class RoomPanelForm extends javax.swing.JPanel {
         pnlContent.add(roomListPanel, BorderLayout.CENTER);
     }
 
-    public void showPanel(JPanel panel) {
+    private void showPanel(JPanel panel) {
         pnlContent.removeAll();
 
         pnlContent.setLayout(new BorderLayout());

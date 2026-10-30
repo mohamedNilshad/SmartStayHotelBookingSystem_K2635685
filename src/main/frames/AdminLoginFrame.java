@@ -4,6 +4,7 @@
  */
 package main.frames;
 
+import java.util.Arrays;
 import javax.swing.BorderFactory;
 import javax.swing.border.EmptyBorder;
 import main.functions.HelperFunctions;
@@ -261,32 +262,34 @@ public class AdminLoginFrame extends javax.swing.JFrame {
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
         /// Validate
         String email = emailTextField.getText().trim();
-        String password = passwordTextField.getText().trim();
+        char[] passwordChars = passwordTextField.getPassword();
 
-        if (password.isEmpty()) {
+        if (passwordChars.length == 0) {
             HelperFunctions.showPopMessage(this, "Please enter Password !!", "");
             return;
         }
+        
         if (email.isEmpty()) {
             HelperFunctions.showPopMessage(this, "Please enter your Email address !!", "");
             return;
         }
-        
-        if(!ValidationFunctions.validateEmail(email)){
+
+        if (!ValidationFunctions.validateEmail(email)) {
             HelperFunctions.showPopMessage(this, "Invalid Email address !!", "");
             return;
         }
-       
+
+        String password = new String(passwordChars);
         boolean isValid = AdminManager.verifyLogin(email, password);
-        
-        if(isValid){
+
+        if (isValid) {
             new AdminDashboardFrame().setVisible(true);
             this.dispose();
-            
-        }else{
+
+        } else {
             HelperFunctions.showPopMessage(this, "Login failed !!", "");
         }
-     
+
 
     }//GEN-LAST:event_loginBtnActionPerformed
 

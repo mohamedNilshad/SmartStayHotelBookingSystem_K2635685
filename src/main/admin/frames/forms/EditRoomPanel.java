@@ -18,9 +18,9 @@ import main.models.room_packages.RoomPackage;
  */
 public class EditRoomPanel extends javax.swing.JPanel {
 
-    private Consumer<Room> onUpdatedRoom;
-    private Runnable onBack;
-    private Room selectedRoom;
+    private final Consumer<Room> onUpdatedRoom;
+    private final Runnable onBack;
+    private final Room selectedRoom;
     private boolean isChanged;
 
     /**
