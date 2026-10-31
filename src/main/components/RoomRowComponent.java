@@ -38,7 +38,7 @@ public class RoomRowComponent {
                 new EmptyBorder(14, 16, 14, 16)
         ));
         row.setMinimumSize(new Dimension(0, rowHeight));
-        row.setPreferredSize(new Dimension(650, rowHeight));
+        row.setPreferredSize(new Dimension(600, rowHeight));
         row.setMaximumSize(new Dimension(Integer.MAX_VALUE, rowHeight));
         row.setAlignmentX(Component.LEFT_ALIGNMENT);
         row.setCursor(new Cursor(Cursor.HAND_CURSOR));

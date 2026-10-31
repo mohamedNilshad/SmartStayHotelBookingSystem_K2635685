@@ -3,10 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/moham/Documents/NetBeansProjects/SmartStayHotelBookingSystem/src/main/admin/frames/forms/RoomListPanel.java</file>
-            <file>file:/C:/Users/moham/Documents/NetBeansProjects/SmartStayHotelBookingSystem/src/main/components/RoomRowComponent.java</file>
-            <file>file:/C:/Users/moham/Documents/NetBeansProjects/SmartStayHotelBookingSystem/src/main/guest/frames/forms/NewBookingPanel.java</file>
-            <file>file:/C:/Users/moham/Documents/NetBeansProjects/SmartStayHotelBookingSystem/src/main/guest/frames/forms/RoomPanelForm.java</file>
+            <file>file:/C:/Users/moham/Documents/NetBeansProjects/SmartStayHotelBookingSystem/src/main/components/CompleteBookingComponent.java</file>
+            <file>file:/C:/Users/moham/Documents/NetBeansProjects/SmartStayHotelBookingSystem/src/main/models/Invoice.java</file>
+            <file>file:/C:/Users/moham/Documents/NetBeansProjects/SmartStayHotelBookingSystem/src/main/models/Booking.java</file>
+            <file>file:/C:/Users/moham/Documents/NetBeansProjects/SmartStayHotelBookingSystem/src/main/admin/frames/forms/BookingPanelForm.java</file>
+            <file>file:/C:/Users/moham/Documents/NetBeansProjects/SmartStayHotelBookingSystem/src/main/managers/BookingManager.java</file>
+            <file>file:/C:/Users/moham/Documents/NetBeansProjects/SmartStayHotelBookingSystem/src/main/admin/frames/forms/BookingListPanel.java</file>
         </group>
     </open-files>
 </project-private>

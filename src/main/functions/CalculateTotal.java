@@ -45,7 +45,6 @@ public class CalculateTotal {
 
         totalAmount -= advncAmount;
         
-                //Invoice(invoiceDate, totalAmount, subTotalAmount, bookingAdvance, isPaid, paidDate, taxRate, taxAmount, discountRate, discountAmount)
         return new Invoice(HelperFunctions.getCurrentDate(), totalAmount, subtotalAmount, advncAmount, false, null, taxRate, taxAmount, discountRate, discountAmount);
         
     }

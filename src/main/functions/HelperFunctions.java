@@ -185,4 +185,8 @@ public class HelperFunctions {
         String last = parts.length > 1 ? parts[parts.length - 1].substring(0, 1) : "";
         return (first + last).toUpperCase();
     }
+    
+    public static String formatMoney(double value) {
+        return String.format("Rs. %,.2f", value);
+    }
 }
