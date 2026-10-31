@@ -26,7 +26,8 @@ public class BookingRowComponent {
             boolean isAdmin,
             Consumer<Booking> onEdit,
             Consumer<Booking> onCancel,
-            Consumer<Booking> onComplete   // pass null for guests
+            Consumer<Booking> onComplete,
+            Consumer<Booking> onSelect
     ) {
 
         int rowHeight = isAdmin ? 110 : 100;
@@ -61,6 +62,11 @@ public class BookingRowComponent {
         }
 
         row.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                onSelect.accept(booking);
+            }
+            
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
                 row.setBackground(new Color(240, 244, 248));
@@ -192,7 +198,7 @@ public class BookingRowComponent {
             Consumer<Booking> onCancel,
             Consumer<Booking> onComplete
     ) {
-        JLabel amountLbl = new JLabel("Rs." + booking.getInvoice().getTotalAmount());
+        JLabel amountLbl = new JLabel("Rs." + (booking.getInvoice().getTotalAmount() + booking.getInvoice().getBookingAdvance()));
         amountLbl.setFont(new Font("Arial", Font.BOLD, 15));
         amountLbl.setAlignmentX(Component.RIGHT_ALIGNMENT);
 

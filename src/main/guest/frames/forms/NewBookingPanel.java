@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Date;
 import javax.swing.*;
-import main.components.InvoicePanel;
+import main.components.InvoiceComponent;
 import main.components.RoomRowComponent;
 import main.functions.CalculateTotal;
 import main.functions.HelperFunctions;
@@ -130,7 +130,6 @@ public class NewBookingPanel extends javax.swing.JPanel {
                                 roomItem, false, false,
                                 null, null,
                                 room -> {
-//                                    selectedRoom = r;
                                     invoice = CalculateTotal.calculation(room, checkInDate.getDate(),
                                             checkOutDate.getDate(), numberOfGuest.getText(), advanceAmount.getText().trim());
                                     showInvoice(room);
@@ -153,26 +152,8 @@ public class NewBookingPanel extends javax.swing.JPanel {
     }
 
     private void showInvoice(Room room) {
-        String roomId = room.getRoomIDString();
-        String packageName = room.getRoomPackage().getPackageName();
-        String bedType = room.getBedType();
-
-        String guestName = GuestManager.getCurrentGuest().getFullName();
-        String guestEmail = GuestManager.getCurrentGuest().getEmailAddress();
-        String guestPhone = GuestManager.getCurrentGuest().getContactNumber();
-
-        String tempCheckInDate = HelperFunctions.formatDate(checkInDate.getDate());
-        String tempCheckOutDate = HelperFunctions.formatDate(checkOutDate.getDate());
-
-        long noOfNights = HelperFunctions.getNoOfNights(checkInDate.getDate(), checkOutDate.getDate());
-        int noOfGuest = Integer.parseInt(numberOfGuest.getText());
-        int extGuestCount = (noOfGuest > room.getCapacity()) ? (noOfGuest - room.getCapacity()) : 0;
-
-        double dailyRoomRate = room.getRoomPackage().getDailyRoomRate();
-        double extraGuestCharge = room.getRoomPackage().getExtraGuestCharge();
-        double extAmount = extGuestCount * extraGuestCharge * noOfNights;
-
-        InvoicePanel invoicePanel = new InvoicePanel(
+ 
+        InvoiceComponent invoicePanel = new InvoiceComponent(
                 invoice, room, 
                 checkInDate.getDate(), 
                 checkOutDate.getDate(), 
@@ -199,43 +180,6 @@ public class NewBookingPanel extends javax.swing.JPanel {
         bookingDetailsScrollPane.repaint();
         bookingDetailsScrollPane.setVisible(true);
         confirmBooking.setVisible(true);
-
-//
-//        bookingDetailsPanel.add(invoicePanel, BorderLayout.CENTER);
-//
-//        bookingDetailsPanel.setVisible(true);
-//        confirmBooking.setVisible(true);
-//
-//        bookingDetailsPanel.revalidate();
-//        bookingDetailsPanel.repaint();
-// Important: Give the invoice its preferred size
-//        roomNumber.setText(roomId);
-//        roomInfo.setText(packageName + " • " + bedType + " bed");
-//
-//        guestNameLbl.setText(guestName);
-//        guestEmailLbl.setText(guestEmail);
-//        guestPhoneLbl.setText(guestPhone);
-//
-//        checkInDateInv.setText(tempCheckInDate);
-//        checkOutDateInv.setText(tempCheckOutDate);
-//
-//        noOfNightsInv.setText(String.valueOf(noOfNights));
-//        noOfGuestsInv.setText(String.valueOf(noOfGuest));
-//
-//        roomAmount.setText("Rs. " + dailyRoomRate + "  x  " + noOfNights);
-//        totRoomAmount.setText("Rs. " + dailyRoomRate * noOfNights);
-//
-//        extGuestCharge.setText("Rs. " + extraGuestCharge + "  x  " + extGuestCount + "  x  " + noOfNights);
-//        totExtGuestCharge.setText("Rs. " + extAmount);
-//
-//        discountPercentLbl.setText("(" + invoice.getDiscountRate() + " %)");
-//        totDiscountAmt.setText("-Rs." + invoice.getDiscountAmount());
-//
-//        taxPercentLbl.setText("(" + invoice.getTaxRate() + " %)");
-//        totTaxAmt.setText("Rs." + invoice.getTaxAmount());
-//
-//        bookingAdvance.setText("-Rs. " + invoice.getBookingAdvance());
-//        totalAmountLbl.setText("Rs. " + invoice.getTotalAmount());
     }
 
     /**
@@ -294,20 +238,8 @@ public class NewBookingPanel extends javax.swing.JPanel {
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel10.setText("Bed type");
 
-        checkInDate.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                checkInDatePropertyChange(evt);
-            }
-        });
-
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel11.setText("Check-in date");
-
-        checkOutDate.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                checkOutDatePropertyChange(evt);
-            }
-        });
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel12.setText("Check-out date");
@@ -391,7 +323,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
         );
         availableRoomsPanelLayout.setVerticalGroup(
             availableRoomsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 237, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         roomListCount.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -469,7 +401,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(bookingDetailsScrollPane)
+                        .addComponent(bookingDetailsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(confirmBooking, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(17, 17, 17))
@@ -507,7 +439,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addGap(37, 37, 37)
                                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(roomListCount)
                                 .addGap(4, 4, 4)
                                 .addComponent(availableRoomsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
@@ -517,14 +449,6 @@ public class NewBookingPanel extends javax.swing.JPanel {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         onBack.run();
     }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void checkInDatePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_checkInDatePropertyChange
-
-    }//GEN-LAST:event_checkInDatePropertyChange
-
-    private void checkOutDatePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_checkOutDatePropertyChange
-        // TODO add your handling code here:
-    }//GEN-LAST:event_checkOutDatePropertyChange
 
     private void nogMinusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nogMinusActionPerformed
         int value = Integer.parseInt(numberOfGuest.getText());

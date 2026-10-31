@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.util.List;
 import java.util.function.Consumer;
 import main.components.BookingRowComponent;
+import main.components.InvoiceComponent;
 import main.functions.HelperFunctions;
 import main.managers.BookingManager;
 import main.models.Booking;
@@ -54,26 +55,51 @@ public class BookingListPanel extends javax.swing.JPanel {
         listPanel.removeAll();
         if (bookingList.isEmpty()) {
             listPanel.add(
-                    BookingRowComponent.createBookingRow(new Booking(), true, false, null, null, null));
+                    BookingRowComponent.createBookingRow(new Booking(), true, false, null, null, null, null));
         } else {
-            for (Booking booking : bookingList) {
+            for (Booking bookingItem : bookingList) {
                 listPanel.add(BookingRowComponent.createBookingRow(
-                        booking,
+                        bookingItem,
                         false,
                         false,
                         onBookingEdit,
-                        b -> {
+                        //cancel
+                        booking -> {
                             int result = HelperFunctions.showConfirmDialog(
                                     "Are you sure you want to cancel this booking?",
                                     "Confirm Booking Cancellation");
 
                             if (result == JOptionPane.YES_OPTION) {
-                                List<Booking> updated = BookingManager.setBookingStatus(1, b.getBookingID());
+                                List<Booking> updated = BookingManager.setBookingStatus(1, booking.getBookingID());
                                 updateBookingList(updated);
                                 HelperFunctions.showPopMessage(this, "Booking cancelled successfully!", "Cancellation Successful");
                             }
                         },
-                        null
+                        null,
+                        booking -> {
+                            InvoiceComponent invoicePanel = new InvoiceComponent(
+                                    booking.getInvoice(), 
+                                    booking.getRoom(),
+                                    booking.getCheckInDate(),
+                                    booking.getCheckOutDate(),
+                                    booking.getNumberOfGeust(),
+                                    booking.getGuest()
+                            );
+
+                           
+                            JDialog popupDialog = new JDialog(
+                                    (JFrame) SwingUtilities.getWindowAncestor(this),
+                                    "Invoice Details",
+                                    true
+                            );
+
+
+                            popupDialog.getContentPane().add(invoicePanel);
+
+                            popupDialog.pack();
+                            popupDialog.setLocationRelativeTo(this);
+                            popupDialog.setVisible(true);
+                        }
                 ));
             }
         }

@@ -62,12 +62,26 @@ public class BookingPanelForm extends javax.swing.JPanel {
 
                     EditBookingPanel fillPanel = new EditBookingPanel(
                             selectedBooking,
+                            onUpdatedBooking -> {
+                                titleLabel.setText("My Bookings");
+                                subtitleLabel.setText("Edit or cancel upcoming stays.");
+                                tabelHeader.setVisible(true);
+                                searchField.setVisible(true);
+                                
+                                myBookingList.replaceAll(b -> b.getBookingID()== onUpdatedBooking.getBookingID()? onUpdatedBooking : b);
+                                sortedBookingList.replaceAll(b -> b.getBookingID() == onUpdatedBooking.getBookingID() ? onUpdatedBooking : b);
+//                                // Update UI
+                                tabelHeader.setText(sortedBookingList.size() + " rooms available");
+                                bookingListPanel.updateBookingList(sortedBookingList);
+
+                                showPanel(bookingListPanel);
+                            },
                             () -> {
                                 titleLabel.setText("My Bookings");
                                 subtitleLabel.setText("Edit or cancel upcoming stays.");
                                 tabelHeader.setVisible(true);
                                 searchField.setVisible(true);
-
+                                
                                 showPanel(bookingListPanel);
                             });
                     showPanel(fillPanel);

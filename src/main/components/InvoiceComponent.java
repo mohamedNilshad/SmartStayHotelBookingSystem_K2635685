@@ -1,13 +1,10 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package main.components;
 
-import java.awt.*;
 import java.util.Date;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import main.functions.HelperFunctions;
 import main.models.Guest;
 import main.models.Invoice;
@@ -17,277 +14,562 @@ import main.models.Room;
  *
  * @author N I L S H A D
  */
-public class InvoiceComponent {
+public class InvoiceComponent extends javax.swing.JPanel {
 
-    private static final Color MUTED = new Color(95, 110, 130);
-    private static final Color BORDER = new Color(215, 222, 230);
-    private static final Color ACCENT = new Color(37, 99, 235);
-    private static final Color GREEN = new Color(22, 101, 52);
-    private static final Color RED = new Color(185, 28, 28);
+    /**
+     * Creates new form InvoicePanel
+     * @param invoice
+     * @param room
+     * @param checkInDate
+     * @param checkOutDate
+     * @param noOfGuest
+     * @param guest
+     */
+    public InvoiceComponent(Invoice invoice, Room room, Date checkInDate, Date checkOutDate, int noOfGuest, Guest guest) {
+        initComponents();
+        
+        String invoiceId = invoice.getInvoiceIDString();
+        String invoiceDate = HelperFunctions.formatDate(invoice.getInvoiceDate());
+        
+        String roomId = room.getRoomIDString();
+        String packageName = room.getRoomPackage().getPackageName();
+        String bedType = room.getBedType();
 
-    public static JPanel createInvoicePanel(
-            Invoice invoice,
-            String invoiceNo,
-            Date invoiceDate,
-            Room room,
-            Guest guest,
-            Date checkIn,
-            Date checkOut,
-            int noOfGuest
-    ) {
-        long nights = HelperFunctions.getNoOfNights(checkIn, checkOut);
-        int extGuestCount = Math.max(0, noOfGuest - room.getCapacity());
+        String guestName = guest.getFullName();
+        String guestEmail = guest.getEmailAddress();
+        String guestPhone = guest.getContactNumber();
 
-        double dailyRate = room.getRoomPackage().getDailyRoomRate();
-        double extraCharge = room.getRoomPackage().getExtraGuestCharge();
+        String checkIn = HelperFunctions.formatDate(checkInDate);
+        String checkOut = HelperFunctions.formatDate(checkOutDate);
 
-        double roomAmount = dailyRate * nights;
-        double extAmount = extGuestCount * extraCharge * nights;
-        double subtotal = roomAmount + extAmount;
-        double totalBeforeAdvance = subtotal - invoice.getDiscountAmount() + invoice.getTaxAmount();
+        long noOfNights = HelperFunctions.getNoOfNights(checkInDate, checkOutDate);
+        int extGuestCount = (noOfGuest > room.getCapacity()) ? (noOfGuest - room.getCapacity()) : 0;
 
-        JPanel card = new JPanel();
-        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setBackground(Color.WHITE);
-        card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(BORDER, 1, true),
-                new EmptyBorder(20, 24, 20, 24)
-        ));
-
-        // ---------- Header ----------
-        card.add(buildHeader(invoiceNo, invoiceDate));
-        card.add(Box.createVerticalStrut(16));
-        card.add(divider());
-        card.add(Box.createVerticalStrut(16));
-
-        // ---------- Billed to / Stay ----------
-        card.add(buildInfoSection(room, guest, checkIn, checkOut, nights, noOfGuest));
-        card.add(Box.createVerticalStrut(16));
-        card.add(divider());
-        card.add(Box.createVerticalStrut(12));
-
-        // ---------- Line items ----------
-        card.add(sectionTitle("CHARGES"));
-        card.add(Box.createVerticalStrut(8));
-
-        card.add(line("Room charge",
-                money(dailyRate) + "  ×  " + nights + (nights == 1 ? " night" : " nights"),
-                money(roomAmount), false, null));
-
-        if (extGuestCount > 0) {
-            card.add(Box.createVerticalStrut(8));
-            card.add(line("Extra guest charge",
-                    money(extraCharge) + "  ×  " + extGuestCount + " guest(s)  ×  " + nights + " nights",
-                    money(extAmount), false, null));
+        double dailyRoomRate = room.getRoomPackage().getDailyRoomRate();
+        double extraGuestCharge = room.getRoomPackage().getExtraGuestCharge();
+        double extAmount = extGuestCount * extraGuestCharge * noOfNights;
+        
+        double totalRoomCharge = dailyRoomRate * noOfNights;
+        
+        invoiceNoLbl.setText("No: " + invoiceId);
+        invoiceDateLbl.setText(invoiceDate);
+        roomNoLbl.setText("Room "+roomId+"   •  "+ packageName);
+        
+        roomInfoLbl.setText("🛏 " + bedType + "  |  👥 x " + noOfGuest);
+        dateInfoLbl.setText("📅 " + checkIn + "  →  " + checkOut);
+        nightCountLbl.setText("🌙 " + noOfNights + (noOfNights == 1 ? " night" : " nights"));
+        
+        guestNameLbl.setText(guestName);
+        guestEmailLbl.setText("✉ " + guestEmail);
+        guestPhoneLbl.setText("📞 " + guestPhone);
+        
+        roomChargeLbl.setText(HelperFunctions.formatMoney(dailyRoomRate)+"  ×  "+ noOfNights +(noOfNights == 1 ? " night" : " nights"));
+        totRoomChargeLbl.setText(HelperFunctions.formatMoney(totalRoomCharge));
+        
+        //for extra guests
+        if(extAmount == 0){
+            extraGuestChargeLbl.setVisible(false);
+            totExtraGuestChargeLbl.setVisible(false);
+            extraGuestChargeCap.setVisible(false);
+        }else{
+            extraGuestChargeLbl.setVisible(true);
+            totExtraGuestChargeLbl.setVisible(true);
+            extraGuestChargeCap.setVisible(true);
+            
+            extraGuestChargeLbl.setText(HelperFunctions.formatMoney(extraGuestCharge) + "  ×  "+extGuestCount+" guest(s)  ×  "+noOfNights+" Nights");
+            totExtraGuestChargeLbl.setText(HelperFunctions.formatMoney(extAmount));
         }
-
-        card.add(Box.createVerticalStrut(12));
-        card.add(divider());
-        card.add(Box.createVerticalStrut(12));
-
-        // ---------- Totals ----------
-        card.add(line("Subtotal", null, money(subtotal), true, null));
-
-        if (invoice.getDiscountAmount() > 0) {
-            card.add(Box.createVerticalStrut(8));
-            card.add(line("Discount", "(" + invoice.getDiscountRate() + " %)",
-                    "-" + money(invoice.getDiscountAmount()), false, GREEN));
+        
+        subtotalLbl.setText(HelperFunctions.formatMoney(invoice.getSubTotalAmount()));
+        
+        //for discount
+        if(invoice.getDiscountAmount()== 0){
+            discountCap.setVisible(false);
+            discountRateLbl.setVisible(false);
+            discountAmountLbl.setVisible(false);
+        }else{
+            discountCap.setVisible(true);
+            discountRateLbl.setVisible(true);
+            discountAmountLbl.setVisible(true);
+            
+            discountRateLbl.setText("("+invoice.getDiscountRate()+"%)");
+            discountAmountLbl.setText(HelperFunctions.formatMoney(invoice.getDiscountAmount()));
         }
-
-        card.add(Box.createVerticalStrut(8));
-        card.add(line("Tax", "(" + invoice.getTaxRate() + " %)",
-                money(invoice.getTaxAmount()), false, null));
-
-        card.add(Box.createVerticalStrut(12));
-        card.add(divider());
-        card.add(Box.createVerticalStrut(12));
-
-        card.add(line("Total before advance", null, money(totalBeforeAdvance), true, null));
-        card.add(Box.createVerticalStrut(8));
-        card.add(line("Booking advance", null,
-                "-" + money(invoice.getBookingAdvance()), false, RED));
-
-        card.add(Box.createVerticalStrut(16));
-        card.add(buildTotalBand(invoice.getTotalAmount()));
-
-        int invoiceWidth = 420; // adjust to fit your panel
-        card.setPreferredSize(new Dimension(invoiceWidth, card.getPreferredSize().height));
-        card.setMaximumSize(new Dimension(invoiceWidth, Integer.MAX_VALUE));
-        return card;
-    }
-
-    // ---------- Header: title + invoice no (left), date (right) ----------
-    private static JPanel buildHeader(String invoiceNo, Date invoiceDate) {
-        JLabel title = new JLabel("INVOICE");
-        title.setFont(new Font("Arial", Font.BOLD, 22));
-        title.setForeground(ACCENT);
-
-        JLabel noLbl = new JLabel("No: " + (invoiceNo == null || invoiceNo.isEmpty() ? "Pending" : invoiceNo));
-        noLbl.setFont(new Font("Arial", Font.PLAIN, 13));
-        noLbl.setForeground(MUTED);
-
-        JPanel left = new JPanel();
-        left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
-        left.setOpaque(false);
-        left.add(title);
-        left.add(Box.createVerticalStrut(2));
-        left.add(noLbl);
-
-        JLabel dateCaption = new JLabel("Date issued");
-        dateCaption.setFont(new Font("Arial", Font.PLAIN, 11));
-        dateCaption.setForeground(Color.GRAY);
-        dateCaption.setAlignmentX(Component.RIGHT_ALIGNMENT);
-
-        JLabel dateLbl = new JLabel(HelperFunctions.formatDate(invoiceDate != null ? invoiceDate : new Date()));
-        dateLbl.setFont(new Font("Arial", Font.BOLD, 14));
-        dateLbl.setAlignmentX(Component.RIGHT_ALIGNMENT);
-
-        JPanel right = new JPanel();
-        right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
-        right.setOpaque(false);
-        right.add(dateCaption);
-        right.add(Box.createVerticalStrut(2));
-        right.add(dateLbl);
-
-        JPanel header = new JPanel(new BorderLayout());
-        header.setOpaque(false);
-        header.setAlignmentX(Component.LEFT_ALIGNMENT);
-        header.add(left, BorderLayout.WEST);
-        header.add(right, BorderLayout.EAST);
-        header.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
-        return header;
-    }
-
-    // ---------- Two columns: billed to | stay ----------
-    private static JPanel buildInfoSection(Room room, Guest guest, Date checkIn, Date checkOut,
-            long nights, int noOfGuest) {
-
-        String[] stay = {
-            "Room " + room.getRoomIDString() + "  •  " + room.getRoomPackage().getPackageName(),
-            "🛏 " + room.getBedType() + "  |  👥 x " + noOfGuest,
-            "📅 " + HelperFunctions.formatDate(checkIn) + "  →  " + HelperFunctions.formatDate(checkOut),
-            "🌙 " + nights + (nights == 1 ? " night" : " nights")
-        };
-        JPanel stayCol = column("STAY DETAILS", stay, 0);      // left, no divider
-
-        JPanel billed = column("BILLED TO",
-                new String[]{guest.getFullName(), "✉ " + guest.getEmailAddress(), "📞 " + guest.getContactNumber()},
-                1);                                            // right, divider on its left edge
-
-        JPanel info = new JPanel(new GridLayout(1, 2, 20, 0));
-        info.setOpaque(false);
-        info.setAlignmentX(Component.LEFT_ALIGNMENT);
-        info.add(stayCol);
-        info.add(billed);
-
-        // Width 0 so this section never widens the card. It stretches to the card width instead.
-        info.setPreferredSize(new Dimension(0, 110));
-        info.setMaximumSize(new Dimension(Integer.MAX_VALUE, 110));
-        return info;
-    }
-
-    private static JPanel column(String title, String[] lines, int index) {
-        JPanel col = new JPanel();
-        col.setLayout(new BoxLayout(col, BoxLayout.Y_AXIS));
-        col.setOpaque(false);
-
-        col.add(sectionTitle(title));
-        col.add(Box.createVerticalStrut(6));
-
-        for (int i = 0; i < lines.length; i++) {
-            JLabel l = new JLabel(lines[i]);
-            l.setFont(new Font("Segoe UI Emoji", i == 0 ? Font.BOLD : Font.PLAIN, i == 0 ? 14 : 13));
-            l.setForeground(i == 0 ? Color.BLACK : MUTED);
-            l.setAlignmentX(Component.LEFT_ALIGNMENT);
-            col.add(l);
-            col.add(Box.createVerticalStrut(3));
+        
+        
+        taxRateLbl.setText("("+invoice.getTaxRate()+"%)");
+        totTaxRateLbl.setText(HelperFunctions.formatMoney(invoice.getTaxAmount()));
+        
+        totalAmountLbl.setText(HelperFunctions.formatMoney((invoice.getTotalAmount() + invoice.getBookingAdvance())));
+        
+        advanceAmountLbl.setText("-"+HelperFunctions.formatMoney(invoice.getBookingAdvance()));
+        
+        
+        if(invoice.getTotalAmount() <= 0){
+            double balance = Math.abs(invoice.getTotalAmount());
+            footerTextLbl.setVisible(true);
+            footerTextLbl.setText("Balance Amount Due to Guest: " + HelperFunctions.formatMoney(balance));
+            payableTotalAmountLbl.setText(HelperFunctions.formatMoney(0));
+            
+        }else{
+            footerTextLbl.setVisible(false);
+            payableTotalAmountLbl.setText(HelperFunctions.formatMoney(invoice.getTotalAmount()));
         }
-
-        if (index == 1) { // left divider on the second column
-            col.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createMatteBorder(0, 1, 0, 0, new Color(225, 230, 236)),
-                    new EmptyBorder(0, 16, 0, 0)));
-        }
-        return col;
-    }
-
-    // ---------- One row: label (+ muted detail) on the left, amount on the right ----------
-    private static JPanel line(String label, String detail, String amount, boolean bold, Color amountColor) {
-        JLabel labelLbl = new JLabel(label);
-        labelLbl.setFont(new Font("Arial", bold ? Font.BOLD : Font.PLAIN, 14));
-        labelLbl.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JPanel left = new JPanel();
-        left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
-        left.setOpaque(false);
-        left.add(labelLbl);
-
-        if (detail != null) {
-            JLabel detailLbl = new JLabel(detail);
-            detailLbl.setFont(new Font("Arial", Font.PLAIN, 12));
-            detailLbl.setForeground(MUTED);
-            detailLbl.setAlignmentX(Component.LEFT_ALIGNMENT);
-            left.add(Box.createVerticalStrut(2));
-            left.add(detailLbl);
-        }
-
-        JLabel amountLbl = new JLabel(amount);
-        amountLbl.setFont(new Font("Arial", bold ? Font.BOLD : Font.PLAIN, 14));
-        if (amountColor != null) {
-            amountLbl.setForeground(amountColor);
-        }
-
-        JPanel row = new JPanel(new BorderLayout(10, 0));
-        row.setOpaque(false);
-        row.setAlignmentX(Component.LEFT_ALIGNMENT);
-        row.add(left, BorderLayout.CENTER);
-        row.add(amountLbl, BorderLayout.EAST);
-        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, detail != null ? 40 : 24));
-        return row;
-    }
-
-    // ---------- Highlighted final amount ----------
-    private static JPanel buildTotalBand(double totalAmount) {
-        JLabel caption = new JLabel("Total payable");
-        caption.setFont(new Font("Arial", Font.BOLD, 15));
-        caption.setForeground(ACCENT);
-
-        JLabel amount = new JLabel(money(totalAmount));
-        amount.setFont(new Font("Arial", Font.BOLD, 20));
-        amount.setForeground(ACCENT);
-
-        JPanel band = new JPanel(new BorderLayout());
-        band.setBackground(new Color(239, 246, 255));
-        band.setBorder(new EmptyBorder(12, 16, 12, 16));
-        band.setAlignmentX(Component.LEFT_ALIGNMENT);
-        band.add(caption, BorderLayout.WEST);
-        band.add(amount, BorderLayout.EAST);
-        band.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
-        return band;
-    }
-
-    // ---------- Small helpers ----------
-    private static JLabel sectionTitle(String text) {
-        JLabel l = new JLabel(text);
-        l.setFont(new Font("Arial", Font.BOLD, 11));
-        l.setForeground(Color.GRAY);
-        l.setAlignmentX(Component.LEFT_ALIGNMENT);
-        return l;
-    }
-
-    private static JComponent divider() {
-        JPanel d = new JPanel();
-        d.setBackground(BORDER);
-        d.setPreferredSize(new Dimension(1, 1));
-        d.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
-        d.setAlignmentX(Component.LEFT_ALIGNMENT);
-        return d;
-    }
-
-    private static String money(double value) {
-        return String.format("Rs. %,.2f", value);
+        
+        
+        
+        
+        
     }
     
-    
-    
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel17 = new javax.swing.JLabel();
+        jLabel36 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        invoiceNoLbl = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        invoiceDateLbl = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel5 = new javax.swing.JLabel();
+        roomNoLbl = new javax.swing.JLabel();
+        roomInfoLbl = new javax.swing.JLabel();
+        dateInfoLbl = new javax.swing.JLabel();
+        nightCountLbl = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        guestNameLbl = new javax.swing.JLabel();
+        guestEmailLbl = new javax.swing.JLabel();
+        guestPhoneLbl = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        roomChargeLbl = new javax.swing.JLabel();
+        totRoomChargeLbl = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JSeparator();
+        totExtraGuestChargeLbl = new javax.swing.JLabel();
+        extraGuestChargeCap = new javax.swing.JLabel();
+        discountRateLbl = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        discountCap = new javax.swing.JLabel();
+        extraGuestChargeLbl = new javax.swing.JLabel();
+        subtotalLbl = new javax.swing.JLabel();
+        discountAmountLbl = new javax.swing.JLabel();
+        taxRateLbl = new javax.swing.JLabel();
+        jLabel28 = new javax.swing.JLabel();
+        totTaxRateLbl = new javax.swing.JLabel();
+        jSeparator4 = new javax.swing.JSeparator();
+        jLabel30 = new javax.swing.JLabel();
+        totalAmountLbl = new javax.swing.JLabel();
+        advanceAmountLbl = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel34 = new javax.swing.JLabel();
+        payableTotalAmountLbl = new javax.swing.JLabel();
+        jLabel37 = new javax.swing.JLabel();
+        jLabel32 = new javax.swing.JLabel();
+        jLabel38 = new javax.swing.JLabel();
+        footerTextLbl = new javax.swing.JLabel();
+
+        jLabel17.setForeground(new java.awt.Color(95, 110, 130));
+        jLabel17.setText("Rs. 6000.00   ×  10 Nights");
+
+        jLabel36.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel36.setText("Discount");
+
+        setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 22)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(37, 99, 235));
+        jLabel1.setText("INVOICE");
+
+        invoiceNoLbl.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
+        invoiceNoLbl.setForeground(new java.awt.Color(95, 110, 130));
+        invoiceNoLbl.setText("No:  INV-0000");
+
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        jLabel3.setForeground(java.awt.Color.gray);
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel3.setText("Date issued");
+
+        invoiceDateLbl.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        invoiceDateLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        invoiceDateLbl.setText("29 Oct 2026");
+
+        jLabel5.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
+        jLabel5.setForeground(java.awt.Color.gray);
+        jLabel5.setText("STAY DETAILS");
+
+        roomNoLbl.setFont(new java.awt.Font("Segoe UI Emoji", 1, 14)); // NOI18N
+        roomNoLbl.setText("Room R100   •  Standard");
+
+        roomInfoLbl.setFont(new java.awt.Font("Segoe UI Emoji", 0, 13)); // NOI18N
+        roomInfoLbl.setForeground(new java.awt.Color(95, 110, 130));
+        roomInfoLbl.setText("🛏  Single |  👥 x 5");
+
+        dateInfoLbl.setFont(new java.awt.Font("Segoe UI Emoji", 0, 13)); // NOI18N
+        dateInfoLbl.setForeground(new java.awt.Color(95, 110, 130));
+        dateInfoLbl.setText("📅  02 Nov 2026   →  12 Nov 2026");
+
+        nightCountLbl.setFont(new java.awt.Font("Segoe UI Emoji", 0, 13)); // NOI18N
+        nightCountLbl.setForeground(new java.awt.Color(95, 110, 130));
+        nightCountLbl.setText("🌙  10 Nights");
+
+        jLabel10.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
+        jLabel10.setForeground(java.awt.Color.gray);
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel10.setText("BILLED TO");
+
+        guestNameLbl.setFont(new java.awt.Font("Segoe UI Emoji", 1, 14)); // NOI18N
+        guestNameLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        guestNameLbl.setText("Nilshad");
+
+        guestEmailLbl.setFont(new java.awt.Font("Segoe UI Emoji", 0, 13)); // NOI18N
+        guestEmailLbl.setForeground(new java.awt.Color(95, 110, 130));
+        guestEmailLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        guestEmailLbl.setText("✉  nilshad@gmail.com");
+
+        guestPhoneLbl.setFont(new java.awt.Font("Segoe UI Emoji", 0, 13)); // NOI18N
+        guestPhoneLbl.setForeground(new java.awt.Color(95, 110, 130));
+        guestPhoneLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        guestPhoneLbl.setText("📞  0777192608");
+
+        jLabel14.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
+        jLabel14.setForeground(java.awt.Color.gray);
+        jLabel14.setText("CHARGES");
+
+        jLabel15.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel15.setText("Room charge");
+
+        roomChargeLbl.setForeground(new java.awt.Color(95, 110, 130));
+        roomChargeLbl.setText("Rs. 6000.00   ×  10 Nights");
+
+        totRoomChargeLbl.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        totRoomChargeLbl.setForeground(java.awt.Color.gray);
+        totRoomChargeLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        totRoomChargeLbl.setText("Rs. 60000.00");
+
+        totExtraGuestChargeLbl.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        totExtraGuestChargeLbl.setForeground(java.awt.Color.gray);
+        totExtraGuestChargeLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        totExtraGuestChargeLbl.setText("Rs. 2000.00");
+
+        extraGuestChargeCap.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        extraGuestChargeCap.setText("Extra guest charge");
+
+        discountRateLbl.setForeground(new java.awt.Color(95, 110, 130));
+        discountRateLbl.setText("(12.0 %)");
+
+        jLabel22.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel22.setText("Subtotal");
+
+        discountCap.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        discountCap.setText("Discount");
+
+        extraGuestChargeLbl.setForeground(new java.awt.Color(95, 110, 130));
+        extraGuestChargeLbl.setText("Rs. 1000.00   ×   2 guest(s)  ×  10 Nights");
+
+        subtotalLbl.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        subtotalLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        subtotalLbl.setText("Rs. 62000.00");
+
+        discountAmountLbl.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        discountAmountLbl.setForeground(java.awt.Color.gray);
+        discountAmountLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        discountAmountLbl.setText("Rs. 1400.00");
+
+        taxRateLbl.setForeground(new java.awt.Color(95, 110, 130));
+        taxRateLbl.setText("(10.0 %)");
+
+        jLabel28.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel28.setText("Tax");
+
+        totTaxRateLbl.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        totTaxRateLbl.setForeground(java.awt.Color.gray);
+        totTaxRateLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        totTaxRateLbl.setText("Rs. 6200.00");
+
+        jLabel30.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel30.setText("Total before advance");
+
+        totalAmountLbl.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        totalAmountLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        totalAmountLbl.setText("Rs. 62000.00");
+
+        advanceAmountLbl.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        advanceAmountLbl.setForeground(java.awt.Color.red);
+        advanceAmountLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        advanceAmountLbl.setText("- Rs. 10000.00");
+
+        jPanel1.setBackground(new java.awt.Color(239, 246, 255));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 16, 12, 16));
+
+        jLabel34.setFont(new java.awt.Font("Arial", 1, 15)); // NOI18N
+        jLabel34.setText("Total payable");
+
+        payableTotalAmountLbl.setFont(new java.awt.Font("Arial", 1, 20)); // NOI18N
+        payableTotalAmountLbl.setForeground(new java.awt.Color(37, 99, 235));
+        payableTotalAmountLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        payableTotalAmountLbl.setText("Rs. 52000.00");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel34)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(payableTotalAmountLbl))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(payableTotalAmountLbl)
+                    .addComponent(jLabel34))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLabel37.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel37.setText("Booking advance");
+
+        jLabel32.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel32.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel32.setText("SmartStay");
+
+        jLabel38.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel38.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel38.setText("Hotel Booking System");
+
+        footerTextLbl.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        footerTextLbl.setForeground(new java.awt.Color(95, 110, 130));
+        footerTextLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        footerTextLbl.setText("Balance Amount Due to Guest:");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSeparator1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(invoiceNoLbl))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel38)
+                                .addGap(45, 45, 45))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel32)
+                                .addGap(67, 67, 67)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(invoiceDateLbl, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(roomNoLbl)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(guestNameLbl))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel10))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(roomInfoLbl)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(guestEmailLbl))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(dateInfoLbl)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(guestPhoneLbl))
+                    .addComponent(jSeparator2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(roomChargeLbl)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(totRoomChargeLbl))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(extraGuestChargeLbl)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(totExtraGuestChargeLbl))
+                    .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel22)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(subtotalLbl))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(discountRateLbl)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(discountAmountLbl))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(taxRateLbl)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(totTaxRateLbl))
+                    .addComponent(jSeparator4)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel30)
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(totalAmountLbl))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel37)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(advanceAmountLbl))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nightCountLbl)
+                            .addComponent(jLabel14)
+                            .addComponent(jLabel15)
+                            .addComponent(extraGuestChargeCap)
+                            .addComponent(discountCap)
+                            .addComponent(jLabel28)
+                            .addComponent(footerTextLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 2, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, 0)
+                        .addComponent(invoiceNoLbl))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel32))
+                        .addGap(0, 0, 0)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(invoiceDateLbl)
+                            .addComponent(jLabel38))))
+                .addGap(10, 10, 10)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel10))
+                .addGap(2, 2, 2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(roomNoLbl)
+                    .addComponent(guestNameLbl))
+                .addGap(2, 2, 2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(roomInfoLbl)
+                    .addComponent(guestEmailLbl))
+                .addGap(2, 2, 2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dateInfoLbl)
+                    .addComponent(guestPhoneLbl))
+                .addGap(2, 2, 2)
+                .addComponent(nightCountLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jLabel14)
+                .addGap(10, 10, 10)
+                .addComponent(jLabel15)
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(roomChargeLbl)
+                    .addComponent(totRoomChargeLbl))
+                .addGap(15, 15, 15)
+                .addComponent(extraGuestChargeCap)
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(totExtraGuestChargeLbl)
+                    .addComponent(extraGuestChargeLbl))
+                .addGap(10, 10, 10)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel22)
+                    .addComponent(subtotalLbl))
+                .addGap(6, 6, 6)
+                .addComponent(discountCap)
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(discountRateLbl)
+                    .addComponent(discountAmountLbl))
+                .addGap(15, 15, 15)
+                .addComponent(jLabel28)
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(taxRateLbl)
+                    .addComponent(totTaxRateLbl))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel30)
+                    .addComponent(totalAmountLbl))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(advanceAmountLbl)
+                    .addComponent(jLabel37))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(footerTextLbl)
+                .addContainerGap(11, Short.MAX_VALUE))
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel advanceAmountLbl;
+    private javax.swing.JLabel dateInfoLbl;
+    private javax.swing.JLabel discountAmountLbl;
+    private javax.swing.JLabel discountCap;
+    private javax.swing.JLabel discountRateLbl;
+    private javax.swing.JLabel extraGuestChargeCap;
+    private javax.swing.JLabel extraGuestChargeLbl;
+    private javax.swing.JLabel footerTextLbl;
+    private javax.swing.JLabel guestEmailLbl;
+    private javax.swing.JLabel guestNameLbl;
+    private javax.swing.JLabel guestPhoneLbl;
+    private javax.swing.JLabel invoiceDateLbl;
+    private javax.swing.JLabel invoiceNoLbl;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JLabel nightCountLbl;
+    private javax.swing.JLabel payableTotalAmountLbl;
+    private javax.swing.JLabel roomChargeLbl;
+    private javax.swing.JLabel roomInfoLbl;
+    private javax.swing.JLabel roomNoLbl;
+    private javax.swing.JLabel subtotalLbl;
+    private javax.swing.JLabel taxRateLbl;
+    private javax.swing.JLabel totExtraGuestChargeLbl;
+    private javax.swing.JLabel totRoomChargeLbl;
+    private javax.swing.JLabel totTaxRateLbl;
+    private javax.swing.JLabel totalAmountLbl;
+    // End of variables declaration//GEN-END:variables
 }

@@ -9,10 +9,10 @@ import javax.swing.*;
 import java.util.List;
 import main.components.BookingRowComponent;
 import main.components.CompleteBookingComponent;
+import main.components.InvoiceComponent;
 import main.functions.HelperFunctions;
 import main.managers.BookingManager;
 import main.models.Booking;
-import main.models.Invoice;
 
 /**
  *
@@ -53,7 +53,7 @@ public class BookingListPanel extends javax.swing.JPanel {
         listPanel.removeAll();
         if (bookingList.isEmpty()) {
             JPanel row = BookingRowComponent.createBookingRow(
-                    new Booking(), true, true, null, null, null
+                    new Booking(), true, true, null, null, null, null
             );
             listPanel.add(row);
         } else {
@@ -91,6 +91,31 @@ public class BookingListPanel extends javax.swing.JPanel {
                                 //show final invoice
                                 HelperFunctions.showPopMessage(this, "Booking completed successfully!", "Completion Successful");
                             }
+                        },
+                        //select
+                        booking ->{
+                            InvoiceComponent invoicePanel = new InvoiceComponent(
+                                    booking.getInvoice(), 
+                                    booking.getRoom(),
+                                    booking.getCheckInDate(),
+                                    booking.getCheckOutDate(),
+                                    booking.getNumberOfGeust(),
+                                    booking.getGuest()
+                            );
+
+                           
+                            JDialog popupDialog = new JDialog(
+                                    (JFrame) SwingUtilities.getWindowAncestor(this),
+                                    "Invoice Details",
+                                    true
+                            );
+
+
+                            popupDialog.getContentPane().add(invoicePanel);
+
+                            popupDialog.pack();
+                            popupDialog.setLocationRelativeTo(this);
+                            popupDialog.setVisible(true);
                         }
                 );
                 listPanel.add(row);
