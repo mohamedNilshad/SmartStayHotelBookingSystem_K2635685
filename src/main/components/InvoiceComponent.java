@@ -28,6 +28,7 @@ public class InvoiceComponent extends javax.swing.JPanel {
     public InvoiceComponent(Invoice invoice, Room room, Date checkInDate, Date checkOutDate, int noOfGuest, Guest guest) {
         initComponents();
         
+        paidLbl.setVisible(false);
         String invoiceId = invoice.getInvoiceIDString();
         String invoiceDate = HelperFunctions.formatDate(invoice.getInvoiceDate());
         
@@ -117,6 +118,14 @@ public class InvoiceComponent extends javax.swing.JPanel {
         }
         
         
+        if(invoice.isIsPaid()){
+            paidLbl.setVisible(true);
+            paidLbl.setText("(PAID - "+HelperFunctions.formatDate(invoice.getPaidDate())+")");
+        }else{
+            paidLbl.setVisible(false);
+        }
+        
+        
         
         
         
@@ -172,6 +181,7 @@ public class InvoiceComponent extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jLabel34 = new javax.swing.JLabel();
         payableTotalAmountLbl = new javax.swing.JLabel();
+        paidLbl = new javax.swing.JLabel();
         jLabel37 = new javax.swing.JLabel();
         jLabel32 = new javax.swing.JLabel();
         jLabel38 = new javax.swing.JLabel();
@@ -318,14 +328,21 @@ public class InvoiceComponent extends javax.swing.JPanel {
         payableTotalAmountLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         payableTotalAmountLbl.setText("Rs. 52000.00");
 
+        paidLbl.setFont(new java.awt.Font("Arial", 2, 10)); // NOI18N
+        paidLbl.setForeground(new java.awt.Color(0, 255, 51));
+        paidLbl.setText("(PAID - 03 Nov 2026)");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel34)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 159, Short.MAX_VALUE)
                 .addComponent(payableTotalAmountLbl))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(paidLbl)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -334,7 +351,9 @@ public class InvoiceComponent extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(payableTotalAmountLbl)
                     .addComponent(jLabel34))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(paidLbl)
+                .addGap(0, 0, 0))
         );
 
         jLabel37.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -521,7 +540,7 @@ public class InvoiceComponent extends javax.swing.JPanel {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(footerTextLbl)
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -561,6 +580,7 @@ public class InvoiceComponent extends javax.swing.JPanel {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JLabel nightCountLbl;
+    private javax.swing.JLabel paidLbl;
     private javax.swing.JLabel payableTotalAmountLbl;
     private javax.swing.JLabel roomChargeLbl;
     private javax.swing.JLabel roomInfoLbl;

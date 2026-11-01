@@ -3,8 +3,8 @@ package main.frames;
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import main.guest.frames.forms.RoomPanelForm;
-import main.guest.frames.forms.BookingPanelForm;
+import main.forms.guest.RoomPanelForm;
+import main.forms.guest.BookingPanelForm;
 import main.managers.GuestManager;
 import main.models.Guest;
 

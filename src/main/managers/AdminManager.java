@@ -3,7 +3,6 @@ package main.managers;
 import java.util.ArrayList;
 import java.util.List;
 import main.models.Admin;
-import main.models.Guest;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -39,8 +38,7 @@ public class AdminManager {
     }
 
     public static Admin getCurrentAdmin() {
-//        return currentAdmin;
-            return new Admin("123456", "123456", "Nilshad", "n@gmail.com");
+        return currentAdmin;
     }
 
     public static void clearSession() {

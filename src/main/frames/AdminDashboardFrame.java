@@ -2,8 +2,8 @@ package main.frames;
 
 import java.awt.Color;
 import javax.swing.JPanel;
-import main.admin.frames.forms.BookingPanelForm;
-import main.admin.frames.forms.RoomPanelForm;
+import main.forms.admin.BookingPanelForm;
+import main.forms.admin.RoomPanelForm;
 import main.managers.AdminManager;
 import main.models.Admin;
 
@@ -60,7 +60,6 @@ public class AdminDashboardFrame extends javax.swing.JFrame {
         bookingMenu = new javax.swing.JButton();
         roomsMenu = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
-        guestsMenu = new javax.swing.JButton();
         mainPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -121,18 +120,6 @@ public class AdminDashboardFrame extends javax.swing.JFrame {
             }
         });
 
-        guestsMenu.setBackground(new java.awt.Color(31, 58, 86));
-        guestsMenu.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        guestsMenu.setForeground(new java.awt.Color(255, 255, 255));
-        guestsMenu.setText("Guests");
-        guestsMenu.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        guestsMenu.setFocusable(false);
-        guestsMenu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                guestsMenuActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -152,7 +139,6 @@ public class AdminDashboardFrame extends javax.swing.JFrame {
             .addComponent(bookingMenu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(roomsMenu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jSeparator1)
-            .addComponent(guestsMenu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -167,8 +153,6 @@ public class AdminDashboardFrame extends javax.swing.JFrame {
                 .addComponent(bookingMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(roomsMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(guestsMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel3)
                 .addGap(0, 0, 0)
@@ -216,7 +200,6 @@ public class AdminDashboardFrame extends javax.swing.JFrame {
     private void bookingMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookingMenuActionPerformed
         bookingMenu.setBackground(Color.decode("#354F68"));
         roomsMenu.setBackground(Color.decode("#1F3A56"));
-        guestsMenu.setBackground(Color.decode("#1F3A56"));
 
         //BookingPanelForm
         BookingPanelForm bookingPanel = new BookingPanelForm();
@@ -227,7 +210,6 @@ public class AdminDashboardFrame extends javax.swing.JFrame {
     private void roomsMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomsMenuActionPerformed
         roomsMenu.setBackground(Color.decode("#354F68"));
         bookingMenu.setBackground(Color.decode("#1F3A56"));
-        guestsMenu.setBackground(Color.decode("#1F3A56"));
         
         //RoomPanelForm
         RoomPanelForm roomPanel = new RoomPanelForm();
@@ -239,12 +221,6 @@ public class AdminDashboardFrame extends javax.swing.JFrame {
         new MainFrame().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void guestsMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guestsMenuActionPerformed
-        guestsMenu.setBackground(Color.decode("#354F68"));
-        bookingMenu.setBackground(Color.decode("#1F3A56"));
-        roomsMenu.setBackground(Color.decode("#1F3A56"));
-    }//GEN-LAST:event_guestsMenuActionPerformed
 
     /**
      * @param args the command line arguments
@@ -290,7 +266,6 @@ public class AdminDashboardFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bookingMenu;
-    private javax.swing.JButton guestsMenu;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
