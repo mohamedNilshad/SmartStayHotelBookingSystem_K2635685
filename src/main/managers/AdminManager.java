@@ -2,7 +2,7 @@ package main.managers;
 
 import java.util.ArrayList;
 import java.util.List;
-import main.models.users.Admin;
+import main.models.users.K2635685_Admin;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -14,16 +14,16 @@ import main.models.users.Admin;
  */
 public class AdminManager {
 
-    private static final List<Admin> adminList = new ArrayList<>();
-    private static Admin currentAdmin;
+    private static final List<K2635685_Admin> adminList = new ArrayList<>();
+    private static K2635685_Admin currentAdmin;
     
     
     public AdminManager(){
-        adminList.add(new Admin("Test@123", "0771235265", "Nilshad", "nilshad@gmail.com"));
+        adminList.add(new K2635685_Admin("Test@123", "0771235265", "Nilshad", "nilshad@gmail.com"));
     }
 
     public static boolean verifyLogin(String email, String password) {
-        for (Admin admin : adminList) {
+        for (K2635685_Admin admin : adminList) {
             if (admin.getEmailAddress().equalsIgnoreCase(email) && admin.getPassword().equalsIgnoreCase(password)) {
                 setCurrentAdmin(admin);
                 return true;
@@ -33,11 +33,11 @@ public class AdminManager {
     }
 
    
-    public static void setCurrentAdmin(Admin admin) {
+    public static void setCurrentAdmin(K2635685_Admin admin) {
         currentAdmin = admin;
     }
 
-    public static Admin getCurrentAdmin() {
+    public static K2635685_Admin getCurrentAdmin() {
         return currentAdmin;
     }
 

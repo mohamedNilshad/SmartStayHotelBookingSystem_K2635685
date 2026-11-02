@@ -2,7 +2,7 @@ package main.managers;
 
 import java.util.ArrayList;
 import java.util.List;
-import main.models.users.Guest;
+import main.models.users.K2635685_Guest;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -14,11 +14,11 @@ import main.models.users.Guest;
  */
 public class GuestManager {
 
-    private static final List<Guest> guestList = new ArrayList<>();
-    private static Guest currentGuest;
+    private static final List<K2635685_Guest> guestList = new ArrayList<>();
+    private static K2635685_Guest currentGuest;
 
     public static boolean isRegistered(String nic) {
-        for (Guest guest : guestList) {
+        for (K2635685_Guest guest : guestList) {
             if (guest.getNicPassportNumber().equalsIgnoreCase(nic.trim())) {
 
                 setCurrentGuest(guest);
@@ -28,18 +28,18 @@ public class GuestManager {
         return false;
     }
 
-    public static void registerUser(Guest guest) {
+    public static void registerUser(K2635685_Guest guest) {
         if (!isRegistered(guest.getNicPassportNumber())) {
             guestList.add(guest);
             setCurrentGuest(guest);
         }
     }
 
-    public static void setCurrentGuest(Guest guest) {
+    public static void setCurrentGuest(K2635685_Guest guest) {
         currentGuest = guest;
     }
 
-    public static Guest getCurrentGuest() {
+    public static K2635685_Guest getCurrentGuest() {
         return currentGuest;
     }
 

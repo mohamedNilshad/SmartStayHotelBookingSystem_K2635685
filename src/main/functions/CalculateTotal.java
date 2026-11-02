@@ -5,8 +5,8 @@
 package main.functions;
 
 import java.util.Date;
-import main.models.Invoice;
-import main.models.Room;
+import main.models.K2635685_Invoice;
+import main.models.K2635685_Room;
 
 /**
  *
@@ -14,7 +14,7 @@ import main.models.Room;
  */
 public class CalculateTotal {
     
-    public static Invoice calculation(Room room, Date checkInDate, Date checkOutDate, String numberOfGuest, String advanceAmount) {
+    public static K2635685_Invoice calculation(K2635685_Room room, Date checkInDate, Date checkOutDate, String numberOfGuest, String advanceAmount) {
         long noOfNights = HelperFunctions.getNoOfNights(checkInDate, checkOutDate);
         int noOfGuest = Integer.parseInt(numberOfGuest);
         int extGuestCount = (noOfGuest > room.getCapacity()) ?  (noOfGuest - room.getCapacity()) : 0;
@@ -44,7 +44,7 @@ public class CalculateTotal {
 
         totalAmount -= advncAmount;
         
-        return new Invoice(HelperFunctions.getCurrentDate(), totalAmount, subtotalAmount, advncAmount, false, null, taxRate, taxAmount, discountRate, discountAmount);
+        return new K2635685_Invoice(HelperFunctions.getCurrentDate(), totalAmount, subtotalAmount, advncAmount, false, null, taxRate, taxAmount, discountRate, discountAmount);
         
     }
 }

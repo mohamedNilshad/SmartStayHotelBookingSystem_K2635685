@@ -23,7 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import main.functions.HelperFunctions;
-import main.models.Booking;
+import main.models.K2635685_Booking;
 
 /**
  *
@@ -31,7 +31,7 @@ import main.models.Booking;
  */
 public class CompleteBookingComponent {
 
-    public static Double showCompleteBookingDialog(Component c, Booking booking) {
+    public static Double showCompleteBookingDialog(Component c, K2635685_Booking booking) {
 
         String bookingId = booking.getBookingIDString();
         String guestName = booking.getGuest().getFullName();

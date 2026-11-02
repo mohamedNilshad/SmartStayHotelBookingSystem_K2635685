@@ -16,10 +16,10 @@ import main.functions.ValidationFunctions;
 import main.managers.BookingManager;
 import main.managers.GuestManager;
 import main.managers.RoomManager;
-import main.models.Booking;
-import main.models.Invoice;
-import main.models.Room;
-import main.models.room_packages.RoomPackage;
+import main.models.K2635685_Booking;
+import main.models.K2635685_Invoice;
+import main.models.K2635685_Room;
+import main.models.room_packages.K2635685_RoomPackage;
 
 /**
  *
@@ -28,8 +28,8 @@ import main.models.room_packages.RoomPackage;
 public class NewBookingPanel extends javax.swing.JPanel {
 
     private final Runnable onBack;
-    private final Room selectedRoom;
-    private Invoice invoice;
+    private final K2635685_Room selectedRoom;
+    private K2635685_Invoice invoice;
 
     /**
      * Creates new form RoomListPanel
@@ -37,7 +37,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
      * @param room
      * @param onBack
      */
-    public NewBookingPanel(Room room, Runnable onBack) {
+    public NewBookingPanel(K2635685_Room room, Runnable onBack) {
         initComponents();
         roomPackageDropDown.setBackground(Color.white);
         bedTypeDropDown.setBackground(Color.white);
@@ -90,7 +90,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
         roomPackageDropDown.removeAllItems();
         bedTypeDropDown.removeAllItems();
 
-        for (RoomPackage roomPackage : RoomManager.getRoomPackageList()) {
+        for (K2635685_RoomPackage roomPackage : RoomManager.getRoomPackageList()) {
             roomPackageDropDown.addItem(roomPackage.getPackageName());
         }
 
@@ -108,7 +108,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
         advanceAmount.setText("10000.0");
     }
 
-    private JScrollPane createRoomListScrollPane(List<Room> rooms) {
+    private JScrollPane createRoomListScrollPane(List<K2635685_Room> rooms) {
         // Container that holds all rows, stacked vertically
 
         JPanel listPanel = new JPanel();
@@ -124,7 +124,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
                     )
             );
         } else {
-            for (Room roomItem : rooms) {
+            for (K2635685_Room roomItem : rooms) {
                 listPanel.add(
                         RoomRowComponent.createRoomRow(
                                 roomItem, false, false,
@@ -151,7 +151,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
         return rowScrollPane;
     }
 
-    private void showInvoice(Room room) {
+    private void showInvoice(K2635685_Room room) {
  
         InvoiceComponent invoicePanel = new InvoiceComponent(
                 invoice, room, 
@@ -476,7 +476,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
             bookingDetailsScrollPane.setVisible(false);
             confirmBooking.setVisible(false);
 
-            List<Room> availableRoomList = BookingManager.getAvailableRoomList(
+            List<K2635685_Room> availableRoomList = BookingManager.getAvailableRoomList(
                     bedTypeDropDown.getSelectedItem().toString(),
                     roomPackageDropDown.getSelectedItem().toString(),
                     checkInDate.getDate(),
@@ -499,7 +499,7 @@ public class NewBookingPanel extends javax.swing.JPanel {
 
     private void confirmBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmBookingActionPerformed
 
-        Booking booking = new Booking(
+        K2635685_Booking booking = new K2635685_Booking(
                 selectedRoom,
                 GuestManager.getCurrentGuest(),
                 checkInDate.getDate(),

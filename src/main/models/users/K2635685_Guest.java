@@ -8,13 +8,13 @@ package main.models.users;
  *
  * @author N I L S H A D
  */
-public class Admin extends User  {
-    private String password;
+public class K2635685_Guest extends K2635685_User {
+    private String nicPassportNumber;
 
-    public Admin() {}
+    public K2635685_Guest() {}
     
-    public Admin(String password, String contactNumber, String fullName, String emailAddress) {
-        this.password = password;
+    public K2635685_Guest(String nicPassportNumber, String contactNumber, String fullName, String emailAddress) {
+        this.nicPassportNumber = nicPassportNumber;
         this.contactNumber = contactNumber;
         this.fullName = fullName;
         this.emailAddress = emailAddress;
@@ -35,8 +35,10 @@ public class Admin extends User  {
         return fullName;
     }
 
-    public String getPassword() {
-        return password;
+    public String getNicPassportNumber() {
+        return nicPassportNumber;
     }
 
+    
+    
 }

@@ -11,7 +11,7 @@ import main.managers.BookingManager;
  *
  * @author N I L S H A D
  */
-public class Invoice {
+public class K2635685_Invoice {
     private int invoiceID;
     private Date invoiceDate;
     private double totalAmount;
@@ -24,7 +24,7 @@ public class Invoice {
     private double discountRate;
     private double discountAmount;
 
-    public Invoice(Date invoiceDate, double totalAmount, double subTotalAmount, double bookingAdvance, boolean isPaid, Date paidDate, double taxRate, double taxAmount, double discountRate, double discountAmount) {
+    public K2635685_Invoice(Date invoiceDate, double totalAmount, double subTotalAmount, double bookingAdvance, boolean isPaid, Date paidDate, double taxRate, double taxAmount, double discountRate, double discountAmount) {
         this.invoiceID = BookingManager.generateBookingId();
         this.invoiceDate = invoiceDate;
         this.totalAmount = totalAmount;
@@ -38,7 +38,7 @@ public class Invoice {
         this.discountAmount = discountAmount;
     }
     
-    public Invoice(){}
+    public K2635685_Invoice(){}
     
     public String getInvoiceIDString() { 
         return "INV - "+String.format("%05d", invoiceID);

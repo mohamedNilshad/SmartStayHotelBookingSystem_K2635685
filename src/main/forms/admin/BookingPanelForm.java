@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import main.functions.ValidationFunctions;
 import main.managers.BookingManager;
-import main.models.Booking;
+import main.models.K2635685_Booking;
 
 /**
  *
@@ -23,8 +23,8 @@ import main.models.Booking;
 public class BookingPanelForm extends javax.swing.JPanel {
 
     private final String placeholder = "Search...";
-    private List<Booking> bookingList = new ArrayList<>();
-    private List<Booking> sortedBookingList = new ArrayList<>();
+    private List<K2635685_Booking> bookingList = new ArrayList<>();
+    private List<K2635685_Booking> sortedBookingList = new ArrayList<>();
     private List<String> bookingStatus = new ArrayList<>();
     private final BookingListPanel bookingListPanel;
 
@@ -89,7 +89,7 @@ public class BookingPanelForm extends javax.swing.JPanel {
 
         sortedBookingList = new ArrayList<>();
 
-        for (Booking booking : bookingList) {
+        for (K2635685_Booking booking : bookingList) {
 
             boolean isBookingId = booking.getBookingIDString().toLowerCase().contains(searchText.toLowerCase());
 

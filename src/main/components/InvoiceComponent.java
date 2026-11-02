@@ -6,9 +6,9 @@ package main.components;
 
 import java.util.Date;
 import main.functions.HelperFunctions;
-import main.models.users.Guest;
-import main.models.Invoice;
-import main.models.Room;
+import main.models.users.K2635685_Guest;
+import main.models.K2635685_Invoice;
+import main.models.K2635685_Room;
 
 /**
  *
@@ -25,7 +25,7 @@ public class InvoiceComponent extends javax.swing.JPanel {
      * @param noOfGuest
      * @param guest
      */
-    public InvoiceComponent(Invoice invoice, Room room, Date checkInDate, Date checkOutDate, int noOfGuest, Guest guest) {
+    public InvoiceComponent(K2635685_Invoice invoice, K2635685_Room room, Date checkInDate, Date checkOutDate, int noOfGuest, K2635685_Guest guest) {
         initComponents();
         
         paidLbl.setVisible(false);

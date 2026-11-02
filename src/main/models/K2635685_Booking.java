@@ -4,7 +4,7 @@
  */
 package main.models;
 
-import main.models.users.Guest;
+import main.models.users.K2635685_Guest;
 import java.util.Date;
 import main.managers.BookingManager;
 
@@ -12,19 +12,19 @@ import main.managers.BookingManager;
  *
  * @author N I L S H A D
  */
-public class Booking {
+public class K2635685_Booking {
     private int bookingID;
-    private Room room;
-    private Guest guest;
+    private K2635685_Room room;
+    private K2635685_Guest guest;
     private Date checkInDate;
     private Date checkOutDate;
     private Date bookingDate;
     private int numberOfGuest;
-    private Invoice invoice;
+    private K2635685_Invoice invoice;
     
     private String status;
 
-    public Booking(Room room, Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, Invoice invoice, String status) {
+    public K2635685_Booking(K2635685_Room room, K2635685_Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, K2635685_Invoice invoice, String status) {
         this.bookingID = BookingManager.generateBookingId();
         this.room = room;
         this.guest = guest;
@@ -36,7 +36,7 @@ public class Booking {
         this.status = status;
     }
     
-    public Booking(int bookingID, Room room, Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, Invoice invoice, String status) {
+    public K2635685_Booking(int bookingID, K2635685_Room room, K2635685_Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, K2635685_Invoice invoice, String status) {
         this.bookingID = bookingID;
         this.room = room;
         this.guest = guest;
@@ -48,7 +48,7 @@ public class Booking {
         this.status = status;
     }
     
-    public Booking(){}
+    public K2635685_Booking(){}
     
     public String getBookingIDString() { 
         return "BK_"+String.format("%04d", bookingID);
@@ -58,11 +58,11 @@ public class Booking {
         return bookingID;
     }
 
-    public Room getRoom() {
+    public K2635685_Room getRoom() {
         return room;
     }
     
-    public Guest getGuest() {
+    public K2635685_Guest getGuest() {
         return guest;
     }
 
@@ -74,7 +74,7 @@ public class Booking {
         return checkOutDate;
     }
 
-    public Invoice getInvoice() {
+    public K2635685_Invoice getInvoice() {
         return invoice;
     }
 
@@ -93,7 +93,7 @@ public class Booking {
     
     public void setStatus(String status) { this.status = status; }
 
-    public void setInvoice(Invoice invoice) {
+    public void setInvoice(K2635685_Invoice invoice) {
         this.invoice = invoice;
     }
     

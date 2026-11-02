@@ -10,7 +10,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import main.managers.RoomManager;
-import main.models.Room;
+import main.models.K2635685_Room;
 
 /**
  *
@@ -19,8 +19,8 @@ import main.models.Room;
 public class RoomPanelForm extends javax.swing.JPanel {
 
     private final String placeholder = "Search...";
-    private final List<Room> roomList = RoomManager.getRoomList();
-    private List<Room> sortedRoomList = new ArrayList<>();
+    private final List<K2635685_Room> roomList = RoomManager.getRoomList();
+    private List<K2635685_Room> sortedRoomList = new ArrayList<>();
     private RoomListPanel roomListPanel;
 
     public RoomPanelForm() {
@@ -209,7 +209,7 @@ public class RoomPanelForm extends javax.swing.JPanel {
 
             sortedRoomList.clear();
 
-            for (Room room : roomList) {
+            for (K2635685_Room room : roomList) {
                 boolean isPackageName = room.getRoomPackage().getPackageName().toLowerCase().startsWith(text.toLowerCase());
                 boolean isBedType = room.getBedType().toLowerCase().startsWith(text.toLowerCase());
                 boolean isRoomId = room.getRoomIDString().toLowerCase().startsWith(text.toLowerCase());

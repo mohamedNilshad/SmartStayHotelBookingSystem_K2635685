@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 import main.forms.admin.BookingPanelForm;
 import main.forms.admin.RoomPanelForm;
 import main.managers.AdminManager;
-import main.models.users.Admin;
+import main.models.users.K2635685_Admin;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -23,7 +23,7 @@ public class AdminDashboardFrame extends javax.swing.JFrame {
     public AdminDashboardFrame() {
         initComponents();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
-        Admin admin = AdminManager.getCurrentAdmin();
+        K2635685_Admin admin = AdminManager.getCurrentAdmin();
         jLabel3.setText(admin.getFullName() + " - ADMIN");
         jLabel5.setText(admin.getContactNumber());
 

@@ -4,14 +4,11 @@
  */
 package main.managers;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import main.functions.HelperFunctions;
-import main.models.Booking;
-import main.models.users.Guest;
-import main.models.Invoice;
-import main.models.Room;
+import main.models.K2635685_Booking;
+import main.models.K2635685_Invoice;
+import main.models.K2635685_Room;
 
 /**
  *
@@ -20,16 +17,16 @@ import main.models.Room;
 public class BookingManager {
 
     private static final List<String> bookingStatus = new ArrayList<>(Arrays.asList("Active", "Cancelled", "Completed"));
-    private static final List<Booking> bookingList = new ArrayList<>();
+    private static final List<K2635685_Booking> bookingList = new ArrayList<>();
 
-    public static List<Booking> getBookingList() {
+    public static List<K2635685_Booking> getBookingList() {
         return new ArrayList<>(bookingList);
     }
 
-    public static List<Booking> getBookingListByGuestId(String id) {
-        List<Booking> myBookingList = new ArrayList<>();
+    public static List<K2635685_Booking> getBookingListByGuestId(String id) {
+        List<K2635685_Booking> myBookingList = new ArrayList<>();
 
-        for (Booking booking : bookingList) {
+        for (K2635685_Booking booking : bookingList) {
 
             if (booking.getGuest().getNicPassportNumber().equals(id)) {
                 myBookingList.add(booking);
@@ -39,10 +36,10 @@ public class BookingManager {
         return myBookingList;
     }
 
-    public static List<Room> getAvailableRoomList(String bedType, String roomPackageName, Date checkInDate, Date checkOutDate, int bookingId) {
-        List<Room> availableRoomList = new ArrayList<>();
+    public static List<K2635685_Room> getAvailableRoomList(String bedType, String roomPackageName, Date checkInDate, Date checkOutDate, int bookingId) {
+        List<K2635685_Room> availableRoomList = new ArrayList<>();
 
-        for (Room room : RoomManager.getRoomList()) {
+        for (K2635685_Room room : RoomManager.getRoomList()) {
 
             if (room.getBedType().equals(bedType) && room.getRoomPackage().getPackageName().equals(roomPackageName)) {//sort rooms by bedType and roomPackageName
                 boolean isAvailable = isBookingAvailable(room.getRoomID(), checkInDate, checkOutDate, bookingId);
@@ -56,7 +53,7 @@ public class BookingManager {
     }
 
     public static boolean isBookingAvailable(int roomId, Date checkInDate, Date checkOutDate, int bookingId) {
-        for (Booking booking : bookingList) {
+        for (K2635685_Booking booking : bookingList) {
 
             if (booking.getRoom().getRoomID() != roomId) {
                 continue;       // different room
@@ -79,11 +76,11 @@ public class BookingManager {
         return newIn.before(existingOut) && newOut.after(existingIn);
     }
 
-    public static void addNewBooking(Booking booking) {
+    public static void addNewBooking(K2635685_Booking booking) {
         bookingList.add(booking);
     }
 
-    public static void updateBooking(Booking booking) {
+    public static void updateBooking(K2635685_Booking booking) {
 
         for (int i = 0; i < bookingList.size(); i++) {
             if (bookingList.get(i).getBookingID() == booking.getBookingID()) {
@@ -93,14 +90,14 @@ public class BookingManager {
         }
     }
     
-    public static List<Booking> completeBooking(int bookingId, double paidAmount) {
+    public static List<K2635685_Booking> completeBooking(int bookingId, double paidAmount) {
         
         for (int i = 0; i < bookingList.size(); i++) {
             if (bookingList.get(i).getBookingID() == bookingId) {
                 
-                Booking tempBooking = bookingList.get(i);
+                K2635685_Booking tempBooking = bookingList.get(i);
                 
-                Invoice updatedInvoice = tempBooking.getInvoice();
+                K2635685_Invoice updatedInvoice = tempBooking.getInvoice();
                 updatedInvoice.setPaidDate(HelperFunctions.getCurrentDate());
                 updatedInvoice.setIsPaid(true);
                 
@@ -117,7 +114,7 @@ public class BookingManager {
     public static void updateBookingStatus(int bookingId, String bookingStatus) {
 
         for (int i = 0; i < bookingList.size(); i++) {
-            Booking booking = bookingList.get(i);
+            K2635685_Booking booking = bookingList.get(i);
 
             if (booking.getBookingID() == bookingId) {
                 booking.setStatus(bookingStatus);
@@ -136,9 +133,9 @@ public class BookingManager {
         return bookingStatus.get(index);
     }
 
-    public static List<Booking> setBookingStatus(int index, int bookingId) {
+    public static List<K2635685_Booking> setBookingStatus(int index, int bookingId) {
         String guestId = "";
-        for (Booking booking : bookingList) {
+        for (K2635685_Booking booking : bookingList) {
             if (booking.getBookingID() == bookingId) {
                 booking.setStatus(bookingStatus.get(index));
                 guestId = booking.getGuest().getNicPassportNumber();

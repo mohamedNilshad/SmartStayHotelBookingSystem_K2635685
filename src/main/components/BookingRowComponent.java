@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import main.functions.HelperFunctions;
-import main.models.Booking;
-import main.models.users.Guest;
+import main.models.K2635685_Booking;
+import main.models.users.K2635685_Guest;
 
 /**
  *
@@ -21,13 +21,13 @@ public class BookingRowComponent {
     private static final Color MUTED = new Color(95, 110, 130);
 
     public static JPanel createBookingRow(
-            Booking booking,
+            K2635685_Booking booking,
             boolean isEmpty,
             boolean isAdmin,
-            Consumer<Booking> onEdit,
-            Consumer<Booking> onCancel,
-            Consumer<Booking> onComplete,
-            Consumer<Booking> onSelect
+            Consumer<K2635685_Booking> onEdit,
+            Consumer<K2635685_Booking> onCancel,
+            Consumer<K2635685_Booking> onComplete,
+            Consumer<K2635685_Booking> onSelect
     ) {
 
         int rowHeight = isAdmin ? 110 : 100;
@@ -85,7 +85,7 @@ public class BookingRowComponent {
     }
 
     // ---------- LEFT: booking id + status badge ----------
-    private static JPanel buildLeft(Booking booking, String status, boolean isAdmin) {
+    private static JPanel buildLeft(K2635685_Booking booking, String status, boolean isAdmin) {
         JLabel idLbl = new JLabel(booking.getBookingIDString());
         idLbl.setFont(new Font("Arial", Font.BOLD, 18));
         idLbl.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -104,7 +104,7 @@ public class BookingRowComponent {
     }
 
     // ---------- CENTER: stay details (+ guest info for admin) ----------
-    private static JPanel buildCenter(Booking booking, boolean isAdmin) {
+    private static JPanel buildCenter(K2635685_Booking booking, boolean isAdmin) {
         JPanel stayPanel = buildStayPanel(booking);
 
         if (!isAdmin) {
@@ -123,7 +123,7 @@ public class BookingRowComponent {
         return center;
     }
 
-    private static JPanel buildStayPanel(Booking booking) {
+    private static JPanel buildStayPanel(K2635685_Booking booking) {
         String roomId = booking.getRoom().getRoomIDString();
         String packageName = booking.getRoom().getRoomPackage().getPackageName();
         String bedType = booking.getRoom().getBedType();
@@ -154,7 +154,7 @@ public class BookingRowComponent {
         return stay;
     }
 
-    private static JPanel buildGuestPanel(Guest guest) {
+    private static JPanel buildGuestPanel(K2635685_Guest guest) {
         String guestName = guest.getFullName();
 
         JLabel nameLbl = new JLabel(guestName);
@@ -190,13 +190,13 @@ public class BookingRowComponent {
 
     // ---------- RIGHT: amount + buttons ----------
     private static JPanel buildRight(
-            Booking booking,
+            K2635685_Booking booking,
             boolean isAdmin,
             boolean canModify,
             boolean canComplete,
-            Consumer<Booking> onEdit,
-            Consumer<Booking> onCancel,
-            Consumer<Booking> onComplete
+            Consumer<K2635685_Booking> onEdit,
+            Consumer<K2635685_Booking> onCancel,
+            Consumer<K2635685_Booking> onComplete
     ) {
         JLabel amountLbl = new JLabel("Rs." + (booking.getInvoice().getTotalAmount() + booking.getInvoice().getBookingAdvance()));
         amountLbl.setFont(new Font("Arial", Font.BOLD, 15));

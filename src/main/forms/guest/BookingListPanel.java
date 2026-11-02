@@ -13,7 +13,7 @@ import main.components.InvoiceComponent;
 import main.functions.HelperFunctions;
 import main.managers.BookingManager;
 import main.managers.RoomManager;
-import main.models.Booking;
+import main.models.K2635685_Booking;
 
 /**
  *
@@ -23,7 +23,7 @@ public class BookingListPanel extends javax.swing.JPanel {
 
     private final JPanel listPanel;
     private final JScrollPane scrollPane;
-    private final Consumer<Booking> onBookingEdit;
+    private final Consumer<K2635685_Booking> onBookingEdit;
 
     /**
      * Creates new form RoomListPanel
@@ -31,7 +31,7 @@ public class BookingListPanel extends javax.swing.JPanel {
      * @param bookingList
      * @param onBookingEdit
      */
-    public BookingListPanel(List<Booking> bookingList, Consumer<Booking> onBookingEdit) {
+    public BookingListPanel(List<K2635685_Booking> bookingList, Consumer<K2635685_Booking> onBookingEdit) {
         initComponents();
         this.onBookingEdit = onBookingEdit;
         setLayout(new BorderLayout());
@@ -51,16 +51,14 @@ public class BookingListPanel extends javax.swing.JPanel {
         updateBookingList(bookingList);
     }
 
-    public void updateBookingList(List<Booking> bookingList) {
+    public void updateBookingList(List<K2635685_Booking> bookingList) {
 
         listPanel.removeAll();
         if (bookingList.isEmpty()) {
-            listPanel.add(
-                    BookingRowComponent.createBookingRow(new Booking(), true, false, null, null, null, null));
+            listPanel.add(BookingRowComponent.createBookingRow(new K2635685_Booking(), true, false, null, null, null, null));
         } else {
-            for (Booking bookingItem : bookingList) {
-                listPanel.add(BookingRowComponent.createBookingRow(
-                        bookingItem,
+            for (K2635685_Booking bookingItem : bookingList) {
+                listPanel.add(BookingRowComponent.createBookingRow(bookingItem,
                         false,
                         false,
                         onBookingEdit,
@@ -71,7 +69,7 @@ public class BookingListPanel extends javax.swing.JPanel {
                                     "Confirm Booking Cancellation");
 
                             if (result == JOptionPane.YES_OPTION) {
-                                List<Booking> updated = BookingManager.setBookingStatus(1, booking.getBookingID());
+                                List<K2635685_Booking> updated = BookingManager.setBookingStatus(1, booking.getBookingID());
                                 updateBookingList(updated);
                                 HelperFunctions.showPopMessage(this, "Booking cancelled successfully!", "Cancellation Successful");
                             }

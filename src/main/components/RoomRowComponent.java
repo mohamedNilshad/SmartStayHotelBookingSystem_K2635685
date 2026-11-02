@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import main.functions.HelperFunctions;
-import main.models.Room;
+import main.models.K2635685_Room;
 
 /**
  *
@@ -22,12 +22,12 @@ public class RoomRowComponent {
     private static final Color MUTED = new Color(95, 110, 130);
 
     public static JPanel createRoomRow(
-            Room room,
+            K2635685_Room room,
             boolean isEmpty,
             boolean isAdmin,
-            Consumer<Room> onEdit,
-            Consumer<Room> onDelete,
-            Consumer<Room> onSelect
+            Consumer<K2635685_Room> onEdit,
+            Consumer<K2635685_Room> onDelete,
+            Consumer<K2635685_Room> onSelect
     ) {
         int rowHeight = isAdmin ? 90 : 76;
 
@@ -86,7 +86,7 @@ public class RoomRowComponent {
     }
 
     // ---------- LEFT: room number ----------
-    private static JLabel buildNumber(Room room) {
+    private static JLabel buildNumber(K2635685_Room room) {
         JLabel number = new JLabel(room.getRoomIDString());
         number.setFont(new Font("Arial", Font.BOLD, 18));
         number.setPreferredSize(new Dimension(60, 35));
@@ -94,7 +94,7 @@ public class RoomRowComponent {
     }
 
     // ---------- CENTER: package + bed/breakfast/capacity ----------
-    private static JPanel buildDetails(Room room) {
+    private static JPanel buildDetails(K2635685_Room room) {
         JLabel type = new JLabel(room.getRoomPackage().getPackageName());
         type.setFont(new Font("Arial", Font.BOLD, 15));
         type.setForeground(MUTED);
@@ -115,7 +115,7 @@ public class RoomRowComponent {
     }
 
     // ---------- RIGHT (admin): price + Edit/Delete ----------
-    private static JPanel buildAdminRight(Room room, Consumer<Room> onEdit, Consumer<Room> onDelete) {
+    private static JPanel buildAdminRight(K2635685_Room room, Consumer<K2635685_Room> onEdit, Consumer<K2635685_Room> onDelete) {
         JLabel price = new JLabel(formatRate(room) + "  per night");
         price.setFont(new Font("Arial", Font.BOLD, 14));
         price.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -144,7 +144,7 @@ public class RoomRowComponent {
     }
 
     // ---------- RIGHT (guest): price, "per night" and arrow ----------
-    private static JPanel buildGuestRight(Room room) {
+    private static JPanel buildGuestRight(K2635685_Room room) {
         JLabel price = new JLabel(formatRate(room));
         price.setFont(new Font("Arial", Font.BOLD, 14));
 
@@ -170,7 +170,7 @@ public class RoomRowComponent {
         return right;
     }
 
-    private static String formatRate(Room room) {
+    private static String formatRate(K2635685_Room room) {
         NumberFormat currency = NumberFormat.getInstance(Locale.US);
         return "Rs. " + currency.format(room.getRoomPackage().getDailyRoomRate());
     }

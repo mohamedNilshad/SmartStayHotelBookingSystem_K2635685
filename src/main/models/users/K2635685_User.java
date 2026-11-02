@@ -8,7 +8,7 @@ package main.models.users;
  *
  * @author N I L S H A D
  */
-abstract public class User {
+abstract public class K2635685_User {
     protected String contactNumber;
     protected String fullName;
     protected String emailAddress;

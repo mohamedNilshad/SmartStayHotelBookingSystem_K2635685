@@ -8,13 +8,14 @@ package main.models.room_packages;
  *
  * @author N I L S H A D
  */
-public class StandardPackage extends RoomPackage {
+public class K2635685_SuitePackage extends K2635685_RoomPackage {
 
-    public StandardPackage() {
-        this.packageName = "Standard";
-        this.dailyRoomRate = 6000.00;
-        this.extraGuestCharge = 1000.00;
-        this.taxRate = 10.0;
+
+    public K2635685_SuitePackage() {
+        this.packageName = "Suite";
+        this.dailyRoomRate = 14000.00;
+        this.extraGuestCharge = 2000.00;
+        this.taxRate = 15.0;
     }
 
     @Override

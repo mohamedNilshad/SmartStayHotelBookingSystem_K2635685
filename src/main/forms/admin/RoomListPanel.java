@@ -6,7 +6,7 @@ package main.forms.admin;
 
 import java.awt.*;
 import javax.swing.*;
-import main.models.Room;
+import main.models.K2635685_Room;
 import java.util.List;
 import java.util.function.Consumer;
 import main.components.RoomRowComponent;
@@ -20,8 +20,8 @@ public class RoomListPanel extends javax.swing.JPanel {
 
     private final JPanel listPanel;
     private final JScrollPane scrollPane;
-    private final Consumer<Room> onRoomEdit;
-    private final Consumer<Room> onRoomDelete;
+    private final Consumer<K2635685_Room> onRoomEdit;
+    private final Consumer<K2635685_Room> onRoomDelete;
 
     /**
      * Creates new form RoomListPanel
@@ -30,7 +30,7 @@ public class RoomListPanel extends javax.swing.JPanel {
      * @param onRoomEdit
      * @param onRoomDelete
      */
-    public RoomListPanel(List<Room> roomList, Consumer<Room> onRoomEdit, Consumer<Room> onRoomDelete) {
+    public RoomListPanel(List<K2635685_Room> roomList, Consumer<K2635685_Room> onRoomEdit, Consumer<K2635685_Room> onRoomDelete) {
         initComponents();
         this.onRoomEdit = onRoomEdit;
         this.onRoomDelete = onRoomDelete;
@@ -57,7 +57,7 @@ public class RoomListPanel extends javax.swing.JPanel {
         updateRoomList(roomList);
     }
 
-    public void updateRoomList(List<Room> roomList) {
+    public void updateRoomList(List<K2635685_Room> roomList) {
 
         listPanel.removeAll();
         if (roomList.isEmpty()) {
@@ -72,7 +72,7 @@ public class RoomListPanel extends javax.swing.JPanel {
                     null
             ));
         } else {
-            for (Room roomItem : roomList) {
+            for (K2635685_Room roomItem : roomList) {
 //                listPanel.add(RoomRowComponent.createRoomRow(room, false));
                 listPanel.add(RoomRowComponent.createRoomRow(
                         roomItem,

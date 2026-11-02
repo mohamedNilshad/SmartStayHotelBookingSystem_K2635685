@@ -8,7 +8,7 @@ package main.models.room_packages;
  *
  * @author N I L S H A D
  */
-abstract public class RoomPackage {
+abstract public class K2635685_RoomPackage {
 
     protected String packageName;
     protected double dailyRoomRate;

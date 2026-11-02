@@ -10,7 +10,7 @@ import javax.swing.border.EmptyBorder;
 import main.functions.HelperFunctions;
 import main.functions.ValidationFunctions;
 import main.managers.GuestManager;
-import main.models.users.Guest;
+import main.models.users.K2635685_Guest;
 
 /**
  *
@@ -365,7 +365,7 @@ public class RegisterFrame extends javax.swing.JFrame {
         }
         
         
-       Guest guest = new Guest(nic, phone, name, email);
+       K2635685_Guest guest = new K2635685_Guest(nic, phone, name, email);
         
         GuestManager.registerUser(guest);
 

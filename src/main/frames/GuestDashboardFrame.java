@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 import main.forms.guest.RoomPanelForm;
 import main.forms.guest.BookingPanelForm;
 import main.managers.GuestManager;
-import main.models.users.Guest;
+import main.models.users.K2635685_Guest;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -24,7 +24,7 @@ public class GuestDashboardFrame extends javax.swing.JFrame {
     public GuestDashboardFrame() {
         initComponents();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
-        Guest guest = GuestManager.getCurrentGuest();
+        K2635685_Guest guest = GuestManager.getCurrentGuest();
         jLabel3.setText(guest.getFullName());
         jLabel5.setText(guest.getContactNumber());
 

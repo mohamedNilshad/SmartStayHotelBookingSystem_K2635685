@@ -12,7 +12,7 @@ import main.components.CompleteBookingComponent;
 import main.components.InvoiceComponent;
 import main.functions.HelperFunctions;
 import main.managers.BookingManager;
-import main.models.Booking;
+import main.models.K2635685_Booking;
 
 /**
  *
@@ -28,7 +28,7 @@ public class BookingListPanel extends javax.swing.JPanel {
      *
      * @param bookingList
      */
-    public BookingListPanel(List<Booking> bookingList) {
+    public BookingListPanel(List<K2635685_Booking> bookingList) {
         initComponents();
         
         setLayout(new BorderLayout());
@@ -48,18 +48,16 @@ public class BookingListPanel extends javax.swing.JPanel {
         updateBookingList(bookingList);
     }
 
-    public void updateBookingList(List<Booking> bookingList) {
+    public void updateBookingList(List<K2635685_Booking> bookingList) {
 
         listPanel.removeAll();
         if (bookingList.isEmpty()) {
-            JPanel row = BookingRowComponent.createBookingRow(
-                    new Booking(), true, true, null, null, null, null
+            JPanel row = BookingRowComponent.createBookingRow(new K2635685_Booking(), true, true, null, null, null, null
             );
             listPanel.add(row);
         } else {
-            for (Booking bookingItem : bookingList) {
-                JPanel row = BookingRowComponent.createBookingRow(
-                        bookingItem, false, true,
+            for (K2635685_Booking bookingItem : bookingList) {
+                JPanel row = BookingRowComponent.createBookingRow(bookingItem, false, true,
                         // Edit
                         null,
                         // Cancel
@@ -71,7 +69,7 @@ public class BookingListPanel extends javax.swing.JPanel {
                             );
 
                             if (result == JOptionPane.YES_OPTION) {
-                                List<Booking> updatedBookingList = BookingManager.setBookingStatus(1, booking.getBookingID()); // Cancellation
+                                List<K2635685_Booking> updatedBookingList = BookingManager.setBookingStatus(1, booking.getBookingID()); // Cancellation
 
                                 updateBookingList(updatedBookingList);
 
@@ -84,7 +82,7 @@ public class BookingListPanel extends javax.swing.JPanel {
                             Double balance = CompleteBookingComponent.showCompleteBookingDialog(this, booking);
                             
                             if (balance != null) { // null means the user closed or cancelled the dialog
-                                List<Booking> updatedBookingList = BookingManager.completeBooking(booking.getBookingID(), balance);
+                                List<K2635685_Booking> updatedBookingList = BookingManager.completeBooking(booking.getBookingID(), balance);
                                 updateBookingList(updatedBookingList);
                                 //show final invoice
                                 HelperFunctions.showPopMessage(this, "Booking completed successfully!", "Completion Successful");

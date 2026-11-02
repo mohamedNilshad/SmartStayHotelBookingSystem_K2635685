@@ -9,7 +9,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import javax.swing.*;
 import javax.swing.border.*;
-import main.models.Room;
+import main.models.K2635685_Room;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -22,14 +22,14 @@ public class RoomListPanel extends javax.swing.JPanel {
     private JPanel listPanel;
     private JScrollPane scrollPane;
     private JLabel titleLabel;
-    private final Consumer<Room> onRoomSelected;
+    private final Consumer<K2635685_Room> onRoomSelected;
 
     /**
      * Creates new form RoomListPanel
      * @param roomList
      * @param onRoomSelected
      */
-    public RoomListPanel(List<Room> roomList, Consumer<Room> onRoomSelected) {
+    public RoomListPanel(List<K2635685_Room> roomList, Consumer<K2635685_Room> onRoomSelected) {
         initComponents();
         this.onRoomSelected = onRoomSelected;
         setLayout(new BorderLayout());
@@ -55,13 +55,13 @@ public class RoomListPanel extends javax.swing.JPanel {
         updateRoomList(roomList);
     }
 
-    public void updateRoomList(List<Room> roomList) {
+    public void updateRoomList(List<K2635685_Room> roomList) {
 
         listPanel.removeAll();
         if (roomList.isEmpty()) {
-            listPanel.add(createRoomRow(new Room(), true));
+            listPanel.add(createRoomRow(new K2635685_Room(), true));
         } else {
-            for (Room room : roomList) {
+            for (K2635685_Room room : roomList) {
                 listPanel.add(createRoomRow(room, false));
             }
         }
@@ -71,7 +71,7 @@ public class RoomListPanel extends javax.swing.JPanel {
 
     }
 
-    private JPanel createRoomRow(Room room, boolean isEmpty) {
+    private JPanel createRoomRow(K2635685_Room room, boolean isEmpty) {
         JPanel row = new JPanel(new BorderLayout(15, 0));
 
         row.setBackground(Color.WHITE);
