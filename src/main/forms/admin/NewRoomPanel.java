@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.function.Consumer;
 import main.functions.HelperFunctions;
 import main.functions.ValidationFunctions;
-import main.managers.RoomManager;
+import main.managers.K2635685_RoomManager;
 import main.models.K2635685_Room;
 import main.models.room_packages.K2635685_RoomPackage;
 
@@ -43,11 +43,11 @@ public class NewRoomPanel extends javax.swing.JPanel {
         roomPackageDropDown.removeAllItems();
         bedTypeDropDown.removeAllItems();
 
-        for (K2635685_RoomPackage roomPackage : RoomManager.getRoomPackageList()) {
+        for (K2635685_RoomPackage roomPackage : K2635685_RoomManager.getRoomPackageList()) {
             roomPackageDropDown.addItem(roomPackage.getPackageName());
         }
 
-        for (String bedType : RoomManager.getBedTypes()) {
+        for (String bedType : K2635685_RoomManager.getBedTypes()) {
             bedTypeDropDown.addItem(bedType);
         }
 
@@ -57,7 +57,7 @@ public class NewRoomPanel extends javax.swing.JPanel {
         numberOfGuest.setText("1");
         discountRateField.setText("12.0");
         breakFastCheckbox.setSelected(false);
-        roomIdLbl.setText("R" + String.format("%03d", RoomManager.generateRoomId()));
+        roomIdLbl.setText("R" + String.format("%03d", K2635685_RoomManager.generateRoomId()));
 
      
     }
@@ -287,16 +287,16 @@ public class NewRoomPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_nogPlusActionPerformed
 
     private void addNewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewBtnActionPerformed
-        int roomId = RoomManager.generateRoomId();
-        K2635685_RoomPackage roomPackage = RoomManager.getRoomPackageByName(roomPackageDropDown.getSelectedItem().toString());
+        int roomId = K2635685_RoomManager.generateRoomId();
+        K2635685_RoomPackage roomPackage = K2635685_RoomManager.getRoomPackageByName(roomPackageDropDown.getSelectedItem().toString());
         String bedType = bedTypeDropDown.getSelectedItem().toString();
-        String[] roomStatus = RoomManager.getRoomStatus();
+        String[] roomStatus = K2635685_RoomManager.getRoomStatus();
         boolean breakfast = breakFastCheckbox.isSelected();
         int capacity = Integer.parseInt(numberOfGuest.getText());
         double discountRate = Double.parseDouble(discountRateField.getText());
         
         K2635685_Room newRoom = new K2635685_Room(roomId, roomPackage, bedType, roomStatus[0], breakfast,capacity, discountRate);
-        RoomManager.addNewRoom(newRoom);
+        K2635685_RoomManager.addNewRoom(newRoom);
         
         HelperFunctions.showPopMessage(this, "Room created successfully !!", "Created Success");
         onNewRoom.accept(newRoom);

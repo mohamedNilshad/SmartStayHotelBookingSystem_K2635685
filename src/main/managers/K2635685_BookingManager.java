@@ -14,7 +14,7 @@ import main.models.K2635685_Room;
  *
  * @author N I L S H A D
  */
-public class BookingManager {
+public class K2635685_BookingManager {
 
     private static final List<String> bookingStatus = new ArrayList<>(Arrays.asList("Active", "Cancelled", "Completed"));
     private static final List<K2635685_Booking> bookingList = new ArrayList<>();
@@ -39,7 +39,7 @@ public class BookingManager {
     public static List<K2635685_Room> getAvailableRoomList(String bedType, String roomPackageName, Date checkInDate, Date checkOutDate, int bookingId) {
         List<K2635685_Room> availableRoomList = new ArrayList<>();
 
-        for (K2635685_Room room : RoomManager.getRoomList()) {
+        for (K2635685_Room room : K2635685_RoomManager.getRoomList()) {
 
             if (room.getBedType().equals(bedType) && room.getRoomPackage().getPackageName().equals(roomPackageName)) {//sort rooms by bedType and roomPackageName
                 boolean isAvailable = isBookingAvailable(room.getRoomID(), checkInDate, checkOutDate, bookingId);

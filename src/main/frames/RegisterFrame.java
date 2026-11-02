@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.border.EmptyBorder;
 import main.functions.HelperFunctions;
 import main.functions.ValidationFunctions;
-import main.managers.GuestManager;
+import main.managers.K2635685_GuestManager;
 import main.models.users.K2635685_Guest;
 
 /**
@@ -367,7 +367,7 @@ public class RegisterFrame extends javax.swing.JFrame {
         
        K2635685_Guest guest = new K2635685_Guest(nic, phone, name, email);
         
-        GuestManager.registerUser(guest);
+        K2635685_GuestManager.registerUser(guest);
 
         HelperFunctions.showPopMessage(this, "Registration successful!", "");
 

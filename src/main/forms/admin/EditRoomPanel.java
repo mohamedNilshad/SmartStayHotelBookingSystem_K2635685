@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.function.Consumer;
 import main.functions.HelperFunctions;
 import main.functions.ValidationFunctions;
-import main.managers.RoomManager;
+import main.managers.K2635685_RoomManager;
 import main.models.K2635685_Room;
 import main.models.room_packages.K2635685_RoomPackage;
 
@@ -48,11 +48,11 @@ public class EditRoomPanel extends javax.swing.JPanel {
         roomPackageDropDown.removeAllItems();
         bedTypeDropDown.removeAllItems();
 
-        for (K2635685_RoomPackage roomPackage : RoomManager.getRoomPackageList()) {
+        for (K2635685_RoomPackage roomPackage : K2635685_RoomManager.getRoomPackageList()) {
             roomPackageDropDown.addItem(roomPackage.getPackageName());
         }
 
-        for (String bedType : RoomManager.getBedTypes()) {
+        for (String bedType : K2635685_RoomManager.getBedTypes()) {
             bedTypeDropDown.addItem(bedType);
         }
 
@@ -335,15 +335,15 @@ public class EditRoomPanel extends javax.swing.JPanel {
 
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
         int roomId = selectedRoom.getRoomID();
-        K2635685_RoomPackage roomPackage = RoomManager.getRoomPackageByName(roomPackageDropDown.getSelectedItem().toString());
+        K2635685_RoomPackage roomPackage = K2635685_RoomManager.getRoomPackageByName(roomPackageDropDown.getSelectedItem().toString());
         String bedType = bedTypeDropDown.getSelectedItem().toString();
-        String[] roomStatus = RoomManager.getRoomStatus();
+        String[] roomStatus = K2635685_RoomManager.getRoomStatus();
         boolean breakfast = breakFastCheckbox.isSelected();
         int capacity = Integer.parseInt(numberOfGuest.getText());
         double discountRate = Double.parseDouble(discountRateField.getText());
         
         K2635685_Room updatedRoom = new K2635685_Room(roomId, roomPackage, bedType, roomStatus[0], breakfast,capacity, discountRate);
-        RoomManager.updateRoom(updatedRoom);
+        K2635685_RoomManager.updateRoom(updatedRoom);
         
         HelperFunctions.showPopMessage(this, "Room updated successfully !!", "Updated Success");
         onUpdatedRoom.accept(updatedRoom);

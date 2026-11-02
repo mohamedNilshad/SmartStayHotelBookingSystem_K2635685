@@ -5,7 +5,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import main.forms.guest.RoomPanelForm;
 import main.forms.guest.BookingPanelForm;
-import main.managers.GuestManager;
+import main.managers.K2635685_GuestManager;
 import main.models.users.K2635685_Guest;
 
 /*
@@ -24,7 +24,7 @@ public class GuestDashboardFrame extends javax.swing.JFrame {
     public GuestDashboardFrame() {
         initComponents();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
-        K2635685_Guest guest = GuestManager.getCurrentGuest();
+        K2635685_Guest guest = K2635685_GuestManager.getCurrentGuest();
         jLabel3.setText(guest.getFullName());
         jLabel5.setText(guest.getContactNumber());
 
@@ -216,7 +216,7 @@ public class GuestDashboardFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        GuestManager.clearSession();
+        K2635685_GuestManager.clearSession();
         new MainFrame().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed

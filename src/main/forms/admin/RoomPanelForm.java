@@ -10,7 +10,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import main.functions.HelperFunctions;
-import main.managers.RoomManager;
+import main.managers.K2635685_RoomManager;
 import main.models.K2635685_Room;
 
 /**
@@ -20,7 +20,7 @@ import main.models.K2635685_Room;
 public class RoomPanelForm extends javax.swing.JPanel {
 
     private final String placeholder = "Search...";
-    private List<K2635685_Room> roomList = RoomManager.getRoomList();
+    private List<K2635685_Room> roomList = K2635685_RoomManager.getRoomList();
     private List<K2635685_Room> sortedRoomList = new ArrayList<>();
     private RoomListPanel roomListPanel;
 
@@ -99,7 +99,7 @@ public class RoomPanelForm extends javax.swing.JPanel {
                     showPanel(fillPanel);
                 },
                 deleteRoom -> {
-                    int roomDeleted = RoomManager.deleteRoom(deleteRoom.getRoomID());
+                    int roomDeleted = K2635685_RoomManager.deleteRoom(deleteRoom.getRoomID());
 
                     switch (roomDeleted) {
                         case 1:
@@ -108,7 +108,7 @@ public class RoomPanelForm extends javax.swing.JPanel {
                             sortedRoomList.remove(deleteRoom);
                             tabelHeader.setText(sortedRoomList.size() + " rooms available");
                             roomListPanel.updateRoomList(sortedRoomList);
-                            roomList = RoomManager.getRoomList();
+                            roomList = K2635685_RoomManager.getRoomList();
                             break;
                         case -1:
                             HelperFunctions.showPopMessage(this, "This room has a booking", "Deletion Failed");
@@ -260,7 +260,7 @@ public class RoomPanelForm extends javax.swing.JPanel {
         String text = searchField.getText().trim();
 
         if (text.isEmpty()) {
-            sortedRoomList = RoomManager.getRoomList();
+            sortedRoomList = K2635685_RoomManager.getRoomList();
 
         } else {
 

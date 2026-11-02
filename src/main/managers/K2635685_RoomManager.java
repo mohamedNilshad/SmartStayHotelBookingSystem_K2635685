@@ -18,14 +18,14 @@ import main.models.room_packages.K2635685_SuitePackage;
  *
  * @author N I L S H A D
  */
-public class RoomManager {
+public class K2635685_RoomManager {
 
-    private static String[] bedTypes = {"Single", "Double", "Queen", "King"};
-    private static String[] roomStatus = {"Available", "Reserved", "Under Maintenance"};
-    private static List<K2635685_RoomPackage> roomPackageList = new ArrayList<>();
-    private static List<K2635685_Room> roomList = new ArrayList<>();
+    private static final String[] bedTypes = {"Single", "Double", "Queen", "King"};
+    private static final String[] roomStatus = {"Available", "Reserved", "Under Maintenance"};
+    private static final List<K2635685_RoomPackage> roomPackageList = new ArrayList<>();
+    private static final List<K2635685_Room> roomList = new ArrayList<>();
 
-    public RoomManager() {
+    public K2635685_RoomManager() {
         //initialize RoomPackages
         roomPackageList.add(new K2635685_StandardPackage());
         roomPackageList.add(new K2635685_DeluxePackage());
@@ -128,8 +128,8 @@ public class RoomManager {
     }
 
     private static boolean roomHasActiveBookings(int roomId) {
-        for (K2635685_Booking b : BookingManager.getBookingList()) {
-            if (b.getRoom().getRoomID() == roomId && BookingManager.getBookingStatus(0).equals(b.getStatus())) {
+        for (K2635685_Booking b : K2635685_BookingManager.getBookingList()) {
+            if (b.getRoom().getRoomID() == roomId && K2635685_BookingManager.getBookingStatus(0).equals(b.getStatus())) {
                 return true;
             }
         }

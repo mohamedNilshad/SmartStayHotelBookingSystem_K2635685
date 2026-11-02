@@ -11,8 +11,8 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import main.managers.BookingManager;
-import main.managers.GuestManager;
+import main.managers.K2635685_BookingManager;
+import main.managers.K2635685_GuestManager;
 import main.models.K2635685_Booking;
 
 /**
@@ -44,7 +44,7 @@ public class BookingPanelForm extends javax.swing.JPanel {
             searchField.setForeground(Color.GRAY);
         }
         
-        myBookingList = BookingManager.getBookingListByGuestId(GuestManager.getCurrentGuest().getNicPassportNumber());
+        myBookingList = K2635685_BookingManager.getBookingListByGuestId(K2635685_GuestManager.getCurrentGuest().getNicPassportNumber());
         sortedBookingList = new ArrayList<>(myBookingList);
         
         int bookingCount = myBookingList.size();

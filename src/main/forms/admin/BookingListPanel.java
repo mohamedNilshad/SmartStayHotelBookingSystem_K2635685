@@ -11,7 +11,7 @@ import main.components.BookingRowComponent;
 import main.components.CompleteBookingComponent;
 import main.components.InvoiceComponent;
 import main.functions.HelperFunctions;
-import main.managers.BookingManager;
+import main.managers.K2635685_BookingManager;
 import main.models.K2635685_Booking;
 
 /**
@@ -69,7 +69,7 @@ public class BookingListPanel extends javax.swing.JPanel {
                             );
 
                             if (result == JOptionPane.YES_OPTION) {
-                                List<K2635685_Booking> updatedBookingList = BookingManager.setBookingStatus(1, booking.getBookingID()); // Cancellation
+                                List<K2635685_Booking> updatedBookingList = K2635685_BookingManager.setBookingStatus(1, booking.getBookingID()); // Cancellation
 
                                 updateBookingList(updatedBookingList);
 
@@ -82,7 +82,7 @@ public class BookingListPanel extends javax.swing.JPanel {
                             Double balance = CompleteBookingComponent.showCompleteBookingDialog(this, booking);
                             
                             if (balance != null) { // null means the user closed or cancelled the dialog
-                                List<K2635685_Booking> updatedBookingList = BookingManager.completeBooking(booking.getBookingID(), balance);
+                                List<K2635685_Booking> updatedBookingList = K2635685_BookingManager.completeBooking(booking.getBookingID(), balance);
                                 updateBookingList(updatedBookingList);
                                 //show final invoice
                                 HelperFunctions.showPopMessage(this, "Booking completed successfully!", "Completion Successful");
@@ -90,7 +90,7 @@ public class BookingListPanel extends javax.swing.JPanel {
                         },
                         //select
                         booking ->{
-                            if (booking.getStatus() != BookingManager.getBookingStatus(1)) {
+                            if (booking.getStatus() != K2635685_BookingManager.getBookingStatus(1)) {
                                 InvoiceComponent invoicePanel = new InvoiceComponent(
                                         booking.getInvoice(),
                                         booking.getRoom(),

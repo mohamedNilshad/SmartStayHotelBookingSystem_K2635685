@@ -5,7 +5,7 @@
 package main.models;
 
 import java.util.Date;
-import main.managers.BookingManager;
+import main.managers.K2635685_BookingManager;
 
 /**
  *
@@ -25,7 +25,7 @@ public class K2635685_Invoice {
     private double discountAmount;
 
     public K2635685_Invoice(Date invoiceDate, double totalAmount, double subTotalAmount, double bookingAdvance, boolean isPaid, Date paidDate, double taxRate, double taxAmount, double discountRate, double discountAmount) {
-        this.invoiceID = BookingManager.generateBookingId();
+        this.invoiceID = K2635685_BookingManager.generateBookingId();
         this.invoiceDate = invoiceDate;
         this.totalAmount = totalAmount;
         this.subTotalAmount = subTotalAmount;

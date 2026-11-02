@@ -11,8 +11,8 @@ import java.util.function.Consumer;
 import main.components.BookingRowComponent;
 import main.components.InvoiceComponent;
 import main.functions.HelperFunctions;
-import main.managers.BookingManager;
-import main.managers.RoomManager;
+import main.managers.K2635685_BookingManager;
+import main.managers.K2635685_RoomManager;
 import main.models.K2635685_Booking;
 
 /**
@@ -69,14 +69,14 @@ public class BookingListPanel extends javax.swing.JPanel {
                                     "Confirm Booking Cancellation");
 
                             if (result == JOptionPane.YES_OPTION) {
-                                List<K2635685_Booking> updated = BookingManager.setBookingStatus(1, booking.getBookingID());
+                                List<K2635685_Booking> updated = K2635685_BookingManager.setBookingStatus(1, booking.getBookingID());
                                 updateBookingList(updated);
                                 HelperFunctions.showPopMessage(this, "Booking cancelled successfully!", "Cancellation Successful");
                             }
                         },
                         null,
                         booking -> {
-                            if (booking.getStatus() != BookingManager.getBookingStatus(1)) {
+                            if (booking.getStatus() != K2635685_BookingManager.getBookingStatus(1)) {
                                 InvoiceComponent invoicePanel = new InvoiceComponent(
                                         booking.getInvoice(),
                                         booking.getRoom(),

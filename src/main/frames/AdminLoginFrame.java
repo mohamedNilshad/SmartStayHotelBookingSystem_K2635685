@@ -9,7 +9,7 @@ import javax.swing.BorderFactory;
 import javax.swing.border.EmptyBorder;
 import main.functions.HelperFunctions;
 import main.functions.ValidationFunctions;
-import main.managers.AdminManager;
+import main.managers.K2635685_AdminManager;
 
 /**
  *
@@ -280,7 +280,7 @@ public class AdminLoginFrame extends javax.swing.JFrame {
         }
 
         String password = new String(passwordChars);
-        boolean isValid = AdminManager.verifyLogin(email, password);
+        boolean isValid = K2635685_AdminManager.verifyLogin(email, password);
 
         if (isValid) {
             new AdminDashboardFrame().setVisible(true);

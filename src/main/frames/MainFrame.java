@@ -5,7 +5,7 @@
 package main.frames;
 
 import java.util.regex.Pattern;
-import main.managers.GuestManager;
+import main.managers.K2635685_GuestManager;
 import javax.swing.BorderFactory;
 import javax.swing.border.EmptyBorder;
 import main.functions.HelperFunctions;
@@ -316,7 +316,7 @@ public class MainFrame extends javax.swing.JFrame {
             return;
         }
 
-        if (GuestManager.isRegistered(nic)) {
+        if (K2635685_GuestManager.isRegistered(nic)) {
 
             GuestDashboardFrame dashboard = new GuestDashboardFrame();
             dashboard.setVisible(true);

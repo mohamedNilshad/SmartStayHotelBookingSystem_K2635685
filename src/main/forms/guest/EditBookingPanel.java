@@ -14,9 +14,9 @@ import main.components.RoomRowComponent;
 import main.functions.CalculateTotal;
 import main.functions.HelperFunctions;
 import main.functions.ValidationFunctions;
-import main.managers.BookingManager;
-import main.managers.GuestManager;
-import main.managers.RoomManager;
+import main.managers.K2635685_BookingManager;
+import main.managers.K2635685_GuestManager;
+import main.managers.K2635685_RoomManager;
 import main.models.K2635685_Booking;
 import main.models.K2635685_Invoice;
 import main.models.K2635685_Room;
@@ -98,11 +98,11 @@ public class EditBookingPanel extends javax.swing.JPanel {
         roomPackageDropDown.removeAllItems();
         bedTypeDropDown.removeAllItems();
 
-        for (K2635685_RoomPackage roomPackage : RoomManager.getRoomPackageList()) {
+        for (K2635685_RoomPackage roomPackage : K2635685_RoomManager.getRoomPackageList()) {
             roomPackageDropDown.addItem(roomPackage.getPackageName());
         }
 
-        for (String bedType : RoomManager.getBedTypes()) {
+        for (String bedType : K2635685_RoomManager.getBedTypes()) {
             bedTypeDropDown.addItem(bedType);
         }
 
@@ -212,7 +212,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
                 checkInDate.getDate(), 
                 checkOutDate.getDate(), 
                 Integer.parseInt(numberOfGuest.getText()),
-                GuestManager.getCurrentGuest()
+                K2635685_GuestManager.getCurrentGuest()
         );
 
     
@@ -564,7 +564,7 @@ public class EditBookingPanel extends javax.swing.JPanel {
             bookingDetailsScrollPane.setVisible(false);
             confirmBooking.setVisible(false);
 
-            List<K2635685_Room> availableRoomList = BookingManager.getAvailableRoomList(
+            List<K2635685_Room> availableRoomList = K2635685_BookingManager.getAvailableRoomList(
                     bedTypeDropDown.getSelectedItem().toString(),
                     roomPackageDropDown.getSelectedItem().toString(),
                     checkInDate.getDate(),
@@ -596,10 +596,10 @@ public class EditBookingPanel extends javax.swing.JPanel {
                 HelperFunctions.getCurrentDate(),
                 Integer.parseInt(numberOfGuest.getText()),
                 invoice,
-                BookingManager.getBookingStatus(0)
+                K2635685_BookingManager.getBookingStatus(0)
         );
 
-        BookingManager.updateBooking(booking);
+        K2635685_BookingManager.updateBooking(booking);
         HelperFunctions.showPopMessage(this, "Room No " + selectedRoom.getRoomIDString() + " booking updated successfully!", "");
         onUpdatedBooking.accept(booking);
     }//GEN-LAST:event_confirmBookingActionPerformed

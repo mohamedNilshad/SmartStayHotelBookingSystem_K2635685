@@ -12,7 +12,7 @@ import main.models.users.K2635685_Guest;
  *
  * @author N I L S H A D
  */
-public class GuestManager {
+public class K2635685_GuestManager {
 
     private static final List<K2635685_Guest> guestList = new ArrayList<>();
     private static K2635685_Guest currentGuest;

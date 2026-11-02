@@ -9,7 +9,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import main.managers.RoomManager;
+import main.managers.K2635685_RoomManager;
 import main.models.K2635685_Room;
 
 /**
@@ -19,7 +19,7 @@ import main.models.K2635685_Room;
 public class RoomPanelForm extends javax.swing.JPanel {
 
     private final String placeholder = "Search...";
-    private final List<K2635685_Room> roomList = RoomManager.getRoomList();
+    private final List<K2635685_Room> roomList = K2635685_RoomManager.getRoomList();
     private List<K2635685_Room> sortedRoomList = new ArrayList<>();
     private RoomListPanel roomListPanel;
 
@@ -203,7 +203,7 @@ public class RoomPanelForm extends javax.swing.JPanel {
         String text = searchField.getText().trim();
  
         if (text.isEmpty()) {
-            sortedRoomList = RoomManager.getRoomList();
+            sortedRoomList = K2635685_RoomManager.getRoomList();
 
         } else {
 

@@ -13,7 +13,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import main.functions.ValidationFunctions;
-import main.managers.BookingManager;
+import main.managers.K2635685_BookingManager;
 import main.models.K2635685_Booking;
 
 /**
@@ -47,12 +47,12 @@ public class BookingPanelForm extends javax.swing.JPanel {
         }
         bookingStatusDropDown.setBackground(Color.white);
 
-        bookingStatus = BookingManager.getBookingStatus();
+        bookingStatus = K2635685_BookingManager.getBookingStatus();
         bookingStatus.add(0, "All");
 
         bookingStatusDropDown.setSelectedItem(bookingStatus.getFirst());
 
-        bookingList = BookingManager.getBookingList();
+        bookingList = K2635685_BookingManager.getBookingList();
         sortedBookingList = new ArrayList<>(bookingList);
 
         int bookingCount = bookingList.size();

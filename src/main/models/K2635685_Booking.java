@@ -6,7 +6,7 @@ package main.models;
 
 import main.models.users.K2635685_Guest;
 import java.util.Date;
-import main.managers.BookingManager;
+import main.managers.K2635685_BookingManager;
 
 /**
  *
@@ -25,7 +25,7 @@ public class K2635685_Booking {
     private String status;
 
     public K2635685_Booking(K2635685_Room room, K2635685_Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, K2635685_Invoice invoice, String status) {
-        this.bookingID = BookingManager.generateBookingId();
+        this.bookingID = K2635685_BookingManager.generateBookingId();
         this.room = room;
         this.guest = guest;
         this.checkInDate = checkInDate;

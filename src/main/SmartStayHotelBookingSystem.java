@@ -3,9 +3,9 @@ package main;
 import main.frames.AdminDashboardFrame;
 import main.frames.GuestDashboardFrame;
 import main.frames.MainFrame;
-import main.managers.AdminManager;
-import main.managers.BookingManager;
-import main.managers.RoomManager;
+import main.managers.K2635685_AdminManager;
+import main.managers.K2635685_BookingManager;
+import main.managers.K2635685_RoomManager;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -22,9 +22,9 @@ public class SmartStayHotelBookingSystem {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        RoomManager _ = new RoomManager();
-        AdminManager _ = new AdminManager();
-        BookingManager _ = new BookingManager();
+        K2635685_RoomManager _ = new K2635685_RoomManager();
+        K2635685_AdminManager _ = new K2635685_AdminManager();
+        K2635685_BookingManager _ = new K2635685_BookingManager();
         
         java.awt.EventQueue.invokeLater(() -> {
         new MainFrame().setVisible(true);

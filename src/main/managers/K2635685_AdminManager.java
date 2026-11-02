@@ -12,13 +12,13 @@ import main.models.users.K2635685_Admin;
  *
  * @author N I L S H A D
  */
-public class AdminManager {
+public class K2635685_AdminManager {
 
     private static final List<K2635685_Admin> adminList = new ArrayList<>();
     private static K2635685_Admin currentAdmin;
     
     
-    public AdminManager(){
+    public K2635685_AdminManager(){
         adminList.add(new K2635685_Admin("Test@123", "0771235265", "Nilshad", "nilshad@gmail.com"));
     }
 

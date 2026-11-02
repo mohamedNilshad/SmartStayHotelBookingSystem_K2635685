@@ -4,7 +4,7 @@ import java.awt.Color;
 import javax.swing.JPanel;
 import main.forms.admin.BookingPanelForm;
 import main.forms.admin.RoomPanelForm;
-import main.managers.AdminManager;
+import main.managers.K2635685_AdminManager;
 import main.models.users.K2635685_Admin;
 
 /*
@@ -23,7 +23,7 @@ public class AdminDashboardFrame extends javax.swing.JFrame {
     public AdminDashboardFrame() {
         initComponents();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
-        K2635685_Admin admin = AdminManager.getCurrentAdmin();
+        K2635685_Admin admin = K2635685_AdminManager.getCurrentAdmin();
         jLabel3.setText(admin.getFullName() + " - ADMIN");
         jLabel5.setText(admin.getContactNumber());
 
@@ -217,7 +217,7 @@ public class AdminDashboardFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_roomsMenuActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        AdminManager.clearSession();
+        K2635685_AdminManager.clearSession();
         new MainFrame().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
