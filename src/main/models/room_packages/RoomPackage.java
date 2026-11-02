@@ -10,10 +10,10 @@ package main.models.room_packages;
  */
 abstract public class RoomPackage {
 
-    private String packageName;
-    private double dailyRoomRate;
-    private double extraGuestCharge;
-    private double taxRate;
+    protected String packageName;
+    protected double dailyRoomRate;
+    protected double extraGuestCharge;
+    protected double taxRate;
 
     abstract public String getPackageName();
 

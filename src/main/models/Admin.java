@@ -41,6 +41,4 @@ public class Admin {
         return password;
     }
 
-    
-    
 }

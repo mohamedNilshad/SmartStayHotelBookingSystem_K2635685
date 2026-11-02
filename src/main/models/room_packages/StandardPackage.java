@@ -10,12 +10,6 @@ package main.models.room_packages;
  */
 public class StandardPackage extends RoomPackage {
 
-    private final String packageName;
-    private final double dailyRoomRate;
-    private final double extraGuestCharge;
-    private final double taxRate;
-    
-
     public StandardPackage() {
         this.packageName = "Standard";
         this.dailyRoomRate = 6000.00;

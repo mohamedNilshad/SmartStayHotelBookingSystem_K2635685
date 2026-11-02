@@ -18,7 +18,7 @@ public class Booking {
     private Date checkInDate;
     private Date checkOutDate;
     private Date bookingDate;
-    private int numberOfGeust;
+    private int numberOfGuest;
     private Invoice invoice;
     
     private String status;
@@ -30,7 +30,7 @@ public class Booking {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.bookingDate = bookingDate;
-        this.numberOfGeust = numberOfGeust;
+        this.numberOfGuest = numberOfGeust;
         this.invoice = invoice;
         this.status = status;
     }
@@ -42,7 +42,7 @@ public class Booking {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.bookingDate = bookingDate;
-        this.numberOfGeust = numberOfGeust;
+        this.numberOfGuest = numberOfGeust;
         this.invoice = invoice;
         this.status = status;
     }
@@ -82,7 +82,7 @@ public class Booking {
     }
 
     public int getNumberOfGeust() {
-        return numberOfGeust;
+        return numberOfGuest;
     }
 
     public String getStatus() {

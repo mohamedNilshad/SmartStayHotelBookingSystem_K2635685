@@ -10,12 +10,6 @@ package main.models.room_packages;
  */
 public class EmptyPackage extends RoomPackage {
 
-    private String packageName;
-    private double dailyRoomRate;
-    private double extraGuestCharge;
-    private double taxRate;
-    
-
     public EmptyPackage() {}
 
     @Override
