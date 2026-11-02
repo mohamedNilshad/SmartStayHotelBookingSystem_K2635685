@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import main.functions.HelperFunctions;
 import main.models.Booking;
-import main.models.Guest;
+import main.models.users.Guest;
 import main.models.Invoice;
 import main.models.Room;
 

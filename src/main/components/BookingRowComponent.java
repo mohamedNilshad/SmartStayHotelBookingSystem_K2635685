@@ -10,7 +10,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import main.functions.HelperFunctions;
 import main.models.Booking;
-import main.models.Guest;
+import main.models.users.Guest;
 
 /**
  *

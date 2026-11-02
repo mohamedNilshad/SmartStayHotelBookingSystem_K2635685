@@ -10,7 +10,7 @@ import javax.swing.border.EmptyBorder;
 import main.functions.HelperFunctions;
 import main.functions.ValidationFunctions;
 import main.managers.GuestManager;
-import main.models.Guest;
+import main.models.users.Guest;
 
 /**
  *

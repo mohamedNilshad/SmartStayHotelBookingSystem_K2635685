@@ -6,7 +6,7 @@ package main.components;
 
 import java.util.Date;
 import main.functions.HelperFunctions;
-import main.models.Guest;
+import main.models.users.Guest;
 import main.models.Invoice;
 import main.models.Room;
 

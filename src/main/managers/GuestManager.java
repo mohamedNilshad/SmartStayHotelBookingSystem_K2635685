@@ -2,7 +2,7 @@ package main.managers;
 
 import java.util.ArrayList;
 import java.util.List;
-import main.models.Guest;
+import main.models.users.Guest;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license

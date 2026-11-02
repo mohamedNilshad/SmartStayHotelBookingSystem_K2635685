@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 import main.forms.guest.RoomPanelForm;
 import main.forms.guest.BookingPanelForm;
 import main.managers.GuestManager;
-import main.models.Guest;
+import main.models.users.Guest;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license

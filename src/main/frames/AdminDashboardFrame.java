@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 import main.forms.admin.BookingPanelForm;
 import main.forms.admin.RoomPanelForm;
 import main.managers.AdminManager;
-import main.models.Admin;
+import main.models.users.Admin;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license

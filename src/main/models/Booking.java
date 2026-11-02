@@ -4,6 +4,7 @@
  */
 package main.models;
 
+import main.models.users.Guest;
 import java.util.Date;
 import main.managers.BookingManager;
 

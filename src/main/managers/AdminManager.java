@@ -2,7 +2,7 @@ package main.managers;
 
 import java.util.ArrayList;
 import java.util.List;
-import main.models.Admin;
+import main.models.users.Admin;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license

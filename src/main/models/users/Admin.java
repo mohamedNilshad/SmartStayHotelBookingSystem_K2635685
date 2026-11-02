@@ -2,22 +2,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package main.models;
+package main.models.users;
 
 /**
  *
  * @author N I L S H A D
  */
-public class Admin {
+public class Admin extends User  {
     private String password;
-    private String contactNumber;
-    private String fullName;
-    private String emailAddress;
 
     public Admin() {}
     
-    
-
     public Admin(String password, String contactNumber, String fullName, String emailAddress) {
         this.password = password;
         this.contactNumber = contactNumber;
@@ -25,14 +20,17 @@ public class Admin {
         this.emailAddress = emailAddress;
     }
 
+    @Override
     public String getContactNumber() {
         return contactNumber;
     }
 
+    @Override
     public String getEmailAddress() {
         return emailAddress;
     }
 
+    @Override
     public String getFullName() {
         return fullName;
     }
