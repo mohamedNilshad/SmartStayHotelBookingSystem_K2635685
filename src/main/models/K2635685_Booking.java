@@ -6,6 +6,7 @@ package main.models;
 
 import main.models.users.K2635685_Guest;
 import java.util.Date;
+import main.functions.HelperFunctions;
 import main.managers.K2635685_BookingManager;
 
 /**
@@ -20,11 +21,11 @@ public class K2635685_Booking {
     private Date checkOutDate;
     private Date bookingDate;
     private int numberOfGuest;
+    private double advncAmount;
     private K2635685_Invoice invoice;
-    
     private String status;
 
-    public K2635685_Booking(K2635685_Room room, K2635685_Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, K2635685_Invoice invoice, String status) {
+    public K2635685_Booking(K2635685_Room room, K2635685_Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, String status, double advncAmount) {
         this.bookingID = K2635685_BookingManager.generateBookingId();
         this.room = room;
         this.guest = guest;
@@ -32,11 +33,17 @@ public class K2635685_Booking {
         this.checkOutDate = checkOutDate;
         this.bookingDate = bookingDate;
         this.numberOfGuest = numberOfGeust;
-        this.invoice = invoice;
+        this.advncAmount = advncAmount;
+        this.invoice = new K2635685_Invoice(
+                bookingDate, advncAmount, room.getRoomPackage().getDailyRoomRate(), 
+                HelperFunctions.getNoOfNights(checkInDate, checkOutDate), 
+                room.getDiscountRate(), room.getRoomPackage().getTaxRate(), 
+                numberOfGeust, room.getCapacity(), room.getRoomPackage().getExtraGuestCharge()
+        );//composition
         this.status = status;
     }
     
-    public K2635685_Booking(int bookingID, K2635685_Room room, K2635685_Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, K2635685_Invoice invoice, String status) {
+    public K2635685_Booking(int bookingID, int invoiceID, Date invoiceDate, K2635685_Room room, K2635685_Guest guest, Date checkInDate, Date checkOutDate, Date bookingDate, int numberOfGeust, String status, double advncAmount) {
         this.bookingID = bookingID;
         this.room = room;
         this.guest = guest;
@@ -44,7 +51,13 @@ public class K2635685_Booking {
         this.checkOutDate = checkOutDate;
         this.bookingDate = bookingDate;
         this.numberOfGuest = numberOfGeust;
-        this.invoice = invoice;
+        this.advncAmount = advncAmount;
+        this.invoice = new K2635685_Invoice(
+                invoiceID, invoiceDate, advncAmount, room.getRoomPackage().getDailyRoomRate(), 
+                HelperFunctions.getNoOfNights(checkInDate, checkOutDate), 
+                room.getDiscountRate(), room.getRoomPackage().getTaxRate(), 
+                numberOfGeust, room.getCapacity(), room.getRoomPackage().getExtraGuestCharge()
+        );//composition
         this.status = status;
     }
     
@@ -88,6 +101,10 @@ public class K2635685_Booking {
 
     public String getStatus() {
         return status;
+    }
+
+    public double getAdvncAmount() {
+        return advncAmount;
     }
     
     

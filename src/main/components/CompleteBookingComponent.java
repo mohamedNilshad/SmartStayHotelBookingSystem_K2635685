@@ -37,7 +37,7 @@ public class CompleteBookingComponent {
         String guestName = booking.getGuest().getFullName();
         String roomId = booking.getRoom().getRoomIDString();
         double totalAmount = booking.getInvoice().getTotalAmount();
-        double balanceAmount = booking.getInvoice().getTotalAmount() - booking.getInvoice().getBookingAdvance();
+        double balanceAmount = booking.getInvoice().getTotalAmount() - booking.getAdvncAmount();
 
         Window owner = SwingUtilities.getWindowAncestor(c);
         JDialog dialog = new JDialog(owner, "Complete Booking", Dialog.ModalityType.APPLICATION_MODAL);

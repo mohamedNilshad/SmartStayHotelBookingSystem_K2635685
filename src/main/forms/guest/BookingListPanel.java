@@ -12,7 +12,6 @@ import main.components.BookingRowComponent;
 import main.components.InvoiceComponent;
 import main.functions.HelperFunctions;
 import main.managers.K2635685_BookingManager;
-import main.managers.K2635685_RoomManager;
 import main.models.K2635685_Booking;
 
 /**
@@ -77,14 +76,7 @@ public class BookingListPanel extends javax.swing.JPanel {
                         null,
                         booking -> {
                             if (booking.getStatus() != K2635685_BookingManager.getBookingStatus(1)) {
-                                InvoiceComponent invoicePanel = new InvoiceComponent(
-                                        booking.getInvoice(),
-                                        booking.getRoom(),
-                                        booking.getCheckInDate(),
-                                        booking.getCheckOutDate(),
-                                        booking.getNumberOfGeust(),
-                                        booking.getGuest()
-                                );
+                                InvoiceComponent invoicePanel = new InvoiceComponent(booking);
 
                                 JDialog popupDialog = new JDialog(
                                         (JFrame) SwingUtilities.getWindowAncestor(this),

@@ -198,7 +198,7 @@ public class BookingRowComponent {
             Consumer<K2635685_Booking> onCancel,
             Consumer<K2635685_Booking> onComplete
     ) {
-        JLabel amountLbl = new JLabel("Rs." + (booking.getInvoice().getTotalAmount() + booking.getInvoice().getBookingAdvance()));
+        JLabel amountLbl = new JLabel("Rs." + (booking.getInvoice().getTotalAmount() + booking.getAdvncAmount()));
         amountLbl.setFont(new Font("Arial", Font.BOLD, 15));
         amountLbl.setAlignmentX(Component.RIGHT_ALIGNMENT);
 

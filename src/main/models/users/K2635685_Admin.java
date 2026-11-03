@@ -9,10 +9,8 @@ package main.models.users;
  * @author N I L S H A D
  */
 public class K2635685_Admin extends K2635685_User  {
-    private String password;
+    private final String password;
 
-    public K2635685_Admin() {}
-    
     public K2635685_Admin(String password, String contactNumber, String fullName, String emailAddress) {
         this.password = password;
         this.contactNumber = contactNumber;
