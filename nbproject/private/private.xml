@@ -3,11 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/moham/Documents/NetBeansProjects/SmartStayHotelBookingSystem/src/main/forms/guest/BookingListPanel.java</file>
-            <file>file:/C:/Users/moham/Documents/NetBeansProjects/SmartStayHotelBookingSystem/src/main/forms/admin/BookingListPanel.java</file>
-            <file>file:/C:/Users/moham/Documents/NetBeansProjects/SmartStayHotelBookingSystem/src/main/SmartStayHotelBookingSystem.java</file>
-            <file>file:/C:/Users/moham/Documents/NetBeansProjects/SmartStayHotelBookingSystem/src/main/components/InvoiceComponent.java</file>
-            <file>file:/C:/Users/moham/Documents/NetBeansProjects/SmartStayHotelBookingSystem/src/main/frames/AdminDashboardFrame.java</file>
+            <file>file:/C:/Users/moham/Documents/NetBeansProjects/SmartStayHotelBookingSystem/src/main/managers/K2635685_AdminManager.java</file>
+            <file>file:/C:/Users/moham/Documents/NetBeansProjects/SmartStayHotelBookingSystem/src/main/managers/K2635685_GuestManager.java</file>
         </group>
     </open-files>
 </project-private>
