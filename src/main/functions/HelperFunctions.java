@@ -70,6 +70,7 @@ public class HelperFunctions {
         return sdf.format(date);
     }
 
+    //check today date is atleast 1 day before the checkin date
     public static boolean isOneDayBefore(Date givenDate) {
 
         LocalDate given = givenDate.toInstant()

@@ -11,7 +11,7 @@ import main.models.room_packages.K2635685_RoomPackage;
  * @author N I L S H A D
  */
 public class K2635685_Room {
-    private int roomID;
+    private final int roomID;
     private K2635685_RoomPackage roomPackage;
     private String bedType;
     private String roomStatus; //(Available-1, Reserved-0, Under Maintenance-3)
@@ -19,8 +19,6 @@ public class K2635685_Room {
     private int capacity;
     private double discountRate;
     
-    public K2635685_Room(){}
-
     public K2635685_Room(int roomID, K2635685_RoomPackage roomType, String bedType, String roomStatus, boolean breakfast, int capacity, double discountRate) {
         this.roomID = roomID;
         this.roomPackage = roomType;

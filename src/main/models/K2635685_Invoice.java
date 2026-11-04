@@ -24,6 +24,7 @@ public class K2635685_Invoice {
     private final double discountRate;
     private final double discountAmount;
 
+    //for new booking
     public K2635685_Invoice(Date invoiceDate, double advncAmount, double dailyRoomRate, long noOfNights, double discountRate, double taxRate, int noOfGuest, int maxCapecity, double extraGuestCharge) {
         
         this.invoiceID = K2635685_BookingManager.generateBookingId();
@@ -37,6 +38,7 @@ public class K2635685_Invoice {
 
     }
     
+    //for edit booking
     public K2635685_Invoice(int invoiceID, Date invoiceDate, double advncAmount, double dailyRoomRate, long noOfNights, double discountRate, double taxRate, int noOfGuest, int maxCapecity, double extraGuestCharge) {
         
         this.invoiceID = invoiceID;
@@ -131,7 +133,8 @@ public class K2635685_Invoice {
 
 
     //Calculate Total Amount
-    private double calculateTotal(double advncAmount, double taxAmount, double discountAmount, double dailyRoomRate, long noOfNights, int noOfGuest, int maxCapecity, double extraGuestCharge) {
+    private double calculateTotal(double advncAmount, double taxAmount, double discountAmount, 
+            double dailyRoomRate, long noOfNights, int noOfGuest, int maxCapecity, double extraGuestCharge) {
        
         double totAmount;
       
