@@ -16,20 +16,20 @@ import main.managers.K2635685_RoomManager;
  *
  * @author N I L S H A D
  */
-public class SmartStayHotelBookingSystem {
-
+public class K2635685_SmartStayHotelBookingSystem {
+    private static K2635685_RoomManager roomManager;
+    private static K2635685_AdminManager adminManager;
+    private static K2635685_BookingManager bookingManager;
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        K2635685_RoomManager _ = new K2635685_RoomManager();
-        K2635685_AdminManager _ = new K2635685_AdminManager();
-        K2635685_BookingManager _ = new K2635685_BookingManager();
+        roomManager = new K2635685_RoomManager();
+        adminManager = new K2635685_AdminManager();
+        bookingManager = new K2635685_BookingManager();
         
         java.awt.EventQueue.invokeLater(() -> {
         new MainFrame().setVisible(true);
-//        new AdminDashboardFrame().setVisible(true);
-//        new GuestDashboardFrame().setVisible(true);
     });
     }
     
