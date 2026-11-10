@@ -82,8 +82,8 @@ public class BookingListPanel extends javax.swing.JPanel {
                             Double balance = CompleteBookingComponent.showCompleteBookingDialog(this, booking);
                             
                             if (balance != null) { // null means the user closed or cancelled the dialog
-                                List<K2635685_Booking> updatedBookingList = K2635685_BookingManager.completeBooking(booking.getBookingID(), balance);
-                                updateBookingList(updatedBookingList);
+                                List<K2635685_Booking> updatedList = K2635685_BookingManager.completeBooking(booking.getBookingID(), balance);
+                                updateBookingList(updatedList);
                                 //show final invoice
                                 HelperFunctions.showPopMessage(this, "Booking completed successfully!", "Completion Successful");
                             }
@@ -91,14 +91,7 @@ public class BookingListPanel extends javax.swing.JPanel {
                         //select
                         booking ->{
                             if (booking.getStatus() != K2635685_BookingManager.getBookingStatus(1)) {
-                                InvoiceComponent invoicePanel = new InvoiceComponent(
-                                        booking.getInvoice(),
-                                        booking.getRoom(),
-                                        booking.getCheckInDate(),
-                                        booking.getCheckOutDate(),
-                                        booking.getNumberOfGeust(),
-                                        booking.getGuest()
-                                );
+                                InvoiceComponent invoicePanel = new InvoiceComponent(booking);
 
                                 JDialog popupDialog = new JDialog(
                                         (JFrame) SwingUtilities.getWindowAncestor(this),

@@ -6,6 +6,7 @@ package main.components;
 
 import java.util.Date;
 import main.functions.HelperFunctions;
+import main.models.K2635685_Booking;
 import main.models.users.K2635685_Guest;
 import main.models.K2635685_Invoice;
 import main.models.K2635685_Room;
@@ -25,8 +26,21 @@ public class InvoiceComponent extends javax.swing.JPanel {
      * @param noOfGuest
      * @param guest
      */
-    public InvoiceComponent(K2635685_Invoice invoice, K2635685_Room room, Date checkInDate, Date checkOutDate, int noOfGuest, K2635685_Guest guest) {
+    private final K2635685_Invoice invoice;
+    private final K2635685_Room room;
+    private final K2635685_Guest guest;
+    
+    public InvoiceComponent(K2635685_Booking booking) {
         initComponents();
+        invoice = booking.getInvoice();
+        room = booking.getRoom();
+        guest = booking.getGuest();
+        
+        Date checkinDate = booking.getCheckInDate();
+        Date checkoutDate = booking.getCheckOutDate();
+        int noOfGuest = booking.getNumberOfGeust();
+        double bookingAdvance = booking.getAdvncAmount();
+        
         
         paidLbl.setVisible(false);
         String invoiceId = invoice.getInvoiceIDString();
@@ -40,10 +54,10 @@ public class InvoiceComponent extends javax.swing.JPanel {
         String guestEmail = guest.getEmailAddress();
         String guestPhone = guest.getContactNumber();
 
-        String checkIn = HelperFunctions.formatDate(checkInDate);
-        String checkOut = HelperFunctions.formatDate(checkOutDate);
+        String checkIn = HelperFunctions.formatDate(checkinDate);
+        String checkOut = HelperFunctions.formatDate(checkoutDate);
 
-        long noOfNights = HelperFunctions.getNoOfNights(checkInDate, checkOutDate);
+        long noOfNights = HelperFunctions.getNoOfNights(checkinDate, checkoutDate);
         int extGuestCount = (noOfGuest > room.getCapacity()) ? (noOfGuest - room.getCapacity()) : 0;
 
         double dailyRoomRate = room.getRoomPackage().getDailyRoomRate();
@@ -101,9 +115,9 @@ public class InvoiceComponent extends javax.swing.JPanel {
         taxRateLbl.setText("("+invoice.getTaxRate()+"%)");
         totTaxRateLbl.setText(HelperFunctions.formatMoney(invoice.getTaxAmount()));
         
-        totalAmountLbl.setText(HelperFunctions.formatMoney((invoice.getTotalAmount() + invoice.getBookingAdvance())));
+        totalAmountLbl.setText(HelperFunctions.formatMoney((invoice.getTotalAmount() + bookingAdvance)));
         
-        advanceAmountLbl.setText("-"+HelperFunctions.formatMoney(invoice.getBookingAdvance()));
+        advanceAmountLbl.setText("-"+HelperFunctions.formatMoney(bookingAdvance));
         
         
         if(invoice.getTotalAmount() <= 0){

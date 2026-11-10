@@ -9,10 +9,9 @@ package main.models.users;
  * @author N I L S H A D
  */
 public class K2635685_Guest extends K2635685_User {
-    private String nicPassportNumber;
+    private final String nicPassportNumber;
 
-    public K2635685_Guest() {}
-    
+ 
     public K2635685_Guest(String nicPassportNumber, String contactNumber, String fullName, String emailAddress) {
         this.nicPassportNumber = nicPassportNumber;
         this.contactNumber = contactNumber;
@@ -39,6 +38,4 @@ public class K2635685_Guest extends K2635685_User {
         return nicPassportNumber;
     }
 
-    
-    
 }

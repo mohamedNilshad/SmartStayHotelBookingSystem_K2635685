@@ -59,7 +59,7 @@ public class RoomListPanel extends javax.swing.JPanel {
 
         listPanel.removeAll();
         if (roomList.isEmpty()) {
-            listPanel.add(createRoomRow(new K2635685_Room(), true));
+            listPanel.add(createRoomRow(null, true));
         } else {
             for (K2635685_Room room : roomList) {
                 listPanel.add(createRoomRow(room, false));

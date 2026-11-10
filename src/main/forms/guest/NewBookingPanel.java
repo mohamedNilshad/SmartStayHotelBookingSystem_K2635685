@@ -10,7 +10,6 @@ import java.util.Date;
 import javax.swing.*;
 import main.components.InvoiceComponent;
 import main.components.RoomRowComponent;
-import main.functions.CalculateTotal;
 import main.functions.HelperFunctions;
 import main.functions.ValidationFunctions;
 import main.managers.K2635685_BookingManager;
@@ -28,8 +27,8 @@ import main.models.room_packages.K2635685_RoomPackage;
 public class NewBookingPanel extends javax.swing.JPanel {
 
     private final Runnable onBack;
-    private final K2635685_Room selectedRoom;
-    private K2635685_Invoice invoice;
+//    private final K2635685_Room selectedRoom;
+    private K2635685_Booking draftBooking;
 
     /**
      * Creates new form RoomListPanel
@@ -51,7 +50,8 @@ public class NewBookingPanel extends javax.swing.JPanel {
         confirmBooking.setVisible(false);
 
         this.onBack = onBack;
-        selectedRoom = room;
+//        selectedRoom = room;
+        
 
         checkInDate.getDateEditor().addPropertyChangeListener("date", evt -> {
 
@@ -83,10 +83,10 @@ public class NewBookingPanel extends javax.swing.JPanel {
             }
         });
 
-        setForm();
+        setForm(room);
     }
 
-    private void setForm() {
+    private void setForm(K2635685_Room room) {
         roomPackageDropDown.removeAllItems();
         bedTypeDropDown.removeAllItems();
 
@@ -98,13 +98,13 @@ public class NewBookingPanel extends javax.swing.JPanel {
             bedTypeDropDown.addItem(bedType);
         }
 
-        roomPackageDropDown.setSelectedItem(selectedRoom.getRoomPackage().getPackageName());
-        bedTypeDropDown.setSelectedItem(selectedRoom.getBedType());
+        roomPackageDropDown.setSelectedItem(room.getRoomPackage().getPackageName());
+        bedTypeDropDown.setSelectedItem(room.getBedType());
 
         checkInDate.setDate(HelperFunctions.getDefaultCheckInDate());
         checkOutDate.setDate(HelperFunctions.getDefaultCheckOutDate(HelperFunctions.getDefaultCheckInDate()));
 
-        numberOfGuest.setText(String.valueOf(selectedRoom.getCapacity()));
+        numberOfGuest.setText(String.valueOf(room.getCapacity()));
         advanceAmount.setText("10000.0");
     }
 
@@ -130,9 +130,21 @@ public class NewBookingPanel extends javax.swing.JPanel {
                                 roomItem, false, false,
                                 null, null,
                                 room -> {
-                                    invoice = CalculateTotal.calculation(room, checkInDate.getDate(),
-                                            checkOutDate.getDate(), numberOfGuest.getText(), advanceAmount.getText().trim());
-                                    showInvoice(room);
+
+                                    ///init booking
+
+                                    draftBooking = new K2635685_Booking(
+                                            room,
+                                            K2635685_GuestManager.getCurrentGuest(),
+                                            checkInDate.getDate(),
+                                            checkOutDate.getDate(),
+                                            HelperFunctions.getCurrentDate(),
+                                            Integer.parseInt(numberOfGuest.getText()),
+                                            K2635685_BookingManager.getBookingStatus(0),
+                                            Double.parseDouble(advanceAmount.getText().trim())
+                                    );
+
+                                    showInvoice();
                                 }
                         )
                 );
@@ -151,17 +163,10 @@ public class NewBookingPanel extends javax.swing.JPanel {
         return rowScrollPane;
     }
 
-    private void showInvoice(K2635685_Room room) {
- 
-        InvoiceComponent invoicePanel = new InvoiceComponent(
-                invoice, room, 
-                checkInDate.getDate(), 
-                checkOutDate.getDate(), 
-                Integer.parseInt(numberOfGuest.getText()),
-                K2635685_GuestManager.getCurrentGuest()
-        );
+    private void showInvoice() {
 
-    
+        InvoiceComponent invoicePanel = new InvoiceComponent(draftBooking);
+
         invoicePanel.setPreferredSize(new Dimension(417, 600));
 
         bookingDetailsScrollPane.setViewportView(invoicePanel);
@@ -499,19 +504,9 @@ public class NewBookingPanel extends javax.swing.JPanel {
 
     private void confirmBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmBookingActionPerformed
 
-        K2635685_Booking booking = new K2635685_Booking(
-                selectedRoom,
-                K2635685_GuestManager.getCurrentGuest(),
-                checkInDate.getDate(),
-                checkOutDate.getDate(),
-                HelperFunctions.getCurrentDate(),
-                Integer.parseInt(numberOfGuest.getText()),
-                invoice,
-                K2635685_BookingManager.getBookingStatus(0)
-        );
-
-        K2635685_BookingManager.addNewBooking(booking);
-        HelperFunctions.showPopMessage(this, "Room No " + selectedRoom.getRoomIDString() + " booked successfully!", "");
+        K2635685_BookingManager.addNewBooking(draftBooking);
+        ///set booking
+        HelperFunctions.showPopMessage(this, "Room No " + draftBooking.getRoom().getRoomIDString() + " booked successfully!", "");
         onBack.run();
     }//GEN-LAST:event_confirmBookingActionPerformed
 

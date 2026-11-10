@@ -41,7 +41,7 @@ public class K2635685_BookingManager {
 
         for (K2635685_Room room : K2635685_RoomManager.getRoomList()) {
 
-            if (room.getBedType().equals(bedType) && room.getRoomPackage().getPackageName().equals(roomPackageName)) {//sort rooms by bedType and roomPackageName
+            if (room.getBedType().equals(bedType) && room.getRoomPackage().getPackageName().equals(roomPackageName)) {
                 boolean isAvailable = isBookingAvailable(room.getRoomID(), checkInDate, checkOutDate, bookingId);
                 if (isAvailable) {
                     availableRoomList.add(room);
